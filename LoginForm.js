@@ -3,8 +3,6 @@ import { createPortal } from 'react-dom';
 import { Button, StyleSheet, TextInput, View } from 'react-native';
 const React = require('react');
 
-const server = 'http://192.168.0.128/index.php/apps/workspace';
-
 class LoginForm extends React.Component {
     constructor(props) {
         super(props);
