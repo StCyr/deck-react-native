@@ -1,25 +1,10 @@
 import React, { useState } from 'react';
-import { Button, StyleSheet, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as Linking from 'expo-linking';
 import WebView from 'react-native-webview';
-import axios from 'axios';
+import BoardScreen from './BoardScreen';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  image: {
-    flex: 1,
-    width: "100%",
-    height: "100%",
-    resizeMode: "contain",
-    justifyContent: "center"
-  },
-});
 
 const Stack = createStackNavigator();
 
@@ -32,27 +17,6 @@ const Stack = createStackNavigator();
             headers: { 'OCS-APIREQUEST': 'true'}
           }} />
     )
-}
-
-function HomeScreen() {
-  axios.get('http://192.168.0.128/index.php/apps/desk/api/v1.0/boards', {
-    headers: {
-      'OCS-APIRequest': 'true',
-      'Content-Type': 'application/json'
-    }
-  })
-    .then((resp) => {
-      boards = resp
-    })
-
-  return (
-    <View style={styles.container}>
-      {boards.map((board) => 
-        <Button>
-        </Button>
-}     )}
-    </View>
-  )
 }
 
 const App = () => {
@@ -76,7 +40,10 @@ const App = () => {
         {token === true ? (
           <Stack.Screen name="Login" component={LoginScreen} />
         ) : (
-          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen
+            name="Home"
+            component={BoardScreen}
+          />
         )}
       </Stack.Navigator>
     </NavigationContainer>
