@@ -23,7 +23,7 @@ import BoardDetailsScreen from './BoardDetailsScreen';
 
   return (
     <NavigationContainer>
-        {token === true ? (
+        {token !== true ? (
           // login and get a device token
           <WebView
             source={{

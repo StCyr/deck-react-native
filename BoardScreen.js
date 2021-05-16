@@ -1,6 +1,5 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import axios from 'axios';
 
 const styles = StyleSheet.create({
@@ -59,7 +58,6 @@ export default class BoardScreen extends React.Component {
         {this.state.boards.map((board) => 
           <Pressable
             key={board.id}
-            // TODO navigate to board
             onPress={() => {
               this.props.navigation.navigate('BoardDetails',{
                 boardId: board.id
