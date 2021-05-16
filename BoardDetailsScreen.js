@@ -22,18 +22,18 @@ const styles = StyleSheet.create({
     },
   });
   
-// Component that display the user's boards
-export default class BoardScreen extends React.Component {
+// Component that display a board's details
+export default class BoardDetailsScreen extends React.Component {
     constructor(props) {
       console.log('props', props)
       super(props)
       this.state = {
-        boards: []
+        stacks: []
       }
     }
   
     componentDidMount() {
-      axios.get('http://192.168.0.128/index.php/apps/deck/api/v1.0/boards', {
+      axios.get(`http://192.168.0.128/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks`, {
         headers: {
           'OCS-APIRequest': 'true',
           'Content-Type': 'application/json',
@@ -44,7 +44,7 @@ export default class BoardScreen extends React.Component {
         .then((resp) => {
           this.setState({
             // TODO check for error
-            boards: resp.data
+            stacks: resp.data
           })
         })  
     }
@@ -64,15 +64,11 @@ export default class BoardScreen extends React.Component {
         <Text style={styles.pageTitle}>
           Boards
         </Text>
-        {this.state.boards.map((board) => 
+        {this.state.stacks.map((board) => 
           <Pressable
             key={board.id}
             // TODO navigate to board
-            onPress={() => {
-              this.props.navigation.navigate('BoardDetails',{
-                boardId: board.id
-              })
-            }}
+            onPress={() => {this.props.navigation.navigate('BoardDetails')}}
             style={this.boardStyle(board.color)}
             >
             <Text style={styles.boardTitle}>
@@ -85,9 +81,6 @@ export default class BoardScreen extends React.Component {
             onPress={() => {alert('hello')}}
             style={this.boardStyle('lightblue')}
             >
-            <Text style={styles.boardTitle}>
-              Create new board
-            </Text>
           </Pressable>
       </View>
     }

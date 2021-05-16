@@ -4,22 +4,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 import * as Linking from 'expo-linking';
 import WebView from 'react-native-webview';
 import BoardScreen from './BoardScreen';
+import BoardDetailsScreen from './BoardDetailsScreen';
 
-
-const Stack = createStackNavigator();
-
- // login and get a device token if necessary
- function LoginScreen() {
-    return (
-        <WebView
-          source={{
-            uri: 'http://192.168.0.128/index.php/login/flow', 
-            headers: { 'OCS-APIREQUEST': 'true'}
-          }} />
-    )
-}
-
-const App = () => {
+ const App = () => {
 
   const [token, setToken] = useState(true);
   
@@ -36,16 +23,20 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        {token === true ? (
-          <Stack.Screen name="Login" component={LoginScreen} />
-        ) : (
-          <Stack.Screen
-            name="Home"
-            component={BoardScreen}
+        {token !== true ? (
+          // login and get a device token
+          <WebView
+            source={{
+              uri: 'http://192.168.0.128/index.php/login/flow', 
+              headers: { 'OCS-APIREQUEST': 'true'}
+            }}
           />
-        )}
-      </Stack.Navigator>
+        ) : (
+          <Stack.Navigator>
+            <Stack.Screen name="Home" component={BoardScreen} options={{title: 'All boards'}} />
+            <Stack.Screen name="BoardDetails" component={BoardDetailsScreen} options={{title: 'Board details'}} />
+          </Stack.Navigator>
+          )}
     </NavigationContainer>
   )
 }
