@@ -1,9 +1,14 @@
 import React from 'react';
-import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
 import { TabView, SceneMap } from 'react-native-tab-view';
 import axios from 'axios';
 
 const styles = StyleSheet.create({
+    loading: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     container: {
         flex: 1,
         alignItems: 'center',
@@ -30,8 +35,12 @@ export default class BoardDetailsScreen extends React.Component {
       super(props)
       this.state = {
         index: 0,
-        routes: [],
-        cards: []
+        routes: [{ key: 'loading', title: 'Loading' }],
+        scenes: {loading: () => (
+            <View style={styles.loading}>
+                <ActivityIndicator size="large" />
+            </View>
+          )}
       }
     }
 
@@ -49,39 +58,19 @@ export default class BoardDetailsScreen extends React.Component {
         })
         .then((resp) => {
             // TODO check for error
-            // Creates the routes needed to render the TabView
             let routes = []
-            let cards = []
+            let scenes = {}
             resp.data.forEach((stack) => {
+                // Creates the routes needed for the TabView
                 routes.push({
                     key: stack.id,
                     title: stack.title
                 })
-                stack.cards.forEach((card) => {
-                    cards.push({
-                        id: card.id,
-                        title: card.title,
-                        stackId: card.stackId
-                    })
-                })
-            })
-            this.setState({
-                routes: routes
-            })
-            this.setState({
-                cards: cards
-            })     
-        })
-    }
-    
-    render() {        
-        // Creates the scenes that will be rendered within the TabView component
-        let scenes = {}
-        this.state.routes.forEach((route) => {
-            const view = () => (
+                // Creates the scenes needed for the TabView
+                const view = () => (
                     <View style={styles.container}>
-                        {this.state.cards.filter(card => card.stackId === route.key).map((card) => 
-                            <Pressable
+                        {stack.cards.map((card) => {
+                            return <Pressable
                                 key={card.id}
                                 // TODO Show card details
                                 onPress={() => {alert('hello')}}
@@ -90,17 +79,25 @@ export default class BoardDetailsScreen extends React.Component {
                                     {card.title}
                                 </Text>
                             </Pressable>
+                        }
                         )}
                     </View>
-            )
-            scenes[route.key.toString()] = view
-        })
+                )
+                scenes[stack.id.toString()] = view
+            })
 
-        // Renders the TabView component
+            this.setState({
+                routes: routes,
+                scenes: scenes
+            })
+        })
+    }
+
+    render() {
         return (
             <TabView
                 navigationState={this.state}
-                renderScene={SceneMap(scenes)}
+                renderScene={SceneMap(this.state.scenes)}
                 onIndexChange={this._handleIndexChange}
                 initialLayout={{ width: Dimensions.get('window').width }} 
             />
