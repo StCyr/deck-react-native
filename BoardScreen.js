@@ -9,10 +9,6 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'flex-start',
     },
-    pageTitle: {
-      fontSize: 32,
-      fontWeight: 'bold'
-    },
     boardTitle: {
       textAlign: 'center',
       textAlignVertical: 'center',
@@ -25,7 +21,6 @@ const styles = StyleSheet.create({
 // Component that display the user's boards
 export default class BoardScreen extends React.Component {
     constructor(props) {
-      console.log('props', props)
       super(props)
       this.state = {
         boards: []
@@ -50,7 +45,6 @@ export default class BoardScreen extends React.Component {
     }
   
     boardStyle = function(color) {
-      console.log('color',color)
       return {
         backgroundColor: '#' + color,
         width: '95%',
@@ -61,9 +55,6 @@ export default class BoardScreen extends React.Component {
   
     render() {
       return <View style={styles.container}>
-        <Text style={styles.pageTitle}>
-          Boards
-        </Text>
         {this.state.boards.map((board) => 
           <Pressable
             key={board.id}
