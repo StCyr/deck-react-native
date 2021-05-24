@@ -73,7 +73,11 @@ export default class BoardDetailsScreen extends React.Component {
                             return <Pressable
                                 key={card.id}
                                 // TODO Show card details
-                                onPress={() => {alert('hello')}}
+                                onPress={() => {this.props.navigation.navigate('CardDetails',{
+                                    boardId: this.props.route.params.boardId,
+                                    stackId: stack.id,
+                                    cardId: card.id
+                                  })}}
                                 style={styles.card}>
                                 <Text style={styles.cardTitle}>
                                     {card.title}

@@ -5,6 +5,7 @@ import * as Linking from 'expo-linking';
 import WebView from 'react-native-webview';
 import BoardScreen from './BoardScreen';
 import BoardDetailsScreen from './BoardDetailsScreen';
+import CardDetailsScreen from './CardDetailsScreen';
 
  const App = () => {
 
@@ -23,7 +24,7 @@ import BoardDetailsScreen from './BoardDetailsScreen';
 
   return (
     <NavigationContainer>
-        {token === true ? (
+        {token !== true ? (
           // login and get a device token
           <WebView
             source={{
@@ -35,6 +36,7 @@ import BoardDetailsScreen from './BoardDetailsScreen';
           <Stack.Navigator>
             <Stack.Screen name="Home" component={BoardScreen} options={{title: 'All boards'}} />
             <Stack.Screen name="BoardDetails" component={BoardDetailsScreen} options={{title: 'Board details'}} />
+            <Stack.Screen name="CardDetails" component={CardDetailsScreen} options={{title: 'Card details'}} />
           </Stack.Navigator>
           )}
     </NavigationContainer>
