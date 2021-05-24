@@ -48,6 +48,7 @@ export default class BoardScreen extends React.Component {
       return {
         backgroundColor: '#' + color,
         width: '95%',
+        borderWidth: 1,
         borderRadius: 10,
         margin: 2
       }
