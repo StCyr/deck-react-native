@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
     },
     card: {
         width: '95%',
+        borderWidth: 1,
         borderRadius: 10,
         margin: 2
     },
@@ -88,8 +89,9 @@ export default class BoardDetailsScreen extends React.Component {
                         <Pressable
                             // TODO create 'onNewCard' action
                             onPress={() => {alert('hello')}}
+                            style={styles.card}
                         >
-                            <Text style={styles.boardTitle}>
+                            <Text style={styles.cardTitle}>
                                 Create card
                             </Text>
                         </Pressable>
