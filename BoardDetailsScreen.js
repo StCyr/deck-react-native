@@ -85,6 +85,14 @@ export default class BoardDetailsScreen extends React.Component {
                             </Pressable>
                         }
                         )}
+                        <Pressable
+                            // TODO create 'onNewCard' action
+                            onPress={() => {alert('hello')}}
+                        >
+                            <Text style={styles.boardTitle}>
+                                Create card
+                            </Text>
+                        </Pressable>
                     </View>
                 )
                 scenes[stack.id.toString()] = view

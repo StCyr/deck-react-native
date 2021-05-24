@@ -76,7 +76,7 @@ export default class BoardScreen extends React.Component {
             style={this.boardStyle('lightblue')}
             >
             <Text style={styles.boardTitle}>
-              Create new board
+              Create board
             </Text>
           </Pressable>
       </View>
