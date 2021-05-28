@@ -1,39 +1,34 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import axios from 'axios';
+import { useSelector } from 'react-redux'
 
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'flex-start',
-    },
-    boardTitle: {
-      textAlign: 'center',
-      textAlignVertical: 'center',
-      fontSize: 20,
-      fontWeight: 'bold',
-      margin: 20
-    },
-  });
-  
 // Component that display the user's boards
 export default class BoardScreen extends React.Component {
   
     constructor(props) {
       super(props)
+      this.server = useSelector((state) => state.server.value)
+      this.token = useSelector((state) => state.token.value)
       this.state = {
         boards: []
       }
     }
   
-    componentDidMount() {
+    componentDidMount() { 
+      // Creates authentication header
+      let authentication = ''
+      if (this.token !== null) {
+        authentication = 'Bearer ' + this.token
+      } else {
+        // Put your basic credentials here for using with expo
+        authentication = 'Basic ' + 'YWRtaW46YWRtaW4='
+      }
       axios.get('http://192.168.0.128/index.php/apps/deck/api/v1.0/boards', {
         headers: {
           'OCS-APIRequest': 'true',
           'Content-Type': 'application/json',
-          // TODO Use the token retrieved during user login
-          'Authorization': 'Basic YWRtaW46YWRtaW4='
+          'Authorization': authentication
         }
       })
         .then((resp) => {
@@ -82,4 +77,20 @@ export default class BoardScreen extends React.Component {
           </Pressable>
       </View>
     }
-  }
+}
+
+// Component style
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  boardTitle: {
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    fontSize: 20,
+    fontWeight: 'bold',
+    margin: 20
+  },
+});
