@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
   });
   
 // Component that display a card's details
-export default class CardDetailsScreen extends React.Component {
+export default class CardDetails extends React.Component {
   
     constructor(props) {
       super(props)

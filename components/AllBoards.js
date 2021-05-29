@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
   });
   
 // Component that display the user's boards
-export default class BoardScreen extends React.Component {
+export default class AllBoards extends React.Component {
   
     constructor(props) {
       super(props)

@@ -3,11 +3,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as Linking from 'expo-linking';
-import Login from './Login';
-import Home from './Home';
-import BoardScreen from './BoardScreen';
-import BoardDetailsScreen from './BoardDetailsScreen';
-import CardDetailsScreen from './CardDetailsScreen';
+import Login from './components/Login';
+import Home from './components/Home';
+import AllBoards from './components/AllBoards';
+import BoardDetails from './components/BoardDetails';
+import CardDetails from './components/CardDetails';
 
 const Stack = createStackNavigator()
 
@@ -57,9 +57,9 @@ export default class App extends React.Component {
       return (
         <NavigationContainer>
           <Stack.Navigator>
-            <Stack.Screen name="AllBoard" component={BoardScreen} options={{title: 'All boards'}} />
-            <Stack.Screen name="BoardDetails" component={BoardDetailsScreen} options={{title: 'Board details'}} />
-            <Stack.Screen name="CardDetails" component={CardDetailsScreen} options={{title: 'Card details'}} />
+            <Stack.Screen name="AllBoards" component={AllBoards} options={{title: 'All boards'}} />
+            <Stack.Screen name="BoardDetails" component={BoardDetails} options={{title: 'Board details'}} />
+            <Stack.Screen name="CardDetails" component={CardDetails} options={{title: 'Card details'}} />
           </Stack.Navigator>
         </NavigationContainer>
       )

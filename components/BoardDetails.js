@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
 });
 
 // Component that display a board's cards, grouped by stack using a TabView component
-export default class BoardDetailsScreen extends React.Component {
+export default class BoardDetails extends React.Component {
 
     constructor(props) {
       super(props)
