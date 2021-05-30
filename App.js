@@ -34,8 +34,8 @@ class App extends React.Component {
     super(props)
 
     // Retrieve token from storage if available
-    const debug = true
-    if (!debug) {
+    const expoDebug = false
+    if (!expoDebug) {
       AsyncStorage.getItem('token').then(token => {
         if (token !== null) {
           console.log('token retrieved from asyncStorage')
@@ -43,7 +43,8 @@ class App extends React.Component {
         }
       })
     } else {
-      console.log('debug mode: setting token and server from hardcoded value')
+      // Expo doesn't support registering URL protocol handler
+      console.log('expo debug mode: setting token and server from hardcoded value')
       this.props.setToken('Basic YWRtaW46YWRtaW4=')
       this.props.setServer('https://nextcloud-dev.bollu.be')
     }
