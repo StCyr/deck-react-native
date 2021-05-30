@@ -38,7 +38,7 @@ class App extends React.Component {
     if (!expoDebug) {
       AsyncStorage.getItem('token').then(token => {
         if (token !== null) {
-          console.log('token retrieved from asyncStorage')
+          console.log('token retrieved from asyncStorage', token)
           this.props.setToken('Bearer ' + token)
         }
       })
