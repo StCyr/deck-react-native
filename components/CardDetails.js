@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
 import { StyleSheet, Text, View } from 'react-native';
 import axios from 'axios';
 
@@ -11,7 +13,7 @@ const styles = StyleSheet.create({
   });
   
 // Component that display a card's details
-export default class CardDetails extends React.Component {
+class CardDetails extends React.Component {
   
     constructor(props) {
       super(props)
@@ -21,16 +23,15 @@ export default class CardDetails extends React.Component {
     }
   
     componentDidMount() {
-      axios.get(`http://192.168.0.128/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks/${this.props.route.params.stackId}/cards/${this.props.route.params.cardId}`, {
+      axios.get(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks/${this.props.route.params.stackId}/cards/${this.props.route.params.cardId}`, {
         headers: {
           'OCS-APIRequest': 'true',
           'Content-Type': 'application/json',
           // TODO Use the token retrieved during user login
-          'Authorization': 'Basic YWRtaW46YWRtaW4='
+          'Authorization': this.props.token.value
         }
       })
         .then((resp) => {
-          console.log(resp.data)
           this.setState({
             // TODO check for error
             card: resp.data
@@ -46,3 +47,10 @@ export default class CardDetails extends React.Component {
       </View>
     }
   }
+
+// Connect to store
+const mapStateToProps = state => ({
+  server: state.server,
+  token: state.token
+})
+export default connect(mapStateToProps)(CardDetails)

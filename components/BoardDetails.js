@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { ActivityIndicator, Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
 import { TabView, SceneMap } from 'react-native-tab-view';
 import axios from 'axios';
@@ -30,7 +31,7 @@ const styles = StyleSheet.create({
 });
 
 // Component that display a board's cards, grouped by stack using a TabView component
-export default class BoardDetails extends React.Component {
+class BoardDetails extends React.Component {
 
     constructor(props) {
       super(props)
@@ -49,12 +50,12 @@ export default class BoardDetails extends React.Component {
 
     componentDidMount() {
         // Gets the board 'stacks
-        axios.get(`http://192.168.0.128/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks`, {
+        axios.get(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks`, {
             headers: {
                 'OCS-APIRequest': 'true',
                 'Content-Type': 'application/json',
                 // TODO Use the token retrieved during user login
-                'Authorization': 'Basic YWRtaW46YWRtaW4='
+                'Authorization': this.props.token.value
             }
         })
         .then((resp) => {
@@ -118,3 +119,10 @@ export default class BoardDetails extends React.Component {
         )
     }
   }
+
+  // Connect to store
+const mapStateToProps = state => ({
+    server: state.server,
+    token: state.token
+  })
+  export default connect(mapStateToProps)(BoardDetails)
