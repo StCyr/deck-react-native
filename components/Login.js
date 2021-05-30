@@ -1,21 +1,28 @@
 import React from 'react';
 import WebView from 'react-native-webview';
+import { connect } from 'react-redux';
 
 // Component to display the chosen NC server's login form
-export default class Login extends React.Component {
+class Login extends React.Component {
     constructor(props) {
         super(props);
     }
 
     render() {
-        console.log('this.props', this.props)
+      console.log('server', this.props)
       return (
         <WebView
             source={{
-                uri: this.props.route.params.NCServer + '/index.php/login/flow', 
+                uri: this.props.server.value + '/index.php/login/flow', 
                 headers: { 'OCS-APIREQUEST': 'true'}
             }}
         />
       )
     }
 }
+
+// Connect to store
+const mapStateToProps = state => ({
+  server: state.server
+})
+export default connect(mapStateToProps)(Login)

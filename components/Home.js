@@ -1,7 +1,68 @@
 import React from 'react';
+
+// Store
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux'
+import { setServer } from './store/serverSlice';
+
+// Persistent storage
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+// UI
 import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
 
+// Component to specify the URL of the Nextcloud server to connect to
+class Home extends React.Component {
+    constructor(props) {
+        super(props);
+        this.onSubmit = this.onSubmit.bind(this);
+    }
+
+    render() {
+      return (
+            <View style={styles.container}>
+                <View style={styles.LoginForm}>
+                <Text>
+                    Please enter the URL of your Nextcloud server
+                </Text>
+                <TextInput style={styles.Input} 
+                    value={this.props.server.value}
+                    onChangeText={server => { 
+                        this.props.setServer(server) }}
+                    placeholder='https://'
+                />
+                <Button
+                    title='Sign In'
+                    onPress={this.onSubmit}
+                />
+                </View>
+            </View>
+
+      )
+    }
+
+    onSubmit() {
+        // Persists NC Server URL and open the login form
+        AsyncStorage.setItem('NCServer', this.props.server.value);
+        this.props.navigation.navigate('Login',{server: this.props.server.value})
+    }
+}
+
+// Connect to store
+const mapStateToProps = state => ({
+    server: state.server
+})
+const mapDispatchToProps = dispatch => (
+    bindActionCreators( {
+        setServer
+    }, dispatch)
+)
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Home)
+
+// Component styles
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -27,45 +88,3 @@ const styles = StyleSheet.create({
         height: 30,
     },
 });
-
-// Component to specify the URL of the Nextcloud server to connect to
-export default class Home extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            NCServer: '',
-        };
-
-        this.onSubmit = this.onSubmit.bind(this);
-    }
-
-    render() {
-      return (
-            <View style={styles.container}>
-                <View style={styles.LoginForm}>
-                <Text>
-                    Please enter the URL of your Nextcloud server
-                </Text>
-                <TextInput style={styles.Input} 
-                    value={this.state.NCServer}
-                    onChangeText={NCServer => { this.setState({NCServer})}}
-                    placeholder='https://'
-                />
-                <Button
-                    title='Sign In'
-                    onPress={this.onSubmit}
-                />
-                </View>
-            </View>
-
-      )
-    }
-
-    onSubmit() {
-        // Persists NC Server URL and open the login form
-        console.log(this.state.NCServer)
-        AsyncStorage.setItem('NCServer', this.state.NCServer);
-        this.props.navigation.navigate('Login',{NCServer: this.state.NCServer})
-    }
-}
