@@ -26,15 +26,18 @@ const Stack = createStackNavigator()
 export default class App extends React.Component {
 
   constructor(props) {
+    console.log('initialising app')
     super(props)
-    
+
     // Retrieve token from storage if available
     AsyncStorage.getItem('token').then(token => {
-      console.log('saving token in store')
-      store.dispatch({ 
-        type: 'setToken',
-        payload: token
-      })
+      if (token !== null) {
+        console.log('token retrieved from asyncStorage')
+        store.dispatch({
+          type: 'setToken',
+          payload: token
+        })
+      }
 })
 
     // Register handler to catch Nextcloud's redirect after successfull login
@@ -44,10 +47,12 @@ export default class App extends React.Component {
   // Function to retrieve the device's token and save it after user logged in
   handleRedirect = async (url) => {
     if (url.url.startsWith('nc://login/server')) {
+      console.log('Received the expected nc:// redirect')
       try {
         token = url.url.substring(url.url.lastIndexOf(':'))
-        console.log('Persisting token', token)
+        console.log('Persisting token in asyncStorage')
         AsyncStorage.setItem('token', token);  
+        console.log('Saving token in store')
         store.dispatch({ 
           type: 'setToken',
           payload: token
