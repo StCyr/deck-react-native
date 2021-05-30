@@ -6,7 +6,7 @@ export const tokenSlice = createSlice({
     value: null,
   },
   reducers: {
-    set: (state, action) => {
+    setToken: (state, action) => {
       state.value = action.payload
     }
   }

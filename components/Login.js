@@ -9,7 +9,6 @@ class Login extends React.Component {
     }
 
     render() {
-      console.log('server', this.props)
       return (
         <WebView
             source={{

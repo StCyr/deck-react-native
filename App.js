@@ -15,8 +15,10 @@ import BoardDetails from './components/BoardDetails';
 import CardDetails from './components/CardDetails';
 
 // Store
-import { Provider } from 'react-redux';
-import store from './store/store';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux'
+import { setServer } from './store/serverSlice';
+import { setToken } from './store/tokenSlice';
 
 // For creating an URL handler to retrieve the device token
 import * as Linking from 'expo-linking';
@@ -25,22 +27,26 @@ import * as Linking from 'expo-linking';
 const Stack = createStackNavigator()
 
 // Application
-export default class App extends React.Component {
+class App extends React.Component {
 
   constructor(props) {
     console.log('initialising app')
     super(props)
 
     // Retrieve token from storage if available
-    AsyncStorage.getItem('token').then(token => {
-      if (token !== null) {
-        console.log('token retrieved from asyncStorage')
-        store.dispatch({
-          type: 'setToken',
-          payload: token
-        })
-      }
-})
+    const debug = true
+    if (!debug) {
+      AsyncStorage.getItem('token').then(token => {
+        if (token !== null) {
+          console.log('token retrieved from asyncStorage')
+          this.props.setToken('Bearer ' + token)
+        }
+      })
+    } else {
+      console.log('debug mode: setting token and server from hardcoded value')
+      this.props.setToken('Basic YWRtaW46YWRtaW4=')
+      this.props.setServer('https://nextcloud-dev.bollu.be')
+    }
 
     // Register handler to catch Nextcloud's redirect after successfull login
     Linking.addEventListener('url', (url) => {this.handleRedirect(url)})
@@ -55,10 +61,7 @@ export default class App extends React.Component {
         console.log('Persisting token in asyncStorage')
         AsyncStorage.setItem('token', token);  
         console.log('Saving token in store')
-        store.dispatch({ 
-          type: 'setToken',
-          payload: token
-        })
+        this.props.setToken('Bearer ' + token)
       } catch (e) {
         // TODO
       } 
@@ -66,29 +69,41 @@ export default class App extends React.Component {
   }
 
   render() {
-    if (store.getState().token.value === null) {
+    if (this.props.token.value === null) {
       // No token is stored yet, we need to get one
       return (
-        <Provider store={store}>
           <NavigationContainer>
             <Stack.Navigator>
               <Stack.Screen name="Home" component={Home} />
               <Stack.Screen name="Login" component={Login} />
             </Stack.Navigator>
           </NavigationContainer>
-        </Provider>
       ) 
     } else {
       return (
-        <Provider store={store}>
         <NavigationContainer>
           <Stack.Navigator>
             <Stack.Screen name="AllBoards" component={AllBoards} options={{title: 'All boards'}} />
             <Stack.Screen name="BoardDetails" component={BoardDetails} options={{title: 'Board details'}} />
             <Stack.Screen name="CardDetails" component={CardDetails} options={{title: 'Card details'}} />
           </Stack.Navigator>
-        </Provider>
+          </NavigationContainer>
       )
     }
   }
 }
+
+// Connect to store
+const mapStateToProps = state => ({
+  token: state.token
+})
+const mapDispatchToProps = dispatch => (
+  bindActionCreators( {
+      setServer,
+      setToken
+  }, dispatch)
+)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App)

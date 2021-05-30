@@ -1,34 +1,25 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import axios from 'axios';
-import { useSelector } from 'react-redux'
 
 // Component that display the user's boards
-export default class AllBoards extends React.Component {
+class AllBoards extends React.Component {
   
     constructor(props) {
       super(props)
-      this.server = useSelector((state) => state.server.value)
-      this.token = useSelector((state) => state.token.value)
       this.state = {
         boards: []
       }
     }
   
     componentDidMount() { 
-      // Creates authentication header
-      let authentication = ''
-      if (this.token !== null) {
-        authentication = 'Bearer ' + this.token
-      } else {
-        // Put your basic credentials here for using with expo
-        authentication = 'Basic ' + 'YWRtaW46YWRtaW4='
-      }
-      axios.get('http://192.168.0.128/index.php/apps/deck/api/v1.0/boards', {
+      // Get all user boards
+      axios.get(this.props.server.value + '/index.php/apps/deck/api/v1.0/boards', {
         headers: {
           'OCS-APIRequest': 'true',
           'Content-Type': 'application/json',
-          'Authorization': authentication
+          'Authorization': this.props.token.value
         }
       })
         .then((resp) => {
@@ -78,6 +69,13 @@ export default class AllBoards extends React.Component {
       </View>
     }
 }
+
+// Connect to store
+const mapStateToProps = state => ({
+  server: state.server,
+  token: state.token
+})
+export default connect(mapStateToProps)(AllBoards)
 
 // Component style
 const styles = StyleSheet.create({

@@ -3,7 +3,7 @@ import React from 'react';
 // Store
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux'
-import { setServer } from './store/serverSlice';
+import { setServer } from '../store/serverSlice';
 
 // Persistent storage
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -44,7 +44,7 @@ class Home extends React.Component {
     onSubmit() {
         // Persists NC Server URL and open the login form
         AsyncStorage.setItem('NCServer', this.props.server.value);
-        this.props.navigation.navigate('Login',{server: this.props.server.value})
+        this.props.navigation.navigate('Login')
     }
 }
 
