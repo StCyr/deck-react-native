@@ -36,10 +36,10 @@ class App extends React.Component {
     // Retrieve token from storage if available
     const expoDebug = false
     if (!expoDebug) {
-      AsyncStorage.getItem('token').then(token => {
+      AsyncStorage.getItem('NCtoken').then(token => {
         if (token !== null) {
           console.log('token retrieved from asyncStorage', token)
-          this.props.setToken('Bearer ' + token)
+          this.props.setToken('Basic ' + token)
         }
       })
     } else {
@@ -54,15 +54,17 @@ class App extends React.Component {
   }
 
   // Function to retrieve the device's token and save it after user logged in
-  handleRedirect = async (url) => {
-    if (url.url.startsWith('nc://login/server')) {
-      console.log('Received the expected nc:// redirect')
+  handleRedirect = async ({url}) => {
+    if (url.startsWith('nc://login/server')) {
+      console.log('Received the expected nc:// redirect', url)
       try {
-        token = url.url.substring(url.url.lastIndexOf(':'))
-        console.log('Persisting token in asyncStorage')
-        AsyncStorage.setItem('token', token);  
+        user = url.substring(url.lastIndexOf('user:')+5)
+        pwd = url.substring(url.lastIndexOf(':')+1)
+        token = btoa(user + ':' + pwd)
+        console.log('Persisting token in asyncStorage', token)
+        AsyncStorage.setItem('NCtoken', token);  
         console.log('Saving token in store')
-        this.props.setToken('Bearer ' + token)
+        this.props.setToken('Basic ' + token)
       } catch (e) {
         // TODO
       } 

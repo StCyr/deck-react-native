@@ -43,6 +43,7 @@ class Home extends React.Component {
 
     onSubmit() {
         // Persists NC Server URL and open the login form
+        console.log('Storing server address in AsyncStorage', this.props.server.value)
         AsyncStorage.setItem('NCServer', this.props.server.value);
         this.props.navigation.navigate('Login')
     }
