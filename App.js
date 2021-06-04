@@ -1,5 +1,8 @@
 import React from 'react';
 
+// For debugging
+import env from './environment';
+
 // Persistent storage
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -23,6 +26,9 @@ import { setToken } from './store/tokenSlice';
 // For creating an URL handler to retrieve the device token
 import * as Linking from 'expo-linking';
 
+// btoa isn't supported by android (and maybe also iOS)
+import {encode as btoa} from 'base-64'
+
 // Create Stack navigator
 const Stack = createStackNavigator()
 
@@ -34,8 +40,7 @@ class App extends React.Component {
     super(props)
 
     // Retrieve token from storage if available
-    const expoDebug = false
-    if (!expoDebug) {
+    if (!env.debug) {
       AsyncStorage.getItem('NCtoken').then(token => {
         if (token !== null) {
           console.log('token retrieved from asyncStorage', token)
@@ -43,10 +48,11 @@ class App extends React.Component {
         }
       })
     } else {
-      // Expo doesn't support registering URL protocol handler
+      // Expo doesn't support registering URL protocol handler so we hardcode 
+      // authentication parameters in environment.js file
       console.log('expo debug mode: setting token and server from hardcoded value')
-      this.props.setToken('Basic YWRtaW46YWRtaW4=')
-      this.props.setServer('https://nextcloud-dev.bollu.be')
+      this.props.setToken(env.token)
+      this.props.setServer(env.server)
     }
 
     // Register handler to catch Nextcloud's redirect after successfull login
@@ -56,18 +62,15 @@ class App extends React.Component {
   // Function to retrieve the device's token and save it after user logged in
   handleRedirect = async ({url}) => {
     if (url.startsWith('nc://login/server')) {
-      console.log('Received the expected nc:// redirect', url)
-      try {
-        user = url.substring(url.lastIndexOf('user:')+5)
+        console.log('Received the expected nc:// redirect', url)
+        user = url.substring(url.lastIndexOf('user:')+5, url.lastIndexOf('&'))
         pwd = url.substring(url.lastIndexOf(':')+1)
         token = btoa(user + ':' + pwd)
         console.log('Persisting token in asyncStorage', token)
+        // TODO Use expo-secure-store to securely store the token
         AsyncStorage.setItem('NCtoken', token);  
         console.log('Saving token in store')
         this.props.setToken('Basic ' + token)
-      } catch (e) {
-        // TODO
-      } 
     }
   }
 
