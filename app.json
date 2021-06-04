@@ -19,7 +19,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "be.bollu.test-app"
+      "bundleIdentifier": "be.bollu.deck-react-native"
     },
     "android": {
       "adaptiveIcon": {
