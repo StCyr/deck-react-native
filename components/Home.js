@@ -9,7 +9,7 @@ import { setServer } from '../store/serverSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // UI
-import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Button, ImageBackground, StyleSheet, Text, TextInput, View } from 'react-native';
 
 // Component to specify the URL of the Nextcloud server to connect to
 class Home extends React.Component {
@@ -21,23 +21,24 @@ class Home extends React.Component {
     render() {
       return (
             <View style={styles.container}>
-                <View style={styles.LoginForm}>
-                <Text>
-                    Please enter the URL of your Nextcloud server
-                </Text>
-                <TextInput style={styles.Input} 
-                    value={this.props.server.value}
-                    onChangeText={server => { 
-                        this.props.setServer(server) }}
-                    placeholder='https://'
-                />
-                <Button
-                    title='Sign In'
-                    onPress={this.onSubmit}
-                />
-                </View>
+                <ImageBackground source={require('../assets/kanban.png')} style={styles.background}>
+                    <View style={styles.LoginForm}>
+                        <Text>
+                            Please enter the URL of your Nextcloud server
+                        </Text>
+                        <TextInput style={styles.Input} 
+                            value={this.props.server.value}
+                            onChangeText={server => { 
+                                this.props.setServer(server) }}
+                            placeholder='https://'
+                        />
+                        <Button
+                            title='Sign In'
+                            onPress={this.onSubmit}
+                        />
+                    </View>
+                </ImageBackground>
             </View>
-
       )
     }
 
@@ -65,14 +66,19 @@ export default connect(
 
 // Component styles
 const styles = StyleSheet.create({
+    background: {
+        width: '100%',
+        height: '100%',
+    },
     container: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'lightskyblue',
       },
     LoginForm: { 
-        alignSelf: 'center',      
+        position: 'absolute',
+        top: '35%',
+        left: '15%',      
         borderRadius: 5,
         borderWidth: 1,
         borderColor: 'darkslateblue',
