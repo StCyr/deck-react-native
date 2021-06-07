@@ -23,8 +23,9 @@ class AllBoards extends React.Component {
         }
       })
         .then((resp) => {
+          console.log('boards restrieved from server')
+          // TODO check for error
           this.setState({
-            // TODO check for error
             boards: resp.data
           })
         })  

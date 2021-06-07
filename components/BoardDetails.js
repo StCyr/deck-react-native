@@ -70,29 +70,33 @@ class BoardDetails extends React.Component {
                     title: stack.title
                 })
                 // Creates the scenes needed for the TabView
-                const view = () => (
-                    <View style={styles.container}>
-                        {stack.cards.map((card) => {
-                            return <Pressable
+                let buttons = []
+                if (stack.hasOwnProperty('cards')) {
+                    stack.cards.map((card) => {
+                        buttons.push( 
+                            <Pressable
                                 key={card.id}
                                 // TODO Show card details
                                 onPress={() => {this.props.navigation.navigate('CardDetails',{
                                     boardId: this.props.route.params.boardId,
                                     stackId: stack.id,
                                     cardId: card.id
-                                  })}}
-                                style={styles.card}>
+                                })}}
+                                style={styles.card} >
                                 <Text style={styles.cardTitle}>
                                     {card.title}
                                 </Text>
                             </Pressable>
-                        }
-                        )}
+                        )
+                    })
+                }
+                const view = () => (
+                    <View style={styles.container}>
+                       {buttons}
                         <Pressable
                             // TODO create 'onNewCard' action
                             onPress={() => {alert('hello')}}
-                            style={styles.card}
-                        >
+                            style={styles.card} >
                             <Text style={styles.cardTitle}>
                                 Create card
                             </Text>
