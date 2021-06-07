@@ -59,6 +59,7 @@ class BoardDetails extends React.Component {
             }
         })
         .then((resp) => {
+            console.log('cards restrieved from server')
             // TODO check for error
             let routes = []
             let scenes = {}
