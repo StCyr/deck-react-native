@@ -40,7 +40,7 @@ class App extends React.Component {
     super(props)
 
     // Retrieve token from storage if available
-    if (!env.debug) {
+    if (!env.expoDebug) {
       AsyncStorage.getItem('NCtoken').then(token => {
         if (token !== null) {
           console.log('token retrieved from asyncStorage', token)
