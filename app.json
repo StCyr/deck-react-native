@@ -19,7 +19,8 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "be.bollu.deck-react-native"
+      "bundleIdentifier": "be.bollu.deck-react-native",
+      "buildNumber": "2"
     },
     "android": {
       "adaptiveIcon": {
