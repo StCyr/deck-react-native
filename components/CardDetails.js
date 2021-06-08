@@ -27,11 +27,11 @@ class CardDetails extends React.Component {
         headers: {
           'OCS-APIRequest': 'true',
           'Content-Type': 'application/json',
-          // TODO Use the token retrieved during user login
           'Authorization': this.props.token.value
         }
       })
         .then((resp) => {
+          console.log('card details from server')
           this.setState({
             // TODO check for error
             card: resp.data
@@ -43,6 +43,9 @@ class CardDetails extends React.Component {
       return <View style={styles.container}>
           <Text>
               { this.state.card.title }
+          </Text>
+          <Text>
+              { this.state.card.description }
           </Text>
       </View>
     }
