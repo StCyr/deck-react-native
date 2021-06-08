@@ -40,6 +40,6 @@ The medias look terrible. I'd be happy to receive new proposals.
 
 You may help me developing this app by donating ETH or EUR:
 
-[ETH wallet address](/assets/eth_wallet.png)
+![ETH wallet address](/assets/eth_wallet.png)
 
 https://www.paypal.com/donate?hosted_button_id=86NDKXPNVA58Q
