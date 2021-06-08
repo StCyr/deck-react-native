@@ -32,6 +32,10 @@ export default {
 };
 ```
 
+## Design
+
+The medias look terrible. I'd be happy to receive new proposals. 
+
 ## Financial support
 
 You may help me developing this app by donating ETH or EUR:
