@@ -16,6 +16,7 @@ import Home from './components/Home';
 import AllBoards from './components/AllBoards';
 import BoardDetails from './components/BoardDetails';
 import CardDetails from './components/CardDetails';
+import NewCard from './components/NewCard';
 
 // Store
 import { connect } from 'react-redux';
@@ -92,6 +93,7 @@ class App extends React.Component {
             <Stack.Screen name="AllBoards" component={AllBoards} options={{title: 'All boards'}} />
             <Stack.Screen name="BoardDetails" component={BoardDetails} options={{title: 'Board details'}} />
             <Stack.Screen name="CardDetails" component={CardDetails} options={{title: 'Card details'}} />
+            <Stack.Screen name="NewCard" component={NewCard} options={{title: 'New card'}} />
           </Stack.Navigator>
           </NavigationContainer>
       )

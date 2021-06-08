@@ -54,12 +54,11 @@ class BoardDetails extends React.Component {
             headers: {
                 'OCS-APIRequest': 'true',
                 'Content-Type': 'application/json',
-                // TODO Use the token retrieved during user login
                 'Authorization': this.props.token.value
             }
         })
         .then((resp) => {
-            console.log('cards restrieved from server')
+            console.log('cards retrieved from server')
             // TODO check for error
             let routes = []
             let scenes = {}
@@ -94,8 +93,10 @@ class BoardDetails extends React.Component {
                     <View style={styles.container}>
                        {buttons}
                         <Pressable
-                            // TODO create 'onNewCard' action
-                            onPress={() => {alert('hello')}}
+                            onPress={() => {this.props.navigation.navigate('NewCard', {
+                                boardId: this.props.route.params.boardId,
+                                stackId: stack.id,                              
+                            })}}
                             style={styles.card} >
                             <Text style={styles.cardTitle}>
                                 Create card
@@ -125,9 +126,9 @@ class BoardDetails extends React.Component {
     }
   }
 
-  // Connect to store
+// Connect to store
 const mapStateToProps = state => ({
     server: state.server,
     token: state.token
-  })
-  export default connect(mapStateToProps)(BoardDetails)
+})
+export default connect(mapStateToProps)(BoardDetails)

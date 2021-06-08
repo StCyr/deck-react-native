@@ -30,7 +30,8 @@
     "react-native-web": "^0.16.3",
     "react-native-webview": "^11.2.3",
     "react-redux": "^7.2.4",
-    "redux": "^4.1.0"
+    "redux": "^4.1.0",
+    "@react-native-community/datetimepicker": "3.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0"
