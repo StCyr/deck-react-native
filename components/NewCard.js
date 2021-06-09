@@ -1,23 +1,29 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Button, StyleSheet, TextInput, View } from 'react-native';
+import { Text } from 'react-native-elements';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
 
 const styles = StyleSheet.create({
-    container: {
+    inputField: {
         flex: 1,
+        flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'flex-start',
     },
-    Input: {
-        width: '95%',
+    inputLabel: {
+        fontWeight: 'bold'
+    },
+    input: {
+        width: '100%',
         borderColor: 'lightgrey',
+        fontSize: 20,
         borderWidth: 1,
         borderRadius: 3,
         marginTop: 5,
+        marginBottom: 5,
         padding: 2,
-        height: 30,
+        height: 40,
     },
 });
 
@@ -37,61 +43,74 @@ class NewCard extends React.Component {
 
     render() {
         return (
-            <View style={styles.container}>
-                        <TextInput style={styles.Input} 
-                            value={this.state.title}
-                            onChangeText={title => { 
-                                this.setState({
-                                    title: title
-                                })
-                            }}
-                            placeholder='title'
-                        />
-                        <DateTimePicker style={styles.Input} 
-                            testID="dateTimePicker"
-                            value={this.state.dueDate}
-                            mode="date"
-                            display="default"
-                            onChange={dueDate => {
-                                this.setState({
-                                    dueDate: DueDate
-                                })
-                            }}
-                        />
-                        <TextInput style={styles.Input} 
-                            value={this.state.description}
-                            onChangeText={description => { 
-                                this.setState({
-                                    description: description
-                                })
-                            }}
-                            placeholder='description'
-                        />
+            <View>
+                        <View style={styles.inputField}>
+                            <Text h1 h1Style={styles.inputLabel}>
+                                Title:
+                            </Text>
+                            <TextInput style={styles.input} 
+                                value={this.state.title}
+                                onChangeText={title => { 
+                                    this.setState({
+                                        title: title
+                                    })
+                                }}
+                                placeholder='title'
+                            />
+                        </View>
+                        <View style={styles.inputField}>
+                            <Text h1 h1Style={styles.inputLabel}>
+                                Due Date:
+                            </Text>
+                            <DateTimePicker style={styles.input} 
+                                value={this.state.dueDate}
+                                mode="date"
+                                display="default"
+                                onChange={dueDate => {
+                                    this.setState({
+                                        dueDate: DueDate
+                                    })
+                                }}
+                            />
+                        </View>
+                        <View>
+                            <Text h1 h1Style={styles.inputLabel}>
+                                Description:
+                            </Text>
+                            <TextInput style={styles.input} 
+                                value={this.state.description}
+                                onChangeText={description => { 
+                                    this.setState({
+                                        description: description
+                                    })
+                                }}
+                                placeholder='description (optional)'
+                            />
+                        </View>
                         <Button
                             title='Create'
                             onPress={this.onSubmit}
                         />
-
             </View>
 
         )
     }
 
     onSubmit() {
-        axios.post(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks/${this.props.route.params.stackId}/cards`, {
-            headers: {
-                'OCS-APIRequest': 'true',
-                'Content-Type': 'application/json',
-                'Authorization': this.props.token.value
-            },
-            data: {
+        axios.post(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks/${this.props.route.params.stackId}/cards`,
+            {
                 'title': this.state.title,
                 'description': this.state.description,
                 'duedate': this.state.duedate
-            }
-        })
+            },
+            {
+                headers: {
+                    'OCS-APIRequest': 'true',
+                    'Content-Type': 'application/json',
+                    'Authorization': this.props.token.value
+                },
+            })
         .then((resp) => {
-            console.log(resp)
             if (resp.status !== 200) {
                 console.log('Error', resp)
             } else {
@@ -99,6 +118,7 @@ class NewCard extends React.Component {
             }
         })
         .catch((error) => {
+            console.log(error)
         })
     }
   
