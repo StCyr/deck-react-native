@@ -6,13 +6,13 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
 
 const styles = StyleSheet.create({
-    inputField: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
+    container: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
     },
-    inputLabel: {
-        fontWeight: 'bold'
+    descriptionInput: {
+        height: 200,
     },
     input: {
         width: '100%',
@@ -20,9 +20,16 @@ const styles = StyleSheet.create({
         fontSize: 20,
         borderWidth: 1,
         borderRadius: 3,
-        marginTop: 5,
-        marginBottom: 5,
+        margin: 5,
         padding: 2,
+    },
+    inputField: {
+        marginBottom: 10,
+    },
+    inputLabel: {
+        fontWeight: 'bold'
+    },
+    titleInput: {
         height: 40,
     },
 });
@@ -43,56 +50,56 @@ class NewCard extends React.Component {
 
     render() {
         return (
-            <View>
-                        <View style={styles.inputField}>
-                            <Text h1 h1Style={styles.inputLabel}>
-                                Title:
-                            </Text>
-                            <TextInput style={styles.input} 
-                                value={this.state.title}
-                                onChangeText={title => { 
-                                    this.setState({
-                                        title: title
-                                    })
-                                }}
-                                placeholder='title'
-                            />
-                        </View>
-                        <View style={styles.inputField}>
-                            <Text h1 h1Style={styles.inputLabel}>
-                                Due Date:
-                            </Text>
-                            <DateTimePicker style={styles.input} 
-                                value={this.state.dueDate}
-                                mode="date"
-                                display="default"
-                                onChange={dueDate => {
-                                    this.setState({
-                                        dueDate: DueDate
-                                    })
-                                }}
-                            />
-                        </View>
-                        <View>
-                            <Text h1 h1Style={styles.inputLabel}>
-                                Description:
-                            </Text>
-                            <TextInput style={styles.input} 
-                                value={this.state.description}
-                                onChangeText={description => { 
-                                    this.setState({
-                                        description: description
-                                    })
-                                }}
-                                placeholder='description (optional)'
-                            />
-                        </View>
-                        <Button
-                            title='Create'
-                            onPress={this.onSubmit}
-                        />
+            <View style={styles.container}>
+                <View style={styles.inputField}>
+                    <Text h1 h1Style={styles.inputLabel}>
+                        Title:
+                    </Text>
+                    <TextInput style={[styles.input, styles.titleInput]} 
+                        value={this.state.title}
+                        onChangeText={title => { 
+                            this.setState({
+                                title: title
+                            })
+                         }}
+                         placeholder='title'
+                    />
+                </View>
+                <View style={styles.inputField}>
+                    <Text h1 h1Style={styles.inputLabel}>
+                        Due Date:
+                    </Text>
+                    <DateTimePicker
+                        value={this.state.dueDate}
+                        mode="date"
+                        display="default"
+                        onChange={dueDate => {
+                            this.setState({
+                                dueDate: DueDate
+                            })
+                        }}
+                    />
+                </View>
+                <View style={styles.inputField}>
+                    <Text h1 h1Style={styles.inputLabel}>
+                        Description:
+                    </Text>
+                    <TextInput style={[styles.input, styles.descriptionInput]} 
+                        multiline={true}
+                        value={this.state.description}
+                        onChangeText={description => { 
+                            this.setState({
+                                description: description
+                            })
+                        }}
+                        placeholder='description (optional)'
+                    />
+                </View>
+                <Button
+                    title='Create'
+                    onPress={this.onSubmit}
+                />
             </View>
-
         )
     }
 
