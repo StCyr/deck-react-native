@@ -95,7 +95,7 @@ class NewCard extends React.Component {
         })
         .then((resp) => {
             // TODO check for error
-            card = resp.data
+            const card = resp.data
             card.duedate = card.duedate ? new Date(card.duedate) : null
             this.setState({
                 card: card,
@@ -176,13 +176,11 @@ class NewCard extends React.Component {
                         onPress={() => {
                             // We must not set a due date when the 'set due date' checkbock isn't checked
                             if (!this.state.showDatePicker) {
-                                card = this.state.card
+                                const card = this.state.card
                                 delete card.duedate
-                                setState({
+                                this.setState({
                                     card: card
-                                }), () => {
-                                    this.onCreate()
-                                }
+                                }, this.onCreate)
                             } else {
                                 this.onCreate()
                             }
@@ -208,13 +206,11 @@ class NewCard extends React.Component {
                             onPress={() => {
                             // We must not set a due date when the 'set due date' checkbock isn't checked
                             if (!this.state.showDatePicker) {
-                                card = this.state.card
+                                const card = this.state.card
                                 delete card.duedate
-                                setState({
+                                this.setState({
                                     card: card
-                                }), () => {
-                                    this.onSave()
-                                }
+                                }, this.onSave)
                             } else {
                                 this.onSave()
                             }
