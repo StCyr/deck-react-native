@@ -12,11 +12,9 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        alignItems: 'center',
         justifyContent: 'flex-start',
     },
     card: {
-        width: '95%',
         borderWidth: 1,
         borderRadius: 10,
         margin: 2
@@ -106,14 +104,16 @@ class BoardDetails extends React.Component {
                     })
                 }
                 const view = () => (
-                    <ScrollView contentContainerStyle={styles.container}
-                        refreshControl={
-                            <RefreshControl
-                                refreshing={this.state.refreshing}
-                                onRefresh={this.loadBoard}
-                            />
-                        } >
-                        {buttons}
+                    <View style={styles.container}>
+                        <ScrollView contentContainerStyle={styles.container}
+                            refreshControl={
+                                <RefreshControl
+                                    refreshing={this.state.refreshing}
+                                    onRefresh={this.loadBoard}
+                                />
+                            } >
+                            {buttons}
+                        </ScrollView>
                         <Pressable
                             onPress={() => {this.props.navigation.navigate('NewCard', {
                                 boardId: this.props.route.params.boardId,
@@ -124,7 +124,7 @@ class BoardDetails extends React.Component {
                                 Create card
                             </Text>
                         </Pressable>
-                    </ScrollView>
+                    </View>
                 )
                 scenes[stack.id.toString()] = view
             })
