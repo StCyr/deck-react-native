@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
         flexGrow: 1
     },
     descriptionInput: {
-        height: 200,
+        flexGrow: 1,
     },
     input: {
         width: '100%',
@@ -150,46 +150,43 @@ class NewCard extends React.Component {
                         placeholder='description (optional)'
                     />
                 </View>
-                <View style={styles.buttonContainer}>
-                    <View style={{flexGrow: 1}} />
-                    { typeof this.props.route.params.cardId === 'undefined'
+                { typeof this.props.route.params.cardId === 'undefined'
+                    ? <Pressable style={styles.button}
+                        onPress={this.onCreate}
+                    >
+                        <Text style={styles.buttonText}>
+                            Create
+                        </Text>
+                    </Pressable>
+                    : this.state.editable === false
                         ? <Pressable style={styles.button}
-                            onPress={this.onCreate}
+                            onPress={() => {
+                                this.setState({
+                                    editable: true
+                                })
+                            }}
                         >
                             <Text style={styles.buttonText}>
-                                Create
+                                Edit
                             </Text>
                         </Pressable>
-                        : this.state.editable === false
-                            ? <Pressable style={styles.button}
-                                onPress={() => {
-                                    this.setState({
-                                        editable: true
-                                    })
-                                }}
-                            >
-                                <Text style={styles.buttonText}>
-                                    Edit
-                                </Text>
-                            </Pressable>
-                            : <Pressable style={styles.button}
-                                onPress={this.onSave}
-                            >
-                                <Text style={styles.buttonText}>
-                                    Save
-                                </Text>
-                            </Pressable>
-                    }
-                    { this.state.editable === false &&
-                        <Pressable style={{...styles.button, backgroundColor: 'red'}}
-                            onPress={this.onDelete}
+                        : <Pressable style={styles.button}
+                            onPress={this.onSave}
                         >
                             <Text style={styles.buttonText}>
-                                Delete
+                                Save
                             </Text>
                         </Pressable>
-                    }                    
-                </View>
+                }
+                { this.state.editable === false &&
+                    <Pressable style={{...styles.button, backgroundColor: 'red'}}
+                        onPress={this.onDelete}
+                    >
+                        <Text style={styles.buttonText}>
+                            Delete
+                        </Text>
+                    </Pressable>
+                }                    
             </View>
         )
     }
