@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { ActivityIndicator, Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Dimensions, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { TabView, SceneMap } from 'react-native-tab-view';
 import axios from 'axios';
 
@@ -34,25 +34,42 @@ const styles = StyleSheet.create({
 class BoardDetails extends React.Component {
 
     constructor(props) {
-      super(props)
-      this.state = {
-        index: 0,
-        routes: [{ key: 'loading', title: 'Loading' }],
-        scenes: {loading: () => (
-            <View style={styles.loading}>
-                <ActivityIndicator size="large" />
-            </View>
-          )}
-      }
+        super(props)
+        this.state = {
+            index: 0,
+            refreshing: false,
+            routes: [{ key: 'loading', title: 'Loading' }],
+            scenes: {loading: () => (
+                <View style={styles.loading}>
+                    <ActivityIndicator size="large" />
+                </View>
+            )}
+        }
+        this.loadBoard = this.loadBoard.bind(this);
     }
 
     _handleIndexChange = index => this.setState({ index })
 
     componentDidMount() {
+        this.loadBoard()
+    }
+
+    render() {
+        return (
+            <TabView
+                navigationState={this.state}
+                renderScene={SceneMap(this.state.scenes)}
+                onIndexChange={this._handleIndexChange}
+                initialLayout={{ width: Dimensions.get('window').width }} 
+            />
+        )
+    }
+
+    loadBoard() {
         // Gets the board 'stacks
         axios.get(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks`, {
             headers: {
-//                'OCS-APIRequest': 'true',
+                'OCS-APIRequest': 'true',
                 'Content-Type': 'application/json',
                 'Authorization': this.props.token.value
             }
@@ -89,8 +106,14 @@ class BoardDetails extends React.Component {
                     })
                 }
                 const view = () => (
-                    <View style={styles.container}>
-                       {buttons}
+                    <ScrollView contentContainerStyle={styles.container}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={this.state.refreshing}
+                                onRefresh={this.loadBoard}
+                            />
+                        } >
+                        {buttons}
                         <Pressable
                             onPress={() => {this.props.navigation.navigate('NewCard', {
                                 boardId: this.props.route.params.boardId,
@@ -101,7 +124,7 @@ class BoardDetails extends React.Component {
                                 Create card
                             </Text>
                         </Pressable>
-                    </View>
+                    </ScrollView>
                 )
                 scenes[stack.id.toString()] = view
             })
@@ -112,18 +135,9 @@ class BoardDetails extends React.Component {
             })
         })
     }
+    
+}
 
-    render() {
-        return (
-            <TabView
-                navigationState={this.state}
-                renderScene={SceneMap(this.state.scenes)}
-                onIndexChange={this._handleIndexChange}
-                initialLayout={{ width: Dimensions.get('window').width }} 
-            />
-        )
-    }
-  }
 
 // Connect to store
 const mapStateToProps = state => ({

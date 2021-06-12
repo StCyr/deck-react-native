@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, RefreshControl, ScrollView, StyleSheet, Text } from 'react-native';
 import axios from 'axios';
 
 // Component that display the user's boards
@@ -9,29 +9,14 @@ class AllBoards extends React.Component {
     constructor(props) {
       super(props)
       this.state = {
+        refreshing: false,
         boards: []
       }
+      this.loadBoards = this.loadBoards.bind(this);
     }
   
     componentDidMount() { 
-      // Get all user boards
-      axios.get(this.props.server.value + '/index.php/apps/deck/api/v1.0/boards', {
-        headers: {
-//          'OCS-APIRequest': 'true',
-          'Content-Type': 'application/json',
-          'Authorization': this.props.token.value
-        }
-      })
-        .then((resp) => {
-          console.log('boards restrieved from server')
-          // TODO check for error
-          this.setState({
-            boards: resp.data
-          })
-        })
-        .catch((error) => {
-          console.log('Error while retrieving boards from the server', error)
-        })  
+      this.loadBoards()
     }
   
     boardStyle = function(color) {
@@ -45,33 +30,61 @@ class AllBoards extends React.Component {
     }
   
     render() {
-      return <View style={styles.container}>
-        {this.state.boards.map((board) => 
-          <Pressable
-            key={board.id}
-            onPress={() => {
-              this.props.navigation.navigate('BoardDetails',{
-                boardId: board.id
-              })
-            }}
-            style={this.boardStyle(board.color)}
+      return (
+        <ScrollView contentContainerStyle={styles.container}
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this.loadBoards}
+              />
+            } >
+            {this.state.boards.map((board) => 
+            <Pressable
+              key={board.id}
+              onPress={() => {
+                this.props.navigation.navigate('BoardDetails',{
+                  boardId: board.id
+                })
+              }}
+              style={this.boardStyle(board.color)}
             >
-            <Text style={styles.boardTitle}>
-              {board.title}
-            </Text>
-          </Pressable>
-        )}
-          <Pressable
-            // TODO create 'onNewBoard' action
-            onPress={() => {alert('hello')}}
-            style={this.boardStyle('lightblue')}
-            >
-            <Text style={styles.boardTitle}>
-              Create board
-            </Text>
-          </Pressable>
-      </View>
-    }
+              <Text style={styles.boardTitle}>
+                {board.title}
+              </Text>
+            </Pressable>
+            )}
+      </ScrollView>
+      )  
+  }
+
+  loadBoards() {
+    // Get all user boards
+    this.setState({
+      refreshing: true
+    })
+    axios.get(this.props.server.value + '/index.php/apps/deck/api/v1.0/boards', {
+      headers: {
+        'OCS-APIRequest': 'true',
+        'Content-Type': 'application/json',
+        'Authorization': this.props.token.value
+      }
+    })
+    .then((resp) => {
+      console.log('boards retrieved from server')
+      // TODO check for error
+      this.setState({
+        refreshing: false,
+        boards: resp.data
+      })
+    })
+    .catch((error) => {
+      this.setState({
+        refreshing: false
+      })
+      console.log('Error while retrieving boards from the server', error)
+    })  
+  }
+    
 }
 
 // Connect to store
