@@ -1,15 +1,36 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Button, StyleSheet, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { Text } from 'react-native-elements';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
 
 const styles = StyleSheet.create({
+    button: {
+        backgroundColor: 'blue',
+        borderWidth: 1,
+        borderRadius: 10,
+        margin: 2,
+        flexGrow: 0
+    },
+    buttonContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-end',
+        flexGrow: 1
+    },
+    buttonText: {
+        textAlign: 'center',
+        textAlignVertical: 'center',
+        fontSize: 20,
+        fontWeight: 'bold',
+        margin: 20
+      },
     container: {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'flex-start',
+        flexGrow: 1
     },
     descriptionInput: {
         height: 200,
@@ -43,7 +64,7 @@ class NewCard extends React.Component {
             editable: false,
             card: {
                 description: '',
-                dueDate: new Date(),
+                duedate: new Date(),
                 title: ''
             }
         }
@@ -103,7 +124,7 @@ class NewCard extends React.Component {
                     </Text>
                     <DateTimePicker
                         disabled={!this.state.editable}
-                        value={this.state.card.dueDate}
+                        value={this.state.card.duedate ?? new Date()}
                         mode="date"
                         display="default"
                         onChange={dueDate => {
@@ -113,7 +134,7 @@ class NewCard extends React.Component {
                         }}
                     />
                 </View>
-                <View style={styles.inputField}>
+                <View style={{...styles.inputField, flexGrow: 1}}>
                     <Text h1 h1Style={styles.inputLabel}>
                         Description:
                     </Text>
@@ -129,29 +150,46 @@ class NewCard extends React.Component {
                         placeholder='description (optional)'
                     />
                 </View>
-                { typeof this.props.route.params.cardId === 'undefined'
-                    ? <Button
-                        title='Create'
-                        onPress={this.onCreate}
-                    />
-                    : this.state.editable === false
-                        ? <Button
-                            title='Edit'
-                            onPress={this.setState({
-                                editable: true
-                            })}
-                        />
-                        : <Button
-                            title='Save'
-                            onPress={this.onSave}
-                        />
-                }
-                { this.state.editable === false &&
-                    <Button
-                        title='Delete'
-                        onPress={this.onDelete}
-                    />
-                }
+                <View style={styles.buttonContainer}>
+                    <View style={{flexGrow: 1}} />
+                    { typeof this.props.route.params.cardId === 'undefined'
+                        ? <Pressable style={styles.button}
+                            onPress={this.onCreate}
+                        >
+                            <Text style={styles.buttonText}>
+                                Create
+                            </Text>
+                        </Pressable>
+                        : this.state.editable === false
+                            ? <Pressable style={styles.button}
+                                onPress={() => {
+                                    this.setState({
+                                        editable: true
+                                    })
+                                }}
+                            >
+                                <Text style={styles.buttonText}>
+                                    Edit
+                                </Text>
+                            </Pressable>
+                            : <Pressable style={styles.button}
+                                onPress={this.onSave}
+                            >
+                                <Text style={styles.buttonText}>
+                                    Save
+                                </Text>
+                            </Pressable>
+                    }
+                    { this.state.editable === false &&
+                        <Pressable style={{...styles.button, backgroundColor: 'red'}}
+                            onPress={this.onDelete}
+                        >
+                            <Text style={styles.buttonText}>
+                                Delete
+                            </Text>
+                        </Pressable>
+                    }                    
+                </View>
             </View>
         )
     }
