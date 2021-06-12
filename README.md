@@ -34,7 +34,7 @@ export default {
 
 ## Design
 
-The medias look terrible. I'd be happy to receive new proposals. 
+Design and medias look terrible. I'd particularly happilly accept any help on this matter. 
 
 ## Financial support
 

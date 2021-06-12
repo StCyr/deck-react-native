@@ -122,6 +122,10 @@ class NewCard extends React.Component {
                 console.log('Error', resp)
             } else {
                 console.log('Card created')
+                this.props.navigation.navigate('BoardDetails',{
+                    boardId: this.props.route.params.boardId,
+                    stackId: this.props.route.params.stackId
+                })
             }
         })
         .catch((error) => {
