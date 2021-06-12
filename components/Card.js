@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { Text } from 'react-native-elements';
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
 
@@ -61,12 +62,13 @@ class NewCard extends React.Component {
         super(props)
 
         this.state = {
-            editable: false,
             card: {
                 description: '',
                 duedate: new Date(),
                 title: ''
-            }
+            },
+            editable: false,
+            showDatePicker: false,
         }
 
         this.onCreate = this.onCreate.bind(this);
@@ -94,8 +96,9 @@ class NewCard extends React.Component {
         .then((resp) => {
             // TODO check for error
             this.setState({
+                card: resp.data,
                 editable: false,
-                card: resp.data
+                showDatePicker: resp.data.duedate ? true : false
             })
         })  
     }
@@ -118,22 +121,38 @@ class NewCard extends React.Component {
                          placeholder='title'
                     />
                 </View>
-                <View style={styles.inputField}>
-                    <Text h1 h1Style={styles.inputLabel}>
-                        Due Date:
-                    </Text>
-                    <DateTimePicker
-                        disabled={!this.state.editable}
-                        value={this.state.card.duedate ?? new Date()}
-                        mode="date"
-                        display="default"
-                        onChange={dueDate => {
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                   <BouncyCheckbox
+                        disableText={true}
+                        isChecked={this.state.showDatePicker}
+                        onPress={(isChecked) => {
                             this.setState({
-                                card: {...this.state.card, dueDate}
+                                showDatePicker: isChecked
                             })
                         }}
                     />
-                </View>
+                    <Text style={{marginLeft: 5}}>
+                        Set due date
+                    </Text>
+                 </View>
+                { this.state.showDatePicker && 
+                    <View style={styles.inputField}>
+                        <Text h1 h1Style={styles.inputLabel}>
+                            Due Date:
+                        </Text>
+                        <DateTimePicker
+                            disabled={!this.state.editable}
+                            value={this.state.card.duedate ?? new Date()}
+                            mode="date"
+                            display="default"
+                            onChange={dueDate => {
+                                this.setState({
+                                    card: {...this.state.card, dueDate}
+                                })
+                            }}
+                        />
+                    </View>
+                }
                 <View style={{...styles.inputField, flexGrow: 1}}>
                     <Text h1 h1Style={styles.inputLabel}>
                         Description:
