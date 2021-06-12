@@ -17,7 +17,7 @@ class AllBoards extends React.Component {
       // Get all user boards
       axios.get(this.props.server.value + '/index.php/apps/deck/api/v1.0/boards', {
         headers: {
-          'OCS-APIRequest': 'true',
+//          'OCS-APIRequest': 'true',
           'Content-Type': 'application/json',
           'Authorization': this.props.token.value
         }
@@ -28,6 +28,9 @@ class AllBoards extends React.Component {
           this.setState({
             boards: resp.data
           })
+        })
+        .catch((error) => {
+          console.log('Error while retrieving boards from the server', error)
         })  
     }
   

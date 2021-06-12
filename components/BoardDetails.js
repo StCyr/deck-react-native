@@ -52,7 +52,7 @@ class BoardDetails extends React.Component {
         // Gets the board 'stacks
         axios.get(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks`, {
             headers: {
-                'OCS-APIRequest': 'true',
+//                'OCS-APIRequest': 'true',
                 'Content-Type': 'application/json',
                 'Authorization': this.props.token.value
             }
@@ -75,7 +75,6 @@ class BoardDetails extends React.Component {
                         buttons.push( 
                             <Pressable
                                 key={card.id}
-                                // TODO Show card details
                                 onPress={() => {this.props.navigation.navigate('CardDetails',{
                                     boardId: this.props.route.params.boardId,
                                     stackId: stack.id,
