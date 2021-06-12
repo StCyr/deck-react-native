@@ -95,10 +95,12 @@ class NewCard extends React.Component {
         })
         .then((resp) => {
             // TODO check for error
+            card = resp.data
+            card.duedate = card.duedate ? new Date(card.duedate) : null
             this.setState({
-                card: resp.data,
+                card: card,
                 editable: false,
-                showDatePicker: resp.data.duedate ? true : false
+                showDatePicker: card.duedate ? true : false
             })
         })  
     }
@@ -145,9 +147,9 @@ class NewCard extends React.Component {
                             value={this.state.card.duedate ?? new Date()}
                             mode="date"
                             display="default"
-                            onChange={dueDate => {
+                            onChange={(event, dueDate) => {
                                 this.setState({
-                                    card: {...this.state.card, dueDate}
+                                    card: {...this.state.card, duedate: dueDate}
                                 })
                             }}
                         />
@@ -171,7 +173,20 @@ class NewCard extends React.Component {
                 </View>
                 { typeof this.props.route.params.cardId === 'undefined'
                     ? <Pressable style={styles.button}
-                        onPress={this.onCreate}
+                        onPress={() => {
+                            // We must not set a due date when the 'set due date' checkbock isn't checked
+                            if (!this.state.showDatePicker) {
+                                card = this.state.card
+                                delete card.duedate
+                                setState({
+                                    card: card
+                                }), () => {
+                                    this.onCreate()
+                                }
+                            } else {
+                                this.onCreate()
+                            }
+                        }}
                     >
                         <Text style={styles.buttonText}>
                             Create
@@ -190,7 +205,20 @@ class NewCard extends React.Component {
                             </Text>
                         </Pressable>
                         : <Pressable style={styles.button}
-                            onPress={this.onSave}
+                            onPress={() => {
+                            // We must not set a due date when the 'set due date' checkbock isn't checked
+                            if (!this.state.showDatePicker) {
+                                card = this.state.card
+                                delete card.duedate
+                                setState({
+                                    card: card
+                                }), () => {
+                                    this.onSave()
+                                }
+                            } else {
+                                this.onSave()
+                            }
+                        }}
                         >
                             <Text style={styles.buttonText}>
                                 Save
@@ -270,7 +298,7 @@ class NewCard extends React.Component {
             if (resp.status !== 200) {
                 console.log('Error', resp)
             } else {
-                console.log('Card deleted')
+                console.log('Card saved')
                 this.props.navigation.goBack()
             }
         })
