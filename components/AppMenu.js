@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Image, View } from 'react-native';
 import Menu, { MenuItem } from 'react-native-material-menu';
 import { connect } from 'react-redux';
@@ -10,21 +10,33 @@ class AppMenu extends React.Component {
 
     constructor(props) {
         super(props)
-        this.logout = this.logout.bind(this);
+        this.menu = React.createRef();
     }
 
     render() {
         return (
             <View style={{marginRight: 15}}>
                 <Menu
+                    ref={this.menu}
                     button={
                         <Image
                             style={{ width: 24, height: 24 }}
                             source={require('../assets/more.png')}
+                            onPress={() => {
+                                console.log('OnPress')
+                                this.menu.current.show();
+                            }}
                         />
                     }
                 >
-                    <MenuItem OnPress={this.logout} >
+                    <MenuItem 
+                        OnPress={() => {
+                            this.props.setToken(null)
+                            this.props.setServer(null)  
+                            this.menu.current.hide();
+                            this.props.navigation.navigate('Home')
+                        }}
+                    >
                         Logout
                     </MenuItem>
                 </Menu>
@@ -32,11 +44,6 @@ class AppMenu extends React.Component {
         )
     }
 
-    logout() {
-        this.props.setToken(null)
-        this.props.setServer(null)  
-        this.props.navigation.navigate('Home')
-    }
 }
 
 // Connect to store

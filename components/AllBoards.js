@@ -64,7 +64,7 @@ class AllBoards extends React.Component {
     })
     axios.get(this.props.server.value + '/index.php/apps/deck/api/v1.0/boards', {
       headers: {
-        'OCS-APIRequest': 'true',
+//        'OCS-APIRequest': 'true',
         'Content-Type': 'application/json',
         'Authorization': this.props.token.value
       }
@@ -100,6 +100,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-start',
+    maxHeight: '96%'
   },
   boardTitle: {
     textAlign: 'center',

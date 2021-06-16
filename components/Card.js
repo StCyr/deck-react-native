@@ -31,7 +31,8 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'flex-start',
-        flexGrow: 1
+        flexGrow: 1,
+        maxHeight: '96%'
     },
     descriptionInput: {
         flexGrow: 1,
@@ -88,7 +89,7 @@ class NewCard extends React.Component {
         console.log('Getting card details from server')
         axios.get(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks/${this.props.route.params.stackId}/cards/${this.props.route.params.cardId}`, {
             headers: {
-                'OCS-APIRequest': 'true',
+//                'OCS-APIRequest': 'true',
                 'Content-Type': 'application/json',
                 'Authorization': this.props.token.value
             }
@@ -239,7 +240,7 @@ class NewCard extends React.Component {
             this.state.card,
             {
                 headers: {
-                    'OCS-APIRequest': 'true',
+//                    'OCS-APIRequest': 'true',
                     'Content-Type': 'application/json',
                     'Authorization': this.props.token.value
                 },
@@ -259,10 +260,9 @@ class NewCard extends React.Component {
   
     onDelete() {
         axios.delete(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks/${this.props.route.params.stackId}/cards/${this.props.route.params.cardId}`,
-            {},
             {
                 headers: {
-                    'OCS-APIRequest': 'true',
+//                    'OCS-APIRequest': 'true',
                     'Content-Type': 'application/json',
                     'Authorization': this.props.token.value
                 },
@@ -285,7 +285,7 @@ class NewCard extends React.Component {
             this.state.card,
             {
                 headers: {
-                    'OCS-APIRequest': 'true',
+//                    'OCS-APIRequest': 'true',
                     'Content-Type': 'application/json',
                     'Authorization': this.props.token.value
                 },

@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'flex-start',
+        maxHeight: '96%'
     },
     card: {
         borderWidth: 1,
@@ -67,7 +68,7 @@ class BoardDetails extends React.Component {
         // Gets the board 'stacks
         axios.get(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks`, {
             headers: {
-                'OCS-APIRequest': 'true',
+//                'OCS-APIRequest': 'true',
                 'Content-Type': 'application/json',
                 'Authorization': this.props.token.value
             }

@@ -81,8 +81,8 @@ class App extends React.Component {
       return (
           <NavigationContainer>
             <Stack.Navigator>
-              <Stack.Screen name="Home" component={Home} options={{ headerTitle: props => <AppMenu {...props} /> }}/>
-              <Stack.Screen name="Login" component={Login} options={{ headerTitle: props => <AppMenu {...props} /> }}/>
+              <Stack.Screen name="Home" component={Home} options={{ title: 'Login', headerRight: props => <AppMenu {...props} /> }}/>
+              <Stack.Screen name="Login" component={Login}/>
             </Stack.Navigator>
           </NavigationContainer>
       ) 
