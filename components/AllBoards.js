@@ -1,7 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux'
+import { setServer } from '../store/serverSlice';
+import { setToken } from '../store/tokenSlice';
+
 import { Pressable, RefreshControl, ScrollView, StyleSheet, Text } from 'react-native';
 import axios from 'axios';
+import AppMenu from './AppMenu';
 
 // Component that display the user's boards
 class AllBoards extends React.Component {
@@ -17,6 +22,10 @@ class AllBoards extends React.Component {
   
     componentDidMount() { 
       this.loadBoards()
+      this.props.navigation.setOptions({
+        headerTitle: 'All Boards',
+        headerRight: () => (<AppMenu navigation={this.props.navigation} setServer={this.props.setServer} setToken={this.props.setToken} />)
+      }, [this.props.navigation, this.props.setServer, this.props.setToken])
     }
   
     boardStyle = function(color) {
@@ -92,7 +101,16 @@ const mapStateToProps = state => ({
   server: state.server,
   token: state.token
 })
-export default connect(mapStateToProps)(AllBoards)
+const mapDispatchToProps = dispatch => (
+  bindActionCreators( {
+      setServer,
+      setToken
+  }, dispatch)
+)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AllBoards)
 
 // Component style
 const styles = StyleSheet.create({

@@ -1,5 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { setServer } from '../store/serverSlice';
+import { setToken } from '../store/tokenSlice';
+import AppMenu from './AppMenu';
 import { ActivityIndicator, Dimensions, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { TabView, SceneMap } from 'react-native-tab-view';
 import axios from 'axios';
@@ -51,6 +55,10 @@ class BoardDetails extends React.Component {
 
     componentDidMount() {
         this.loadBoard()
+        this.props.navigation.setOptions({
+            headerTitle: 'Board details',
+            headerRight: () => (<AppMenu navigation={this.props.navigation} setServer={this.props.setServer} setToken={this.props.setToken} />)
+          }, [this.props.navigation, this.props.setServer, this.props.setToken])    
     }
 
     render() {
@@ -68,7 +76,6 @@ class BoardDetails extends React.Component {
         // Gets the board 'stacks
         axios.get(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks`, {
             headers: {
-//                'OCS-APIRequest': 'true',
                 'Content-Type': 'application/json',
                 'Authorization': this.props.token.value
             }
@@ -144,5 +151,14 @@ class BoardDetails extends React.Component {
 const mapStateToProps = state => ({
     server: state.server,
     token: state.token
-})
-export default connect(mapStateToProps)(BoardDetails)
+  })
+  const mapDispatchToProps = dispatch => (
+    bindActionCreators( {
+        setServer,
+        setToken
+    }, dispatch)
+  )
+  export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(BoardDetails)

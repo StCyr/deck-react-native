@@ -1,12 +1,8 @@
 import React from 'react';
 import { Image, Pressable, View } from 'react-native';
 import Menu, { MenuItem } from 'react-native-material-menu';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux'
-import { setServer } from '../store/serverSlice';
-import { setToken } from '../store/tokenSlice';
 
-class AppMenu extends React.Component {
+export default class AppMenu extends React.Component {
 
     constructor(props) {
         super(props)
@@ -36,7 +32,6 @@ class AppMenu extends React.Component {
                             this.props.setToken(null)
                             this.props.setServer(null)  
                             this.menu.current.hide();
-                            this.props.navigation.navigate('Home')
                         }}
                     >
                         Logout
@@ -47,14 +42,3 @@ class AppMenu extends React.Component {
     }
 
 }
-
-// Connect to store
-const mapDispatchToProps = dispatch => (
-  bindActionCreators( {
-      setServer,
-      setToken
-  }, dispatch)
-)
-export default connect(
-  mapDispatchToProps
-)(AppMenu)

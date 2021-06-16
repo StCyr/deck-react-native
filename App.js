@@ -81,7 +81,7 @@ class App extends React.Component {
       return (
           <NavigationContainer>
             <Stack.Navigator>
-              <Stack.Screen name="Home" component={Home} options={{ title: 'Login', headerRight: props => <AppMenu {...props} /> }}/>
+              <Stack.Screen name="Home" component={Home} options={{ title: 'Login' }}/>
               <Stack.Screen name="Login" component={Login}/>
             </Stack.Navigator>
           </NavigationContainer>
@@ -90,10 +90,10 @@ class App extends React.Component {
       return (
         <NavigationContainer>
           <Stack.Navigator>
-            <Stack.Screen name="AllBoards" component={AllBoards} options={{ title: 'All Boards', headerRight: props => <AppMenu {...props} /> }}/>
-            <Stack.Screen name="BoardDetails" component={BoardDetails} options={{ title: 'Board details', headerRight: props => <AppMenu {...props} /> }}/>
-            <Stack.Screen name="CardDetails" component={Card} options={{ title: 'Card details', headerRight: props => <AppMenu {...props} /> }}/>
-            <Stack.Screen name="NewCard" component={Card} options={{ title: 'New card', headerRight: props => <AppMenu {...props} /> }}/>
+            <Stack.Screen name="AllBoards" component={AllBoards} />
+            <Stack.Screen name="BoardDetails" component={BoardDetails} />
+            <Stack.Screen name="CardDetails" component={Card} />
+            <Stack.Screen name="NewCard" component={Card} />
           </Stack.Navigator>
           </NavigationContainer>
       )

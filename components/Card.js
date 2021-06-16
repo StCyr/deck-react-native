@@ -1,5 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { setServer } from '../store/serverSlice';
+import { setToken } from '../store/tokenSlice';
+import AppMenu from './AppMenu';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { Text } from 'react-native-elements';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
@@ -57,7 +61,7 @@ const styles = StyleSheet.create({
     },
 });
 
-class NewCard extends React.Component {
+class Card extends React.Component {
 
     constructor(props) {
         super(props)
@@ -78,6 +82,11 @@ class NewCard extends React.Component {
     }
 
     componentDidMount() {
+        this.props.navigation.setOptions({
+            headerTitle: typeof this.props.route.params.cardId === 'undefined' ? 'New card' : 'Card details',
+            headerRight: () => (<AppMenu navigation={this.props.navigation} setServer={this.props.setServer} setToken={this.props.setToken} />)
+        }, [this.props.navigation, this.props.setServer, this.props.setToken])
+
         if (typeof this.props.route.params.cardId === 'undefined') {
             console.log('Creating new card')
             this.setState({
@@ -89,7 +98,6 @@ class NewCard extends React.Component {
         console.log('Getting card details from server')
         axios.get(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks/${this.props.route.params.stackId}/cards/${this.props.route.params.cardId}`, {
             headers: {
-//                'OCS-APIRequest': 'true',
                 'Content-Type': 'application/json',
                 'Authorization': this.props.token.value
             }
@@ -240,7 +248,6 @@ class NewCard extends React.Component {
             this.state.card,
             {
                 headers: {
-//                    'OCS-APIRequest': 'true',
                     'Content-Type': 'application/json',
                     'Authorization': this.props.token.value
                 },
@@ -262,7 +269,6 @@ class NewCard extends React.Component {
         axios.delete(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks/${this.props.route.params.stackId}/cards/${this.props.route.params.cardId}`,
             {
                 headers: {
-//                    'OCS-APIRequest': 'true',
                     'Content-Type': 'application/json',
                     'Authorization': this.props.token.value
                 },
@@ -285,7 +291,6 @@ class NewCard extends React.Component {
             this.state.card,
             {
                 headers: {
-//                    'OCS-APIRequest': 'true',
                     'Content-Type': 'application/json',
                     'Authorization': this.props.token.value
                 },
@@ -309,5 +314,14 @@ class NewCard extends React.Component {
 const mapStateToProps = state => ({
     server: state.server,
     token: state.token
-})
-export default connect(mapStateToProps)(NewCard)
+  })
+  const mapDispatchToProps = dispatch => (
+    bindActionCreators( {
+        setServer,
+        setToken
+    }, dispatch)
+  )
+  export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Card)
