@@ -11,6 +11,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 // UI
+import AppMenu from './components/AppMenu';
 import Login from './components/Login';
 import Home from './components/Home';
 import AllBoards from './components/AllBoards';
@@ -80,8 +81,8 @@ class App extends React.Component {
       return (
           <NavigationContainer>
             <Stack.Navigator>
-              <Stack.Screen name="Home" component={Home} />
-              <Stack.Screen name="Login" component={Login} />
+              <Stack.Screen name="Home" component={Home} options={{ headerTitle: props => <AppMenu {...props} /> }}/>
+              <Stack.Screen name="Login" component={Login} options={{ headerTitle: props => <AppMenu {...props} /> }}/>
             </Stack.Navigator>
           </NavigationContainer>
       ) 
@@ -89,10 +90,10 @@ class App extends React.Component {
       return (
         <NavigationContainer>
           <Stack.Navigator>
-            <Stack.Screen name="AllBoards" component={AllBoards} options={{title: 'All boards'}} />
-            <Stack.Screen name="BoardDetails" component={BoardDetails} options={{title: 'Board details'}} />
-            <Stack.Screen name="CardDetails" component={Card} options={{title: 'Card details'}} />
-            <Stack.Screen name="NewCard" component={Card} options={{title: 'New card'}} />
+            <Stack.Screen name="AllBoards" component={AllBoards} options={{ title: 'All Boards', headerRight: props => <AppMenu {...props} /> }}/>
+            <Stack.Screen name="BoardDetails" component={BoardDetails} options={{ title: 'Board details', headerRight: props => <AppMenu {...props} /> }}/>
+            <Stack.Screen name="CardDetails" component={Card} options={{ title: 'Card details', headerRight: props => <AppMenu {...props} /> }}/>
+            <Stack.Screen name="NewCard" component={Card} options={{ title: 'New card', headerRight: props => <AppMenu {...props} /> }}/>
           </Stack.Navigator>
           </NavigationContainer>
       )

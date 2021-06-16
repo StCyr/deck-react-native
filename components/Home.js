@@ -14,7 +14,7 @@ import { Button, ImageBackground, StyleSheet, Text, TextInput, View } from 'reac
 // Component to specify the URL of the Nextcloud server to connect to
 class Home extends React.Component {
     constructor(props) {
-        super(props);
+        super(props);        
         this.onSubmit = this.onSubmit.bind(this);
     }
 
@@ -56,7 +56,7 @@ const mapStateToProps = state => ({
 })
 const mapDispatchToProps = dispatch => (
     bindActionCreators( {
-        setServer
+        setServer,
     }, dispatch)
 )
 export default connect(
@@ -77,17 +77,21 @@ const styles = StyleSheet.create({
       },
     LoginForm: { 
         position: 'absolute',
-        top: '35%',
+        top: '10%',
         left: '15%',      
-        borderRadius: 5,
+        borderRadius: 8,
         borderWidth: 1,
-        borderColor: 'darkslateblue',
-        backgroundColor: 'aliceblue',
+        backgroundColor: 'white',
+        opacity: 0.95,
         width: '70%',
-        padding: 10
+        height: 180,
+        padding: 10,
+        justifyContent: 'space-between',
     },
     Input: {
         borderColor: 'darkslateblue',
+        backgroundColor: 'white',
+        opacity: 1,
         borderWidth: 1,
         borderRadius: 3,
         marginTop: 5,
