@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { Image, View } from 'react-native';
+import React from 'react';
+import { Image, Pressable, View } from 'react-native';
 import Menu, { MenuItem } from 'react-native-material-menu';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux'
@@ -19,18 +19,20 @@ class AppMenu extends React.Component {
                 <Menu
                     ref={this.menu}
                     button={
-                        <Image
-                            style={{ width: 24, height: 24 }}
-                            source={require('../assets/more.png')}
+                        <Pressable
                             onPress={() => {
-                                console.log('OnPress')
                                 this.menu.current.show();
                             }}
-                        />
+                        >
+                            <Image
+                                style={{ width: 24, height: 24 }}
+                                source={require('../assets/more.png')}
+                            />
+                        </Pressable>
                     }
                 >
                     <MenuItem 
-                        OnPress={() => {
+                        onPress={() => {
                             this.props.setToken(null)
                             this.props.setServer(null)  
                             this.menu.current.hide();
