@@ -1,6 +1,7 @@
 {
   "expo": {
-    "name": "deck-react-native",
+    "name": "Nextcloud Deck",
+    "description": "The power of Nextcloud Deck on your smartphone",
     "slug": "deck-react-native",
     "version": "0.2.0",
     "orientation": "portrait",
@@ -20,7 +21,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "be.bollu.deck-react-native",
-      "buildNumber": "3"
+      "buildNumber": "4"
     },
     "android": {
       "adaptiveIcon": {
@@ -28,7 +29,7 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.stcyr.testapp",
-      "versionCode": 3,
+      "versionCode": 4,
       "permissions": []
     },
     "web": {
