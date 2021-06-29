@@ -40,12 +40,23 @@ class App extends React.Component {
     console.log('initialising app')
     super(props)
 
+     // Register handler to catch Nextcloud's redirect after successfull login
+    Linking.addEventListener('url', (url) => {this.handleRedirect(url)})
+  }
+
+  componentDidMount() {
     // Retrieve token from storage if available
     if (!env.expoDebug) {
       AsyncStorage.getItem('NCtoken').then(token => {
         if (token !== null) {
           console.log('token retrieved from asyncStorage', token)
           this.props.setToken('Basic ' + token)
+          AsyncStorage.getItem('NCServer').then(server => {
+            if (server !== null) {
+              console.log('server retrieved from asyncStorage', server)
+              this.props.setServer(server)    
+            }
+          })
         }
       })
     } else {
@@ -55,9 +66,6 @@ class App extends React.Component {
       this.props.setToken(env.token)
       this.props.setServer(env.server)
     }
-
-    // Register handler to catch Nextcloud's redirect after successfull login
-    Linking.addEventListener('url', (url) => {this.handleRedirect(url)})
   }
 
   // Function to retrieve the device's token and save it after user logged in

@@ -72,11 +72,10 @@ class AllBoards extends React.Component {
       refreshing: true
     })
     axios.get(this.props.server.value + '/index.php/apps/deck/api/v1.0/boards', {
-      headers: {
-//        'OCS-APIRequest': 'true',
+        headers: {
         'Content-Type': 'application/json',
         'Authorization': this.props.token.value
-      }
+        }
     })
     .then((resp) => {
       console.log('boards retrieved from server')
