@@ -23,6 +23,7 @@
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-41.0.0.tar.gz",
     "react-native-bouncy-checkbox": "^2.1.1",
+    "react-native-drax": "^0.8.0",
     "react-native-elements": "^3.4.2",
     "react-native-gesture-handler": "^1.10.3",
     "react-native-material-menu": "^1.2.0",
