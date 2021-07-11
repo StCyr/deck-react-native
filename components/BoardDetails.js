@@ -27,7 +27,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'flex-start',
-        maxHeight: '96%'
       },    
     stackBar: {
         flex: 1,
@@ -78,7 +77,6 @@ class BoardDetails extends React.Component {
     }
 
     render() {
-        console.log('index', this.state.index)
         return (
             <DraxProvider>
                 <View style={styles.stackBar} >
@@ -139,6 +137,17 @@ class BoardDetails extends React.Component {
                     ))}
                     </ScrollView>
                 }
+                <Pressable
+                    style={[styles.card, {marginBottom: 40}]}
+                    onPress={() => {this.props.navigation.navigate('NewCard', {
+                        boardId: this.props.route.params.boardId,
+                        stackId: this.state.index,                              
+                    })}}
+                >
+                    <Text style={styles.cardTitle}>
+                        Create card
+                    </Text>
+                </Pressable>
             </DraxProvider>
         )
     }
