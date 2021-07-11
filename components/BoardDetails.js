@@ -10,16 +10,19 @@ import axios from 'axios';
 
 const styles = StyleSheet.create({
     card: {
+        flex: 1,
+        justifyContent: 'center',
         borderWidth: 1,
         borderRadius: 10,
         margin: 2,
+        minHeight: 60,
+        maxHeight: 60
     },
     cardTitle: {
         textAlign: 'center',
         textAlignVertical: 'center',
         fontSize: 20,
         fontWeight: 'bold',
-        margin: 20
     },
     container: {
         flex: 1,
@@ -119,6 +122,7 @@ class BoardDetails extends React.Component {
                         <DraxView
                             key={card.id}
                             payload={card.id}
+                            style={styles.card}
                             onDragEnd={() => {
                                     // Shows selected card's details
                                     this.props.navigation.navigate('CardDetails',{
