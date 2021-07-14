@@ -155,7 +155,7 @@ class BoardDetails extends React.Component {
     loadBoard() {
         this.setState({
             refreshing: true
-          })      
+        })      
         axios.get(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks`, {
             headers: {
                 'Content-Type': 'application/json',

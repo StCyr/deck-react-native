@@ -84,7 +84,7 @@ class App extends React.Component {
   }
 
   render() {
-    if (this.props.token.value === null) {
+    if (this.props.token.value === null || this.props.server.value === null) {
       // No token is stored yet, we need to get one
       return (
           <NavigationContainer>
@@ -111,7 +111,8 @@ class App extends React.Component {
 
 // Connect to store
 const mapStateToProps = state => ({
-  token: state.token
+  token: state.token,
+  server: state.server
 })
 const mapDispatchToProps = dispatch => (
   bindActionCreators( {
