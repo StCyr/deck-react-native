@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { addStack, moveCard } from '../store/boardSlice';
 import { setServer } from '../store/serverSlice';
 import { setToken } from '../store/tokenSlice';
 import AppMenu from './AppMenu';
@@ -59,7 +60,6 @@ class BoardDetails extends React.Component {
         this.state = {
             index: 0,   // the index of the stack currently shown
             refreshing: false,
-            stacks: []
         }
         this.loadBoard = this.loadBoard.bind(this)
         this.moveCard = this.moveCard.bind(this)
@@ -80,7 +80,7 @@ class BoardDetails extends React.Component {
         return (
             <DraxProvider>
                 <View style={styles.stackBar} >
-                {this.state.stacks.map(stack => (
+                {this.props.boards.value[this.props.route.params.boardId].stacks.map(stack => (
                     <DraxView
                         key={stack.id}
                         style={[ styles.stackTab,  ]}
@@ -107,7 +107,7 @@ class BoardDetails extends React.Component {
                     </DraxView>
                 ))}
                 </View>
-                {typeof this.state.stacks[this.state.index] !== 'undefined' && typeof this.state.stacks[this.state.index].cards !== 'undefined' && 
+                {typeof this.props.boards.value[this.props.route.params.boardId].stacks[this.state.index] !== 'undefined' && typeof this.props.boards.value[this.props.route.params.boardId].stacks[this.state.index].cards !== 'undefined' && 
                     <ScrollView contentContainerStyle={styles.container}
                         refreshControl={
                             <RefreshControl                           
@@ -116,7 +116,7 @@ class BoardDetails extends React.Component {
                             />
                         } 
                     >
-                    {this.state.stacks[this.state.index].cards.map(card => (
+                    {Object.values(this.props.boards.value[this.props.route.params.boardId].stacks[this.state.index].cards).map(card => (
                         <DraxView
                             key={card.id}
                             payload={card.id}
@@ -168,18 +168,25 @@ class BoardDetails extends React.Component {
             })          
             console.log('cards retrieved from server')
             // TODO check for error
-            let stacks = []
             resp.data.forEach(stack => {
-                stacks[stack.id] = stack
+                this.props.addStack({
+                    boardId: this.props.route.params.boardId, 
+                    stack
+                })
             })
             this.setState({
-                index: Math.min(...Object.keys(stacks)),
-                stacks: stacks,
+                index: Math.min(...Object.keys(this.props.boards.value[this.props.route.params.boardId].stacks)),
             })
         })
     }
     
     moveCard(cardId, stackId) {
+        this.props.moveCard({
+            boardId: this.props.route.params.boardId,
+            oldStackId: this.state.index,
+            newStackId: stackId,
+            cardId
+        })
         axios.put(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks/${this.state.index}/cards/${cardId}/reorder`,
             {
                 order: 0,
@@ -195,23 +202,35 @@ class BoardDetails extends React.Component {
             console.log('card moved')
         })
         .catch((error) => {
-            console.log(error)
+            // Reverts change and inform user
+            // TODO inform user
+            this.props.moveCard({
+                boardId: this.props.route.params.boardId,
+                oldStackId: stackId,
+                newStackId: this.state.index,
+                cardId
+            })
         })
     }
 }
 
 // Connect to store
 const mapStateToProps = state => ({
+    boards: state.boards,
     server: state.server,
     token: state.token
-  })
-  const mapDispatchToProps = dispatch => (
+})
+
+const mapDispatchToProps = dispatch => (
     bindActionCreators( {
+        addStack,
+        moveCard,
         setServer,
         setToken
     }, dispatch)
-  )
-  export default connect(
+)
+
+export default connect(
     mapStateToProps,
     mapDispatchToProps
-  )(BoardDetails)
+)(BoardDetails)

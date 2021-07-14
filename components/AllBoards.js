@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux'
+import { addBoard } from '../store/boardSlice';
 import { setServer } from '../store/serverSlice';
 import { setToken } from '../store/tokenSlice';
 
@@ -15,7 +16,6 @@ class AllBoards extends React.Component {
       super(props)
       this.state = {
         refreshing: false,
-        boards: []
       }
       this.loadBoards = this.loadBoards.bind(this);
     }
@@ -47,7 +47,7 @@ class AllBoards extends React.Component {
                 onRefresh={this.loadBoards}
               />
             } >
-            {this.state.boards.map((board) => 
+            {typeof Object.values(this.props.boards.value) !== 'undefined' && Object.values(this.props.boards.value).map((board) => 
             <Pressable
               key={board.id}
               onPress={() => {
@@ -82,8 +82,8 @@ class AllBoards extends React.Component {
       // TODO check for error
       this.setState({
         refreshing: false,
-        boards: resp.data
       })
+      resp.data.forEach(board => this.props.addBoard(board))
     })
     .catch((error) => {
       this.setState({
@@ -97,11 +97,13 @@ class AllBoards extends React.Component {
 
 // Connect to store
 const mapStateToProps = state => ({
+  boards: state.boards,
   server: state.server,
   token: state.token
 })
 const mapDispatchToProps = dispatch => (
   bindActionCreators( {
+      addBoard,
       setServer,
       setToken
   }, dispatch)

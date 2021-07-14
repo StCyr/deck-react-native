@@ -11,7 +11,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 // UI
-import AppMenu from './components/AppMenu';
 import Login from './components/Login';
 import Home from './components/Home';
 import AllBoards from './components/AllBoards';

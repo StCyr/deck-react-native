@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import {addCard, deleteCard } from '../store/boardSlice';
 import { setServer } from '../store/serverSlice';
 import { setToken } from '../store/tokenSlice';
 import AppMenu from './AppMenu';
@@ -257,6 +258,13 @@ class Card extends React.Component {
                 console.log('Error', resp)
             } else {
                 console.log('Card created')
+                console.log(resp)
+                this.state.card.id = resp.data.id
+                this.props.addCard({
+                    boardId: this.props.route.params.boardId,
+                    stackId: this.props.route.params.stackId,
+                    card: this.state.card
+                })
                 this.props.navigation.goBack()
             }
         })
@@ -278,6 +286,11 @@ class Card extends React.Component {
                 console.log('Error', resp)
             } else {
                 console.log('Card deleted')
+                this.props.deleteCard({
+                    boardId: this.props.route.params.boardId,
+                    stackId: this.props.route.params.stackId,
+                    cardId: this.state.card.id
+                })
                 this.props.navigation.goBack()
             }
         })
@@ -312,11 +325,14 @@ class Card extends React.Component {
 
 // Connect to store
 const mapStateToProps = state => ({
+    boards: state.boards,
     server: state.server,
     token: state.token
   })
   const mapDispatchToProps = dispatch => (
     bindActionCreators( {
+        addCard,
+        deleteCard,
         setServer,
         setToken
     }, dispatch)
