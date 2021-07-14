@@ -39,6 +39,10 @@ const styles = StyleSheet.create({
         backgroundColor: 'lightskyblue',
         justifyContent: 'center'
     },
+    stackTabDraggedOver: {
+        borderColor: 'yellow',
+        borderWidth: 1
+    },
     stackTabText: {
         textAlign: 'center',
         textTransform: 'uppercase',
@@ -83,9 +87,8 @@ class BoardDetails extends React.Component {
                 {this.props.boards.value[this.props.route.params.boardId].stacks.map(stack => (
                     <DraxView
                         key={stack.id}
-                        style={[ styles.stackTab,  ]}
-                        onReceiveDragEnter={({ dragged: { payload } }) => {
-                        }}
+                        style={styles.stackTab}
+                        receivingStyle={styles.stackTabDraggedOver}
                         onReceiveDragDrop={({ dragged: { payload } }) => {
                             console.log(`moving card ${payload}`);
                             this.moveCard(payload, stack.id)
@@ -121,13 +124,18 @@ class BoardDetails extends React.Component {
                             key={card.id}
                             payload={card.id}
                             style={styles.card}
-                            onDragEnd={() => {
-                                    // Shows selected card's details
+                            onDragEnd={(event) => {
+                                // Shows selected card's details when the user just clicked the card
+                                if (event.dragTranslation.x < 5 &&
+                                    event.dragTranslation.x > -5 &&
+                                    event.dragTranslation.y < 5 && 
+                                    event.dragTranslation.y > -5) {
                                     this.props.navigation.navigate('CardDetails',{
                                         boardId: this.props.route.params.boardId,
                                         stackId: this.state.index,
                                         cardId: card.id
                                     })
+                                }
                             }}
                         >
                             <Text style={styles.cardTitle}>
