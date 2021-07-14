@@ -107,7 +107,7 @@ class BoardDetails extends React.Component {
                     </DraxView>
                 ))}
                 </View>
-                {this.state.stacks.length !== 0 && 
+                {typeof this.state.stacks[this.state.index] !== 'undefined' && typeof this.state.stacks[this.state.index].cards !== 'undefined' && 
                     <ScrollView contentContainerStyle={styles.container}
                         refreshControl={
                             <RefreshControl                           
@@ -192,7 +192,6 @@ class BoardDetails extends React.Component {
         })
         .then((resp) => {
             // TODO check for error
-            console.log(resp)
             console.log('card moved')
         })
         .catch((error) => {
