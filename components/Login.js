@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 // Component to display the chosen NC server's login form
 class Login extends React.Component {
     constructor(props) {
-        super(props);
+      super(props);
     }
 
     render() {

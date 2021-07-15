@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React from 'react';
 import { Image, Pressable, View } from 'react-native';
 import Menu, { MenuItem } from 'react-native-material-menu';
@@ -29,9 +30,23 @@ export default class AppMenu extends React.Component {
                 >
                     <MenuItem 
                         onPress={() => {
-                            this.props.setToken(null)
-                            this.props.setServer(null)  
-                            this.menu.current.hide();
+                            axios.delete(this.props.server.value + '/ocs/v2.php/core/apppassword', {
+                                headers: {
+                                    'OCS-APIREQUEST': true,
+                                    'Authorization': this.props.token.value
+                                }                    
+                            }).then(resp => {
+                                console.log('User logged out from server')
+                                AsyncStorage.clear();
+                                this.props.setToken(null)
+                                this.props.setServer(null)  
+                            })
+                            .catch(error => {
+                                console.log('Error occured while logging user out from server. Trying to clear session here anyway')
+                                AsyncStorage.clear();
+                                this.props.setToken(null)
+                                this.props.setServer(null)  
+                            })
                         }}
                     >
                         Logout

@@ -50,7 +50,7 @@ class App extends React.Component {
         if (token !== null) {
           console.log('token retrieved from asyncStorage', token)
           this.props.setToken('Basic ' + token)
-          AsyncStorage.getItem('NCServer').then(server => {
+          AsyncStorage.getItem('NCserver').then(server => {
             if (server !== null) {
               console.log('server retrieved from asyncStorage', server)
               this.props.setServer(server)    

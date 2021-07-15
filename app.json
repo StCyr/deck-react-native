@@ -21,7 +21,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "be.bollu.deck-react-native",
-      "buildNumber": "17"
+      "buildNumber": "20"
     },
     "android": {
       "adaptiveIcon": {
@@ -29,7 +29,7 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.stcyr.testapp",
-      "versionCode": 17,
+      "versionCode": 20,
       "permissions": []
     },
     "web": {

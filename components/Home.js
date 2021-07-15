@@ -15,6 +15,9 @@ import { Button, ImageBackground, StyleSheet, Text, TextInput, View } from 'reac
 class Home extends React.Component {
     constructor(props) {
         super(props);        
+        this.state = {
+            NCserver: ''
+        }
         this.onSubmit = this.onSubmit.bind(this);
     }
 
@@ -27,9 +30,12 @@ class Home extends React.Component {
                             Please enter the URL of your Nextcloud server
                         </Text>
                         <TextInput style={styles.Input} 
-                            value={this.props.server.value}
+                            value={this.state.NCserver}
                             onChangeText={server => { 
-                                this.props.setServer(server) }}
+                                this.setState({
+                                    NCserver: server
+                                })
+                            }}
                             placeholder='https://'
                         />
                         <Button
@@ -44,8 +50,10 @@ class Home extends React.Component {
 
     onSubmit() {
         // Persists NC Server URL and open the login form
-        console.log('Storing server address in AsyncStorage', this.props.server.value)
-        AsyncStorage.setItem('NCServer', this.props.server.value);
+        console.log('Storing server address in redux store and AsyncStorage', this.state.NCserver)
+        this.props.setServer(this.state.NCserver)
+        AsyncStorage.setItem('NCserver', this.state.NCserver)
+        console.log('Navigating')
         this.props.navigation.navigate('Login')
     }
 }

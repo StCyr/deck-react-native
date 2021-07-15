@@ -76,8 +76,8 @@ class BoardDetails extends React.Component {
         this.loadBoard()
         this.props.navigation.setOptions({
             headerTitle: 'Board details',
-            headerRight: () => (<AppMenu navigation={this.props.navigation} setServer={this.props.setServer} setToken={this.props.setToken} />)
-          }, [this.props.navigation, this.props.setServer, this.props.setToken])    
+            headerRight: () => (<AppMenu server={this.props.server} token={this.props.token} />)
+          }, [this.props.server, this.props.token])    
     }
 
     render() {
