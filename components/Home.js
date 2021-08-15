@@ -31,6 +31,10 @@ class Home extends React.Component {
                             onChangeText={server => { 
                                 this.props.setServer(server) }}
                             placeholder='https://'
+                            autoCapitalize='none'
+                            autoCorrect={false}
+                            keyboardType='url'
+                            textContentType='URL'
                         />
                         <Button
                             title='Sign In'

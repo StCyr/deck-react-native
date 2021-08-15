@@ -8,53 +8,10 @@ import AppMenu from './AppMenu';
 import { Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { DraxProvider, DraxView } from 'react-native-drax';
 import axios from 'axios';
+import createStyles from '../styles/base.js'
+import { initialWindowMetrics } from 'react-native-safe-area-context';
 
-const styles = StyleSheet.create({
-    card: {
-        flex: 1,
-        justifyContent: 'center',
-        borderWidth: 1,
-        borderRadius: 10,
-        margin: 2,
-        minHeight: 60,
-        maxHeight: 60
-    },
-    cardTitle: {
-        textAlign: 'center',
-        textAlignVertical: 'center',
-        fontSize: 20,
-        fontWeight: 'bold',
-    },
-    container: {
-        flex: 1,
-        justifyContent: 'flex-start',
-      },    
-    stackBar: {
-        flex: 1,
-        flexDirection: 'row',
-        maxHeight: 40
-    },
-    stackTab: {
-        flexGrow: 1,
-        backgroundColor: 'lightskyblue',
-        justifyContent: 'center'
-    },
-    stackTabDraggedOver: {
-        borderColor: 'yellow',
-        borderWidth: 1
-    },
-    stackTabText: {
-        textAlign: 'center',
-        textTransform: 'uppercase',
-        color: 'white'
-    },
-    stackTabTextSelected: {
-        fontWeight: 'bold'
-    },
-    stackTabTextNormal: {
-        fontWeight: 'normal'
-    }
-})
+const styles = createStyles()
 
 // Component that display a board's cards, grouped by stack
 class BoardDetails extends React.Component {
@@ -67,6 +24,7 @@ class BoardDetails extends React.Component {
         }
         this.loadBoard = this.loadBoard.bind(this)
         this.moveCard = this.moveCard.bind(this)
+        this.insets = initialWindowMetrics.insets
     }
 
     _handleIndexChange = index => this.setState({ index })
@@ -145,17 +103,19 @@ class BoardDetails extends React.Component {
                     ))}
                     </ScrollView>
                 }
-                <Pressable
-                    style={[styles.card, {marginBottom: 40}]}
-                    onPress={() => {this.props.navigation.navigate('NewCard', {
-                        boardId: this.props.route.params.boardId,
-                        stackId: this.state.index,                              
-                    })}}
-                >
-                    <Text style={styles.cardTitle}>
-                        Create card
-                    </Text>
-                </Pressable>
+                <View style={[styles.container, {marginBottom: this.insets.bottom}]}>
+                    <Pressable
+                        style={styles.button}
+                        onPress={() => {this.props.navigation.navigate('NewCard', {
+                            boardId: this.props.route.params.boardId,
+                            stackId: this.state.index,                              
+                        })}}
+                    >
+                        <Text style={styles.buttonTitle}>
+                            Create card
+                        </Text>
+                    </Pressable>
+                </View>
             </DraxProvider>
         )
     }
