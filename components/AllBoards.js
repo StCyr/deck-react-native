@@ -5,9 +5,12 @@ import { addBoard } from '../store/boardSlice';
 import { setServer } from '../store/serverSlice';
 import { setToken } from '../store/tokenSlice';
 
-import { Pressable, RefreshControl, ScrollView, StyleSheet, Text } from 'react-native';
+import { Pressable, RefreshControl, ScrollView, View, Text, Image } from 'react-native';
 import axios from 'axios';
 import AppMenu from './AppMenu';
+import createStyles from '../styles/base.js'
+
+const styles = createStyles()
 
 // Component that display the user's boards
 class AllBoards extends React.Component {
@@ -28,16 +31,6 @@ class AllBoards extends React.Component {
       }, [this.props.navigation, this.props.setServer, this.props.setToken])
     }
   
-    boardStyle = function(color) {
-      return {
-        backgroundColor: '#' + color,
-        width: '95%',
-        borderWidth: 1,
-        borderRadius: 10,
-        margin: 2
-      }
-    }
-  
     render() {
       return (
         <ScrollView contentContainerStyle={styles.container}
@@ -55,11 +48,16 @@ class AllBoards extends React.Component {
                   boardId: board.id
                 })
               }}
-              style={this.boardStyle(board.color)}
+              style={styles.card}
             >
-              <Text style={styles.boardTitle}>
+              <View style={[styles.cardColor, {backgroundColor: `#${board.color}`}]} />
+              <Text style={styles.cardTitle}>
                 {board.title}
               </Text>
+              <Image
+                style={{ width: 24, height: 24 }}
+                source={require('../assets/go.png')}
+              />
             </Pressable>
             )}
       </ScrollView>
@@ -112,20 +110,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(AllBoards)
-
-// Component style
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    maxHeight: '96%'
-  },
-  boardTitle: {
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    fontSize: 20,
-    fontWeight: 'bold',
-    margin: 20
-  },
-});

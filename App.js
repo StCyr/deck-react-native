@@ -102,7 +102,7 @@ class App extends React.Component {
             <Stack.Screen name="CardDetails" component={Card} />
             <Stack.Screen name="NewCard" component={Card} />
           </Stack.Navigator>
-          </NavigationContainer>
+        </NavigationContainer>
       )
     }
   }

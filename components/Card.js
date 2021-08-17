@@ -5,62 +5,14 @@ import {addCard, deleteCard } from '../store/boardSlice';
 import { setServer } from '../store/serverSlice';
 import { setToken } from '../store/tokenSlice';
 import AppMenu from './AppMenu';
-import { Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { Pressable, ScrollView, Platform, KeyboardAvoidingView, TextInput, View } from 'react-native';
 import { Text } from 'react-native-elements';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
+import createStyles from '../styles/base.js';
 
-const styles = StyleSheet.create({
-    button: {
-        backgroundColor: 'blue',
-        borderWidth: 1,
-        borderRadius: 10,
-        margin: 2,
-        flexGrow: 0
-    },
-    buttonContainer: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'flex-end',
-        flexGrow: 1
-    },
-    buttonText: {
-        textAlign: 'center',
-        textAlignVertical: 'center',
-        fontSize: 20,
-        fontWeight: 'bold',
-        margin: 20
-      },
-    container: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'flex-start',
-        flexGrow: 1,
-        maxHeight: '96%'
-    },
-    descriptionInput: {
-        flexGrow: 1,
-    },
-    input: {
-        width: '100%',
-        borderColor: 'lightgrey',
-        fontSize: 20,
-        borderWidth: 1,
-        borderRadius: 3,
-        margin: 5,
-        padding: 2,
-    },
-    inputField: {
-        marginBottom: 10,
-    },
-    inputLabel: {
-        fontWeight: 'bold'
-    },
-    titleInput: {
-        height: 40,
-    },
-});
+const styles = createStyles()
 
 class Card extends React.Component {
 
@@ -117,24 +69,24 @@ class Card extends React.Component {
 
     render() {
         return (
-            <View style={styles.container}>
+            <View style={[styles.container, {paddingBottom: 40, flex: 1}]}>
                 <View style={styles.inputField}>
-                    <Text h1 h1Style={styles.inputLabel}>
+                    <Text h1 h1Style={styles.title}>
                         Title:
                     </Text>
-                    <TextInput style={[styles.input, styles.titleInput]} 
+                    <TextInput style={styles.input} 
                         editable={this.state.editable}
                         value={this.state.card.title}
                         onChangeText={title => { 
                             this.setState({
                                 card: {...this.state.card, title}
                             })
-                         }}
-                         placeholder='title'
+                        }}
+                        placeholder='title'
                     />
                 </View>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                   <BouncyCheckbox
+                    <BouncyCheckbox
                         disableText={true}
                         isChecked={this.state.showDatePicker}
                         onPress={(isChecked) => {
@@ -146,10 +98,10 @@ class Card extends React.Component {
                     <Text style={{marginLeft: 5}}>
                         Set due date
                     </Text>
-                 </View>
+                </View>
                 { this.state.showDatePicker && 
                     <View style={styles.inputField}>
-                        <Text h1 h1Style={styles.inputLabel}>
+                        <Text h1 h1Style={styles.title}>
                             Due Date:
                         </Text>
                         <DateTimePicker
@@ -166,7 +118,7 @@ class Card extends React.Component {
                     </View>
                 }
                 <View style={{...styles.inputField, flexGrow: 1}}>
-                    <Text h1 h1Style={styles.inputLabel}>
+                    <Text h1 h1Style={styles.title}>
                         Description:
                     </Text>
                     <TextInput style={[styles.input, styles.descriptionInput]} 
@@ -196,7 +148,7 @@ class Card extends React.Component {
                             }
                         }}
                     >
-                        <Text style={styles.buttonText}>
+                        <Text style={styles.buttonTitle}>
                             Create
                         </Text>
                     </Pressable>
@@ -208,7 +160,7 @@ class Card extends React.Component {
                                 })
                             }}
                         >
-                            <Text style={styles.buttonText}>
+                            <Text style={styles.buttonTitle}>
                                 Edit
                             </Text>
                         </Pressable>
@@ -226,16 +178,16 @@ class Card extends React.Component {
                             }
                         }}
                         >
-                            <Text style={styles.buttonText}>
+                            <Text style={styles.buttonTitle}>
                                 Save
                             </Text>
                         </Pressable>
                 }
                 { this.state.editable === false &&
-                    <Pressable style={{...styles.button, backgroundColor: 'red'}}
+                    <Pressable style={[styles.button, styles.buttonDestruct]}
                         onPress={this.onDelete}
                     >
-                        <Text style={styles.buttonText}>
+                        <Text style={[styles.buttonTitle, styles.buttonTitleDestruct]}>
                             Delete
                         </Text>
                     </Pressable>

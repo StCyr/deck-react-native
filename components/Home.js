@@ -37,6 +37,10 @@ class Home extends React.Component {
                                 })
                             }}
                             placeholder='https://'
+                            autoCapitalize='none'
+                            autoCorrect={false}
+                            keyboardType='url'
+                            textContentType='URL'
                         />
                         <Button
                             title='Sign In'
