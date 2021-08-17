@@ -101,8 +101,7 @@ const baseStyles = {
     justifyContent: 'center',
   },
   stackTabDraggedOver: {
-    borderColor: 'yellow',
-    borderWidth: 1
+    backgroundColor: colors.bgInteract,
   },
   stackTabText: {
     textAlign: 'center',

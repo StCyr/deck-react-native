@@ -82,6 +82,9 @@ class BoardDetails extends React.Component {
                             key={card.id}
                             payload={card.id}
                             style={styles.card}
+                            draggingStyle={{opacity: 0}}
+                            dragReleasedStyle={{opacity: 0}}
+                            hoverStyle={[styles.card, {opacity: 0.6, shadowOpacity: 0}]}
                             onDragEnd={(event) => {
                                 // Shows selected card's details when the user just clicked the card
                                 if (event.dragTranslation.x < 5 &&
@@ -96,7 +99,7 @@ class BoardDetails extends React.Component {
                                 }
                             }}
                         >
-                            <Text style={styles.cardTitle}>
+                            <Text style={[styles.cardTitle, { width: '100%' }]}>
                                 {card.title}
                             </Text>
                         </DraxView>
