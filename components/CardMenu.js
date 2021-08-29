@@ -2,6 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import Menu, { MenuItem } from 'react-native-material-menu';
 import axios from 'axios';
+import {i18n} from '../i18n/i18n.js';
 
 export default class CardMenu extends React.Component {
 
@@ -19,11 +20,10 @@ export default class CardMenu extends React.Component {
                 >
                     <MenuItem 
                         onPress={() => {
-                            console.log('menu pressed')
                             this.menu.current.hide();
                         }}
                     >
-                        Move card
+                        {i18n.t('moveCard')}
                     </MenuItem>
                 </Menu>
             </View>

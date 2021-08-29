@@ -1,15 +1,10 @@
 import React from 'react';
-
-// Store
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux'
 import { setServer } from '../store/serverSlice';
-
-// Persistent storage
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-// UI
 import { Button, ImageBackground, StyleSheet, Text, TextInput, View } from 'react-native';
+import {i18n} from '../i18n/i18n.js';
 
 // Component to specify the URL of the Nextcloud server to connect to
 class Home extends React.Component {
@@ -27,8 +22,8 @@ class Home extends React.Component {
                 <ImageBackground source={require('../assets/kanban.png')} style={styles.background}>
                     <View style={styles.LoginForm}>
                         <Text>
-                            Please enter the URL of your Nextcloud server
-                        </Text>
+                            {i18n.t('setUrl')}
+                       </Text>
                         <TextInput style={styles.Input} 
                             value={this.state.NCserver}
                             onChangeText={server => { 

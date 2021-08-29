@@ -10,6 +10,7 @@ import { DraxProvider, DraxView } from 'react-native-drax';
 import axios from 'axios';
 import createStyles from '../styles/base.js'
 import { initialWindowMetrics } from 'react-native-safe-area-context';
+import {i18n} from '../i18n/i18n.js';
 
 const styles = createStyles()
 
@@ -115,7 +116,7 @@ class BoardDetails extends React.Component {
                         })}}
                     >
                         <Text style={styles.buttonTitle}>
-                            Create card
+                            {i18n.t('createCard')}
                         </Text>
                     </Pressable>
                 </View>

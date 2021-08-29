@@ -11,6 +11,7 @@ import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
 import createStyles from '../styles/base.js';
+import {i18n} from '../i18n/i18n.js';
 
 const styles = createStyles()
 
@@ -72,7 +73,7 @@ class Card extends React.Component {
             <View style={[styles.container, {paddingBottom: 40, flex: 1}]}>
                 <View style={styles.inputField}>
                     <Text h1 h1Style={styles.title}>
-                        Title:
+                        {i18n.t('title')}
                     </Text>
                     <TextInput style={styles.input} 
                         editable={this.state.editable}
@@ -96,13 +97,13 @@ class Card extends React.Component {
                         }}
                     />
                     <Text style={{marginLeft: 5}}>
-                        Set due date
+                        {i18n.t('setDueDate')}
                     </Text>
                 </View>
                 { this.state.showDatePicker && 
                     <View style={styles.inputField}>
                         <Text h1 h1Style={styles.title}>
-                            Due Date:
+                        {i18n.t('dueDate')}
                         </Text>
                         <DateTimePicker
                             disabled={!this.state.editable}
@@ -119,7 +120,7 @@ class Card extends React.Component {
                 }
                 <View style={{...styles.inputField, flexGrow: 1}}>
                     <Text h1 h1Style={styles.title}>
-                        Description:
+                        {i18n.t('description')}
                     </Text>
                     <TextInput style={[styles.input, styles.descriptionInput]} 
                         editable={this.state.editable}
@@ -149,7 +150,7 @@ class Card extends React.Component {
                         }}
                     >
                         <Text style={styles.buttonTitle}>
-                            Create
+                            {i18n.t('create')}
                         </Text>
                     </Pressable>
                     : this.state.editable === false
@@ -161,7 +162,7 @@ class Card extends React.Component {
                             }}
                         >
                             <Text style={styles.buttonTitle}>
-                                Edit
+                                {i18n.t('edit')}
                             </Text>
                         </Pressable>
                         : <Pressable style={styles.button}
@@ -179,7 +180,7 @@ class Card extends React.Component {
                         }}
                         >
                             <Text style={styles.buttonTitle}>
-                                Save
+                                {i18n.t('save')}
                             </Text>
                         </Pressable>
                 }
@@ -188,7 +189,7 @@ class Card extends React.Component {
                         onPress={this.onDelete}
                     >
                         <Text style={[styles.buttonTitle, styles.buttonTitleDestruct]}>
-                            Delete
+                            {i18n.t('delete')}
                         </Text>
                     </Pressable>
                 }                    
