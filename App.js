@@ -71,7 +71,7 @@ class App extends React.Component {
   handleRedirect = async ({url}) => {
     if (url.startsWith('nc://login/server')) {
         console.log('Received the expected nc:// redirect', url)
-        user = url.substring(url.lastIndexOf('user:')+5, url.lastIndexOf('&'))
+        user = decodeURIComponent(url.substring(url.lastIndexOf('user:')+5, url.lastIndexOf('&')))
         pwd = url.substring(url.lastIndexOf(':')+1)
         token = btoa(user + ':' + pwd)
         console.log('Persisting token in asyncStorage', token)
