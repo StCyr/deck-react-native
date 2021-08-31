@@ -27,3 +27,33 @@ export const fr = {
     setUrl : 'Veuillez entrer l\'URL de votre serveur Nextcloud',
     title : 'Titre: ',
 }
+
+export const en = {
+    create : 'Создать',
+    createCard : 'Создать карточку',
+    delete : 'Удалить',
+    description : 'Описание: ',
+    dueDate : 'Дата исполнения: ',
+    edit : 'Редактировать',
+    logout: 'Выйти',
+    moveCard : 'Переместить карточку',
+    save : 'Сохранить',
+    setDueDate : 'Задать дату исполнения',
+    setUrl : 'Введите URL-адрес вашего сервера Nextcloud',
+    title : 'Заголовок: ',
+}
+
+export const ua = {
+    create : 'Створити',
+    createCard : 'Створити картку',
+    delete : 'Видалити',
+    description : 'Опис: ',
+    dueDate : 'Дата виконання: ',
+    edit : 'Редагувати',
+    logout: 'Вийти',
+    moveCard : 'Перемістити картку',
+    save : 'Зберегти',
+    setDueDate : 'Задати дату виконання',
+    setUrl : 'Введіть URL-адресу вашого серверу Nextcloud',
+    title : 'Заголовок: ',
+}
