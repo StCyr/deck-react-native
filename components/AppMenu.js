@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { setServer } from '../store/serverSlice';
 import { setToken } from '../store/tokenSlice';
-
 import { Image, Pressable, View } from 'react-native';
 import Menu, { MenuItem } from 'react-native-material-menu';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {i18n} from '../i18n/i18n.js';
 
 class AppMenu extends React.Component {
 
@@ -55,8 +55,8 @@ class AppMenu extends React.Component {
                             })
                         }}
                     >
-                        Logout
-                    </MenuItem>
+                         {i18n.t('logout')}
+                   </MenuItem>
                 </Menu>
             </View>
         )
