@@ -28,7 +28,7 @@ export const fr = {
     title : 'Titre: ',
 }
 
-export const en = {
+export const ru = {
     create : 'Создать',
     createCard : 'Создать карточку',
     delete : 'Удалить',
