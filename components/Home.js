@@ -38,7 +38,7 @@ class Home extends React.Component {
                             textContentType='URL'
                         />
                         <Button
-                            title='Sign In'
+                            title={i18n.t('signIn')}
                             onPress={this.onSubmit}
                         />
                     </View>

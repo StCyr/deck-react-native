@@ -10,6 +10,7 @@ export const en = {
     save : 'Save',
     setDueDate : 'Set due date',
     setUrl : 'Please enter the URL of your Nextcloud server',
+    signIn: 'Sign In',
     title : 'Title: ',
 }
 
@@ -25,6 +26,7 @@ export const fr = {
     save : 'Sauvegarder',
     setDueDate : 'Définir une échéance',
     setUrl : 'Veuillez entrer l\'URL de votre serveur Nextcloud',
+    signIn: 'S\'identifier',
     title : 'Titre: ',
 }
 
@@ -40,6 +42,7 @@ export const ru = {
     save : 'Сохранить',
     setDueDate : 'Задать дату исполнения',
     setUrl : 'Введите URL-адрес вашего сервера Nextcloud',
+    signIn: 'Sign In',
     title : 'Заголовок: ',
 }
 
@@ -55,5 +58,6 @@ export const ua = {
     save : 'Зберегти',
     setDueDate : 'Задати дату виконання',
     setUrl : 'Введіть URL-адресу вашого серверу Nextcloud',
+    signIn: 'Sign In',
     title : 'Заголовок: ',
 }
