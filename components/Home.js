@@ -11,7 +11,7 @@ class Home extends React.Component {
     constructor(props) {
         super(props);        
         this.state = {
-            NCserver: ''
+            NCserver: undefined
         }
         this.onSubmit = this.onSubmit.bind(this);
     }
@@ -31,7 +31,7 @@ class Home extends React.Component {
                                     NCserver: server
                                 })
                             }}
-                            placeholder='https://'
+                            defaultValue='https://'
                             autoCapitalize='none'
                             autoCorrect={false}
                             keyboardType='url'
