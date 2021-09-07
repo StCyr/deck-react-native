@@ -2,6 +2,7 @@ import axios from 'axios';
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { deleteAllBoards } from '../store/boardSlice';
 import { setServer } from '../store/serverSlice';
 import { setToken } from '../store/tokenSlice';
 import { Image, Pressable, View } from 'react-native';
@@ -43,15 +44,17 @@ class AppMenu extends React.Component {
                                 }                    
                             }).then(resp => {
                                 console.log('User logged out from server')
-                                AsyncStorage.clear();
+                                AsyncStorage.clear()
                                 this.props.setToken(null)
-                                this.props.setServer(null)  
+                                this.props.setServer(null)
+                                this.props.deleteAllBoards()
                             })
                             .catch(error => {
                                 console.log('Error occured while logging user out from server. Trying to clear session here anyway')
-                                AsyncStorage.clear();
+                                AsyncStorage.clear()
                                 this.props.setToken(null)
-                                this.props.setServer(null)  
+                                this.props.setServer(null)
+                                this.props.deleteAllBoards()
                             })
                         }}
                     >
@@ -72,6 +75,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => (
     bindActionCreators( {
+        deleteAllBoards,
         setServer,
         setToken
     }, dispatch)

@@ -24,6 +24,9 @@ export const boardSlice = createSlice({
       // Adds stack
       state.value[action.payload.boardId].stacks[action.payload.stack.id] = action.payload.stack
     },
+    deleteAllBoards: (state, action) => {
+      state.value = {}
+    },
     deleteCard: (state, action) => {
       delete state.value[action.payload.boardId].stacks[action.payload.stackId].cards[action.payload.cardId]
     },
@@ -31,10 +34,10 @@ export const boardSlice = createSlice({
       const card = state.value[action.payload.boardId].stacks[action.payload.oldStackId].cards[action.payload.cardId]
       state.value[action.payload.boardId].stacks[action.payload.newStackId].cards[action.payload.cardId] = card
       delete state.value[action.payload.boardId].stacks[action.payload.oldStackId].cards[action.payload.cardId]
-    }
+    },
   }
 })
 
-export const { addBoard, addCard, addStack, deleteCard, moveCard } = boardSlice.actions
+export const { addBoard, addCard, addStack, deleteAllBoards, deleteCard, moveCard } = boardSlice.actions
 
 export default boardSlice.reducer
