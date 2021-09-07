@@ -81,7 +81,11 @@ class AllBoards extends React.Component {
       this.setState({
         refreshing: false,
       })
-      resp.data.forEach(board => this.props.addBoard(board))
+      resp.data.forEach(board => {
+        if (!board.archived) {
+          this.props.addBoard(board)
+        }
+      })
     })
     .catch((error) => {
       this.setState({
