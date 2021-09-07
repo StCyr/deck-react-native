@@ -1,33 +1,19 @@
 import React from 'react';
-
-// For debugging
-import env from './environment';
-
-// Persistent storage
+import env from './environment'; // For debugging
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-// Navigation
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-
-// UI
 import Login from './components/Login';
 import Home from './components/Home';
 import AllBoards from './components/AllBoards';
 import BoardDetails from './components/BoardDetails';
 import Card from './components/Card';
-
-// Store
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux'
 import { setServer } from './store/serverSlice';
 import { setToken } from './store/tokenSlice';
-
-// For creating an URL handler to retrieve the device token
-import * as Linking from 'expo-linking';
-
-// btoa isn't supported by android (and maybe also iOS)
-import {encode as btoa} from 'base-64'
+import * as Linking from 'expo-linking'; // For creating an URL handler to retrieve the device token
+import {encode as btoa} from 'base-64'; // btoa isn't supported by android (and maybe also iOS)
 
 // Create Stack navigator
 const Stack = createStackNavigator()
