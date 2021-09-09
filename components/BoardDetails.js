@@ -25,7 +25,12 @@ class BoardDetails extends React.Component {
         }
         this.loadBoard = this.loadBoard.bind(this)
         this.moveCard = this.moveCard.bind(this)
-        this.insets = initialWindowMetrics.insets
+        this.insets = initialWindowMetrics?.insets ?? {
+            left: 0,
+            right: 0,
+            bottom: 0,
+            top: 0,
+        }
     }
 
     _handleIndexChange = index => this.setState({ index })
