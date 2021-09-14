@@ -211,7 +211,6 @@ class Card extends React.Component {
                 console.log('Error', resp)
             } else {
                 console.log('Card created')
-                console.log(resp)
                 this.state.card.id = resp.data.id
                 this.props.addCard({
                     boardId: this.props.route.params.boardId,
