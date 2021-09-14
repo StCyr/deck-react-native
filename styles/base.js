@@ -114,11 +114,16 @@ const baseStyles = {
   stackTabTextNormal: {
     fontWeight: 'normal'
   },
+  textWarning: {
+    textAlign: 'center',
+    fontSize: fonts.l,
+  },
   descriptionInput: {
     minHeight: 120,
   },
   input: {
     width: '100%',
+    flexDirection: 'row',
     backgroundColor: colors.bg,
     borderColor: colors.border,
     fontSize: fonts.m,
