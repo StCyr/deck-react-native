@@ -101,7 +101,7 @@ class BoardDetails extends React.Component {
                         ScrollView can use to make the containing view sticky,
                         without changing styles on the containing view */}
                         <View>
-                            <View style={styles.stackBar} >
+                            <ScrollView style={styles.stackBar} horizontal>
                                 {stacks.map(stack => (
                                     <DraxView
                                         key={stack.id}
@@ -127,7 +127,7 @@ class BoardDetails extends React.Component {
                                         </Pressable>
                                     </DraxView>
                                 ))}
-                            </View>
+                            </ScrollView>
                         </View>
                         {currentStack?.cards &&
                         <View>
