@@ -50,7 +50,8 @@ class BoardDetails extends React.Component {
     }
 
     render() {
-        if (this.props.boards.value[this.props.route.params.boardId].stacks.length === 0 && !this.state.refreshing) {
+        const stacks = this.props.boards.value[this.props.route.params.boardId].stacks;
+        if (stacks.length === 0 && !this.state.refreshing) {
             // Board has no stack
             return (
                 <View style={[styles.container, {marginBottom: this.insets.bottom}]}>
@@ -83,6 +84,7 @@ class BoardDetails extends React.Component {
                 </View>
             )
         } else {
+            const currentStack = stacks.find(oneStack => oneStack.id === this.state.index);
             return (
                 <DraxProvider>
                     <ScrollView
@@ -100,7 +102,7 @@ class BoardDetails extends React.Component {
                         without changing styles on the containing view */}
                         <View>
                             <View style={styles.stackBar} >
-                                {this.props.boards.value[this.props.route.params.boardId].stacks.map(stack => (
+                                {stacks.map(stack => (
                                     <DraxView
                                         key={stack.id}
                                         style={styles.stackTab}
@@ -127,10 +129,9 @@ class BoardDetails extends React.Component {
                                 ))}
                             </View>
                         </View>
-                        {typeof this.props.boards.value[this.props.route.params.boardId].stacks[this.state.index] !== 'undefined' &&
-                         typeof this.props.boards.value[this.props.route.params.boardId].stacks[this.state.index].cards !== 'undefined' &&
+                        {currentStack?.cards &&
                         <View>
-                            {Object.values(this.props.boards.value[this.props.route.params.boardId].stacks[this.state.index].cards).map(card => (
+                            {Object.values(currentStack.cards).map(card => (
                                 <DraxView
                                     key={card.id}
                                     payload={card.id}
@@ -200,6 +201,10 @@ class BoardDetails extends React.Component {
                     boardId: this.props.route.params.boardId,
                     stack: resp.data
                 })
+                // Select new stack
+                this.setState({
+                    index: this.props.boards.value[this.props.route.params.boardId].stacks[0].id,
+                })
             }
         })
         .catch((error) => {
@@ -229,10 +234,12 @@ class BoardDetails extends React.Component {
                     stack
                 })
             })
-            // Shows first stack
-            this.setState({
-                index: Math.min(...Object.keys(this.props.boards.value[this.props.route.params.boardId].stacks)),
-            })
+            // Shows stack with order === 0, if stacks are available
+            if (this.props.boards.value[this.props.route.params.boardId].stacks?.length) {
+                this.setState({
+                    index: this.props.boards.value[this.props.route.params.boardId].stacks[0].id,
+                })
+            }
         })
     }
 
