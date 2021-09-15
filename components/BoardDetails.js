@@ -73,7 +73,7 @@ class BoardDetails extends React.Component {
                                 <Icon
                                     name='arrow-right'
                                     color='#b4b4b4'
-                                    size='40'
+                                    size='30'
                                 />
                             }
                             type='clear'
@@ -112,44 +112,47 @@ class BoardDetails extends React.Component {
                         </DraxView>
                     ))}
                     </View>
-                    {typeof this.props.boards.value[this.props.route.params.boardId].stacks[this.state.index] !== 'undefined' && typeof this.props.boards.value[this.props.route.params.boardId].stacks[this.state.index].cards !== 'undefined' &&
-                        <ScrollView contentContainerStyle={styles.container}
-                            refreshControl={
-                                <RefreshControl                
-                                    refreshing={this.state.refreshing}
-                                    onRefresh={this.loadBoard}
-                                />
-                            }
-                        >
-                        {Object.values(this.props.boards.value[this.props.route.params.boardId].stacks[this.state.index].cards).map(card => (
-                            <DraxView
-                                key={card.id}
-                                payload={card.id}
-                                style={styles.card}
-                                draggingStyle={{opacity: 0}}
-                                dragReleasedStyle={{opacity: 0}}
-                                hoverStyle={[styles.card, {opacity: 0.6, shadowOpacity: 0}]}
-                                onDragEnd={(event) => {
-                                    // Shows selected card's details when the user just clicked the card
-                                    if (event.dragTranslation.x < 5 &&
-                                        event.dragTranslation.x > -5 &&
-                                        event.dragTranslation.y < 5 &&
-                                        event.dragTranslation.y > -5) {
-                                        this.props.navigation.navigate('CardDetails',{
-                                            boardId: this.props.route.params.boardId,
-                                            stackId: this.state.index,
-                                            cardId: card.id
-                                        })
-                                    }
-                                }}
-                            >
-                                <Text style={[styles.cardTitle, { width: '100%' }]}>
-                                    {card.title}
-                                </Text>
-                            </DraxView>
-                        ))}
-                        </ScrollView>
-                    }
+                    <ScrollView contentContainerStyle={styles.container}
+                        refreshControl={
+                            <RefreshControl                
+                                refreshing={this.state.refreshing}
+                                onRefresh={this.loadBoard}
+                            />
+                        }
+                    >
+                        {typeof this.props.boards.value[this.props.route.params.boardId].stacks[this.state.index] !== 'undefined' &&
+                         typeof this.props.boards.value[this.props.route.params.boardId].stacks[this.state.index].cards !== 'undefined' &&
+                        <View>
+                            {Object.values(this.props.boards.value[this.props.route.params.boardId].stacks[this.state.index].cards).map(card => (
+                                <DraxView
+                                    key={card.id}
+                                    payload={card.id}
+                                    style={styles.card}
+                                    draggingStyle={{opacity: 0}}
+                                    dragReleasedStyle={{opacity: 0}}
+                                    hoverStyle={[styles.card, {opacity: 0.6, shadowOpacity: 0}]}
+                                    onDragEnd={(event) => {
+                                        // Shows selected card's details when the user just clicked the card
+                                        if (event.dragTranslation.x < 5 &&
+                                            event.dragTranslation.x > -5 &&
+                                            event.dragTranslation.y < 5 &&
+                                            event.dragTranslation.y > -5) {
+                                            this.props.navigation.navigate('CardDetails',{
+                                                boardId: this.props.route.params.boardId,
+                                                stackId: this.state.index,
+                                                cardId: card.id
+                                            })
+                                        }
+                                    }}
+                                >
+                                    <Text style={[styles.cardTitle, { width: '100%' }]}>
+                                        {card.title}
+                                    </Text>
+                                </DraxView>
+                            ))}
+                        </View>
+                        }
+                    </ScrollView>
                     <View style={[styles.container, {marginBottom: this.insets.bottom}]}>
                         <Pressable
                             style={styles.button}
