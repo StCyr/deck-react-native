@@ -111,7 +111,6 @@ const baseStyles = {
   stackTab: {
     flexGrow: 1,
     justifyContent: 'center',
-    padding: padding.m,
   },
   stackTabDraggedOver: {
     backgroundColor: colors.bgInteract,
@@ -120,6 +119,7 @@ const baseStyles = {
     textAlign: 'center',
     textTransform: 'uppercase',
     color: colors.text,
+    padding: padding.m,
   },
   stackTabTextSelected: {
     fontWeight: 'bold'
