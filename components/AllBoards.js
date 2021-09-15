@@ -102,7 +102,7 @@ class AllBoards extends React.Component {
                     <Icon
                       name='arrow-right'
                       color='#b4b4b4'
-                      size='30'
+                      size={30}
                     />
                   }
                   type='clear'
