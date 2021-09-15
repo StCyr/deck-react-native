@@ -50,7 +50,7 @@ class BoardDetails extends React.Component {
     }
 
     render() {
-        if (this.props.boards.value[this.props.route.params.boardId].stacks.length === 0) {
+        if (this.props.boards.value[this.props.route.params.boardId].stacks.length === 0 && !this.state.refreshing) {
             // Board has no stack
             return (
                 <View style={[styles.container, {marginBottom: this.insets.bottom}]}>
@@ -219,6 +219,7 @@ class BoardDetails extends React.Component {
                     stack
                 })
             })
+            // Shows first stack
             this.setState({
                 index: Math.min(...Object.keys(this.props.boards.value[this.props.route.params.boardId].stacks)),
             })
