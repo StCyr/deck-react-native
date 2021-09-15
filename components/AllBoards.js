@@ -4,9 +4,7 @@ import { bindActionCreators } from 'redux'
 import { addBoard } from '../store/boardSlice';
 import { setServer } from '../store/serverSlice';
 import { setToken } from '../store/tokenSlice';
-import { Pressable, RefreshControl, ScrollView, View, Text, TextInput, Image } from 'react-native';
-import { Button } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/EvilIcons';
+import { Image, Pressable, RefreshControl, ScrollView, View, Text, TextInput } from 'react-native';
 import { DraxProvider } from 'react-native-drax';
 import { initialWindowMetrics } from 'react-native-safe-area-context';
 import {i18n} from '../i18n/i18n.js';
