@@ -1,5 +1,6 @@
 export const en = {
     create : 'Create',
+    createBoard: 'Create board',
     createCard : 'Create card',
     createStack : 'Create stack',
     delete : 'Delete',
@@ -9,6 +10,7 @@ export const en = {
     logout: 'Logout',
     moveCard : 'Move card',
     noStack : 'This board has no stack. Start working by first creating a stack.',
+    newBoardHint: 'Type the name of a board to create one',
     newStackHint : 'Type here the name of a new list',
     save : 'Save',
     setDueDate : 'Set due date',
@@ -19,6 +21,7 @@ export const en = {
 
 export const fr = {
     create : 'Créer',
+    createBoard: 'Créer un tableau',
     createCard : 'Créer une carte',
     createStack : 'Créer une liste',
     delete : 'Supprimer',
@@ -28,6 +31,7 @@ export const fr = {
     logout: 'Logout',
     moveCard : 'Déplacer la carte',
     noStack : 'Ce tableau n\'a pas de liste. Commencez par en créer une.',
+    newBoardHint: 'Tapez un nom pour créer un tableau',
     newStackHint : 'Entrez le nom de votre nouvelle liste ici',
     save : 'Sauvegarder',
     setDueDate : 'Définir une échéance',

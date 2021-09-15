@@ -132,6 +132,20 @@ const baseStyles = {
     marginVertical: padding.s,
     padding: padding.m,
   },
+  inputButton: {
+    display: 'flex',
+    flexDirection: 'row',
+    width: '100%',
+    borderRadius: padding.m,
+    padding: padding.m,
+    marginVertical: padding.s,
+    backgroundColor: colors.bgInteract,
+  },
+  inputText: {
+    textAlign: 'center',
+    fontSize: fonts.m,
+    color: colors.textInteract,
+  },
   inputField: {
     marginVertical: padding.s,
   },
