@@ -91,22 +91,14 @@ class AllBoards extends React.Component {
               <View style={styles.inputButton} >
                 <TextInput style={[styles.inputText, {flexGrow: 1}]}
                   value={this.state.newBoardName}
+                  autoFocus={true}
                   maxLength={100}
                   onChangeText={newBoardName => {
                     this.setState({ newBoardName })
                   }}
+                  onSubmitEditing={() => this.createBoard()}
                   placeholder={i18n.t('newBoardHint')}
-                />
-                <Button
-                  icon={
-                    <Icon
-                      name='arrow-right'
-                      color='#b4b4b4'
-                      size={30}
-                    />
-                  }
-                  type='clear'
-                  onPress={() => this.createBoard()}
+                  returnKeyType='send'
                 />
               </View>
             </View>
