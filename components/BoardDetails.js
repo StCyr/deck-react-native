@@ -88,7 +88,6 @@ class BoardDetails extends React.Component {
             return (
                 <DraxProvider>
                     <ScrollView
-                        contentContainerStyle={styles.boardDetailsContainer}
                         refreshControl={
                             <RefreshControl
                                 refreshing={this.state.refreshing}
@@ -130,7 +129,7 @@ class BoardDetails extends React.Component {
                             </ScrollView>
                         </View>
                         {currentStack?.cards &&
-                        <View>
+                        <View style={styles.boardDetailsContainer}>
                             {Object.values(currentStack.cards).map(card => (
                                 <DraxView
                                     key={card.id}

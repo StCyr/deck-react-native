@@ -101,12 +101,13 @@ const baseStyles = {
   stackBar: {
     flex: 1,
     flexDirection: 'row',
-    maxHeight: 48,
     borderBottomColor: colors.border,
     borderBottomWidth: 1,
     marginBottom: padding.m,
-    marginTop: padding.s,
     backgroundColor: colors.bgDefault,
+    width: '100%',
+    paddingLeft: padding.m,
+    paddingRight: padding.m,
   },
   stackTab: {
     flexGrow: 1,
