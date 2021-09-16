@@ -12,7 +12,7 @@ import { DraxProvider, DraxView } from 'react-native-drax';
 import axios from 'axios';
 import createStyles from '../styles/base.js'
 import { initialWindowMetrics } from 'react-native-safe-area-context';
-import {i18n} from '../i18n/i18n.js';
+import { i18n } from '../i18n/i18n.js';
 
 const styles = createStyles()
 
@@ -46,11 +46,12 @@ class BoardDetails extends React.Component {
         this.props.navigation.setOptions({
             headerTitle: 'Board details',
             headerRight: () => (<AppMenu/>)
-        })    
+        })
     }
 
     render() {
-        if (this.props.boards.value[this.props.route.params.boardId].stacks.length === 0 && !this.state.refreshing) {
+        const stacks = this.props.boards.value[this.props.route.params.boardId].stacks;
+        if (stacks.length === 0 && !this.state.refreshing) {
             // Board has no stack
             return (
                 <View style={[styles.container, {marginBottom: this.insets.bottom}]}>
@@ -83,47 +84,53 @@ class BoardDetails extends React.Component {
                 </View>
             )
         } else {
+            const currentStack = stacks.find(oneStack => oneStack.id === this.state.index);
             return (
                 <DraxProvider>
-                    <View style={styles.stackBar} >
-                    {this.props.boards.value[this.props.route.params.boardId].stacks.map(stack => (
-                        <DraxView
-                            key={stack.id}
-                            style={styles.stackTab}
-                            receivingStyle={styles.stackTabDraggedOver}
-                            onReceiveDragDrop={({ dragged: { payload } }) => {
-                                console.log(`moving card ${payload}`);
-                                this.moveCard(payload, stack.id)
-                            }}
-                        >
-                            <Pressable
-                                key={stack.id}
-                                onPress={() => {
-                                    // Switches to selected stack
-                                    this.setState({
-                                        index: stack.id
-                                    })
-                                }}
-                            >
-                                <Text style={[styles.stackTabText, this.state.index === stack.id ? styles.stackTabTextSelected : styles.stackTabTextNormal]}>
-                                    {stack.title}
-                                </Text>
-                            </Pressable>
-                        </DraxView>
-                    ))}
-                    </View>
-                    <ScrollView contentContainerStyle={styles.container}
+                    <ScrollView
                         refreshControl={
-                            <RefreshControl                
+                            <RefreshControl
                                 refreshing={this.state.refreshing}
                                 onRefresh={this.loadBoard}
                             />
                         }
+                        stickyHeaderIndices={[0]}
                     >
-                        {typeof this.props.boards.value[this.props.route.params.boardId].stacks[this.state.index] !== 'undefined' &&
-                         typeof this.props.boards.value[this.props.route.params.boardId].stacks[this.state.index].cards !== 'undefined' &&
+                        {/* This view is needed as an extra wrapper,
+                        ScrollView can use to make the containing view sticky,
+                        without changing styles on the containing view */}
                         <View>
-                            {Object.values(this.props.boards.value[this.props.route.params.boardId].stacks[this.state.index].cards).map(card => (
+                            <ScrollView style={styles.stackBar} horizontal>
+                                {stacks.map(stack => (
+                                    <DraxView
+                                        key={stack.id}
+                                        style={styles.stackTab}
+                                        receivingStyle={styles.stackTabDraggedOver}
+                                        onReceiveDragDrop={({ dragged: { payload } }) => {
+                                            console.log(`moving card ${payload}`);
+                                            this.moveCard(payload, stack.id)
+                                        }}
+                                    >
+                                        <Pressable
+                                            key={stack.id}
+                                            onPress={() => {
+                                                // Switches to selected stack
+                                                this.setState({
+                                                    index: stack.id
+                                                })
+                                            }}
+                                        >
+                                            <Text style={[styles.stackTabText, this.state.index === stack.id ? styles.stackTabTextSelected : styles.stackTabTextNormal]}>
+                                                {stack.title}
+                                            </Text>
+                                        </Pressable>
+                                    </DraxView>
+                                ))}
+                            </ScrollView>
+                        </View>
+                        {currentStack?.cards &&
+                        <View style={styles.boardDetailsContainer}>
+                            {Object.values(currentStack.cards).map(card => (
                                 <DraxView
                                     key={card.id}
                                     payload={card.id}
@@ -193,6 +200,10 @@ class BoardDetails extends React.Component {
                     boardId: this.props.route.params.boardId,
                     stack: resp.data
                 })
+                // Select new stack
+                this.setState({
+                    index: this.props.boards.value[this.props.route.params.boardId].stacks[0].id,
+                })
             }
         })
         .catch((error) => {
@@ -203,7 +214,7 @@ class BoardDetails extends React.Component {
     loadBoard() {
         this.setState({
             refreshing: true
-        })      
+        })
         axios.get(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks`, {
             headers: {
                 'Content-Type': 'application/json',
@@ -213,22 +224,24 @@ class BoardDetails extends React.Component {
         .then((resp) => {
             this.setState({
                 refreshing: false
-            })          
+            })
             console.log('cards retrieved from server')
             // TODO check for error
             resp.data.forEach(stack => {
                 this.props.addStack({
-                    boardId: this.props.route.params.boardId, 
+                    boardId: this.props.route.params.boardId,
                     stack
                 })
             })
-            // Shows first stack
-            this.setState({
-                index: Math.min(...Object.keys(this.props.boards.value[this.props.route.params.boardId].stacks)),
-            })
+            // Shows stack with order === 0, if stacks are available
+            if (this.props.boards.value[this.props.route.params.boardId].stacks?.length) {
+                this.setState({
+                    index: this.props.boards.value[this.props.route.params.boardId].stacks[0].id,
+                })
+            }
         })
     }
-    
+
     moveCard(cardId, stackId) {
         this.props.moveCard({
             boardId: this.props.route.params.boardId,

@@ -5,9 +5,10 @@ export const dimensions = {
   fullHeight: Dimensions.get('window').height,
   fullWidth: Dimensions.get('window').width
 }
-  
+
 export const colors  = {
   bg: '#fff',
+  bgDefault: '#f2f2f2',
   text: '#000',
   border: '#E5E5E5',
   // blueish
@@ -41,9 +42,17 @@ export const dropShadow = {
   elevation: 3,
 }
 
+const containerStyles = {
+  padding: padding.m,
+}
+
 const baseStyles = {
   container: {
-    padding: padding.m,
+    ...containerStyles
+  },
+  boardDetailsContainer: {
+    ...containerStyles,
+    paddingTop: 0,
   },
   title: {
     fontSize: fonts.xl,
@@ -92,9 +101,13 @@ const baseStyles = {
   stackBar: {
     flex: 1,
     flexDirection: 'row',
-    maxHeight: 48,
     borderBottomColor: colors.border,
     borderBottomWidth: 1,
+    marginBottom: padding.m,
+    backgroundColor: colors.bgDefault,
+    width: '100%',
+    paddingLeft: padding.m,
+    paddingRight: padding.m,
   },
   stackTab: {
     flexGrow: 1,
@@ -107,6 +120,7 @@ const baseStyles = {
     textAlign: 'center',
     textTransform: 'uppercase',
     color: colors.text,
+    padding: padding.m,
   },
   stackTabTextSelected: {
     fontWeight: 'bold'
