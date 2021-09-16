@@ -69,12 +69,11 @@ class BoardDetails extends React.Component {
                                 placeholder={i18n.t('newStackHint')}
                         />
                         <Button
-                            // TODO Why doesn't it work?
                             icon={
                                 <Icon
                                     name='arrow-right'
                                     color='#b4b4b4'
-                                    size='30'
+                                    size={30}
                                 />
                             }
                             type='clear'
