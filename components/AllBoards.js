@@ -91,6 +91,10 @@ class AllBoards extends React.Component {
                   value={this.state.newBoardName}
                   autoFocus={true}
                   maxLength={100}
+                  onBlur={() => {
+                      this.setState({creatingBoard: false})
+                    this.setState({ newBoardName: '' })
+                  }}
                   onChangeText={newBoardName => {
                     this.setState({ newBoardName })
                   }}
