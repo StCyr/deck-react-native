@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux'
 import { addBoard } from '../store/boardSlice';
 import { setServer } from '../store/serverSlice';
 import { setToken } from '../store/tokenSlice';
-import { Image, Pressable, RefreshControl, ScrollView, View, Text, TextInput } from 'react-native';
+import { Pressable, RefreshControl, ScrollView, View, Text, TextInput } from 'react-native';
 import { DraxProvider } from 'react-native-drax';
 import { initialWindowMetrics } from 'react-native-safe-area-context';
 import {i18n} from '../i18n/i18n.js';
@@ -65,10 +65,6 @@ class AllBoards extends React.Component {
                   <Text style={styles.cardTitle}>
                     {board.title}
                   </Text>
-                  <Image
-                    style={{ width: 24, height: 24 }}
-                    source={require('../assets/go.png')}
-                  />
                 </Pressable>
               )}
           </ScrollView>
@@ -92,7 +88,7 @@ class AllBoards extends React.Component {
                   autoFocus={true}
                   maxLength={100}
                   onBlur={() => {
-                      this.setState({creatingBoard: false})
+                    this.setState({creatingBoard: false})
                     this.setState({ newBoardName: '' })
                   }}
                   onChangeText={newBoardName => {

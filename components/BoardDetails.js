@@ -6,8 +6,6 @@ import { setServer } from '../store/serverSlice';
 import { setToken } from '../store/tokenSlice';
 import AppMenu from './AppMenu';
 import { Pressable, RefreshControl, ScrollView, Text, TextInput, View } from 'react-native';
-import { Button } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/EvilIcons';
 import { DraxProvider, DraxView } from 'react-native-drax';
 import axios from 'axios';
 import createStyles from '../styles/base.js'
@@ -60,24 +58,17 @@ class BoardDetails extends React.Component {
                             {i18n.t('noStack')}
                        </Text>
                     </View>
-                    <View style={styles.input} >
-                        <TextInput style={{flexGrow: 1}}
+                    <View style={styles.inputButton} >
+                        <TextInput style={[styles.inputText, {flexGrow: 1}]}
                                 value={this.state.newStackName}
+                                autoFocus={true}
+                                maxLength={100}
                                 onChangeText={newStackName => {
                                     this.setState({ newStackName })
                                 }}
+                                onSubmitEditing={() => this.createStack()}
                                 placeholder={i18n.t('newStackHint')}
-                        />
-                        <Button
-                            icon={
-                                <Icon
-                                    name='arrow-right'
-                                    color='#b4b4b4'
-                                    size={30}
-                                />
-                            }
-                            type='clear'
-                            onPress={() => this.createStack()}
+                                returnKeyType='send'
                         />
                     </View>
                 </View>
