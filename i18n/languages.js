@@ -71,3 +71,24 @@ export const ua = {
     signIn: 'Sign In',
     title : 'Заголовок: ',
 }
+
+export const ca = {
+    create : 'Crear',
+    createBoard: 'Crear tauler',
+    createCard : 'Crear targeta',
+    createStack : 'Crear llista',
+    delete : 'Esborrar',
+    description : 'Descripció: ',
+    dueDate : 'Data de venciment: ',
+    edit : 'Editar',
+    logout: 'Tancar la sessió',
+    moveCard : 'Moure targeta',
+    noStack : 'Aquest tauler no té llistes. Comenceu a treballar creant-ne una.',
+    newBoardHint: 'Escriviu el nom d\'un tauler per creear-ne un',
+    newStackHint : 'Escriviu el nom de la nova llista',
+    save : 'Desar',
+    setDueDate : 'Inserir data de venciment',
+    setUrl : 'Si us plau, escriviu l\'adreça del vostre servidor Nextcloud',
+    signIn: 'Iniciar la sessió',
+    title : 'Títol: ',
+}
