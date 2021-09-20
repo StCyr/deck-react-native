@@ -1,6 +1,7 @@
 import React from 'react';
 import env from './environment'; // For debugging
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { KeyboardAvoidingView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Login from './components/Login';
@@ -81,14 +82,16 @@ class App extends React.Component {
       ) 
     } else {
       return (
-        <NavigationContainer>
-          <Stack.Navigator>
-            <Stack.Screen name="AllBoards" component={AllBoards} />
-            <Stack.Screen name="BoardDetails" component={BoardDetails} />
-            <Stack.Screen name="CardDetails" component={Card} />
-            <Stack.Screen name="NewCard" component={Card} />
-          </Stack.Navigator>
-        </NavigationContainer>
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior='padding'>
+          <NavigationContainer>
+            <Stack.Navigator>
+              <Stack.Screen name="AllBoards" component={AllBoards} />
+              <Stack.Screen name="BoardDetails" component={BoardDetails} />
+              <Stack.Screen name="CardDetails" component={Card} />
+              <Stack.Screen name="NewCard" component={Card} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </KeyboardAvoidingView>
       )
     }
   }
