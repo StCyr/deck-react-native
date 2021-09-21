@@ -1,9 +1,11 @@
 import React from 'react';
 import env from './environment'; // For debugging
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { KeyboardAvoidingView } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { KeyboardAvoidingView, Appearance } from 'react-native';
+import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import * as Font from 'expo-font';
+import AppLoading from 'expo-app-loading';
 import Login from './components/Login';
 import Home from './components/Home';
 import AllBoards from './components/AllBoards';
@@ -22,6 +24,18 @@ const Stack = createStackNavigator()
 // Application
 class App extends React.Component {
 
+  state = {
+    fontsLoaded: false,
+    colorScheme: 'light',
+  }
+
+  async loadFonts() {
+    await Font.loadAsync({
+      deck: require('./assets/fonts/deck/deck.ttf'),
+    })
+    this.setState({ fontsLoaded: true })
+  }
+
   constructor(props) {
     console.log('initialising app')
     super(props)
@@ -31,6 +45,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    this.loadFonts()
     // Retrieve token from storage if available
     if (!env.expoDebug) {
       AsyncStorage.getItem('NCtoken').then(token => {
@@ -70,29 +85,33 @@ class App extends React.Component {
   }
 
   render() {
-    if (this.props.token.value === null || this.props.server.value === null) {
-      // No token is stored yet, we need to get one
-      return (
-          <NavigationContainer>
-            <Stack.Navigator>
-              <Stack.Screen name="Home" component={Home} options={{ title: 'Login' }}/>
-              <Stack.Screen name="Login" component={Login}/>
-            </Stack.Navigator>
-          </NavigationContainer>
-      ) 
+    if(this.state.fontsLoaded) {
+      if (this.props.token.value === null || this.props.server.value === null) {
+        // No token is stored yet, we need to get one
+        return (
+            <NavigationContainer theme={Appearance.getColorScheme() === 'dark' ? DarkTheme : DefaultTheme}>
+              <Stack.Navigator screenOptions={({navigation}) => {return {detachPreviousScreen: !navigation.isFocused()}}}>
+                <Stack.Screen name="Home" component={Home} options={{ title: 'Login' }}/>
+                <Stack.Screen name="Login" component={Login}/>
+              </Stack.Navigator>
+            </NavigationContainer>
+        ) 
+      } else {
+        return (
+          <KeyboardAvoidingView style={{ flex: 1 }} behavior='padding'>
+            <NavigationContainer theme={Appearance.getColorScheme() === 'dark' ? DarkTheme : DefaultTheme}>
+              <Stack.Navigator screenOptions={({navigation}) => {return {detachPreviousScreen: !navigation.isFocused()}}}>
+                <Stack.Screen name="AllBoards" component={AllBoards} />
+                <Stack.Screen name="BoardDetails" component={BoardDetails} />
+                <Stack.Screen name="CardDetails" component={Card} />
+                <Stack.Screen name="NewCard" component={Card} />
+              </Stack.Navigator>
+            </NavigationContainer>
+          </KeyboardAvoidingView>
+        )
+      }
     } else {
-      return (
-        <KeyboardAvoidingView style={{ flex: 1 }} behavior='padding'>
-          <NavigationContainer>
-            <Stack.Navigator>
-              <Stack.Screen name="AllBoards" component={AllBoards} />
-              <Stack.Screen name="BoardDetails" component={BoardDetails} />
-              <Stack.Screen name="CardDetails" component={Card} />
-              <Stack.Screen name="NewCard" component={Card} />
-            </Stack.Navigator>
-          </NavigationContainer>
-        </KeyboardAvoidingView>
-      )
+      return <AppLoading />
     }
   }
 }

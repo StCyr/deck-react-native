@@ -96,7 +96,7 @@ class Card extends React.Component {
                             })
                         }}
                     />
-                    <Text style={{marginLeft: 5}}>
+                    <Text style={styles.textCheckbox}>
                         {i18n.t('setDueDate')}
                     </Text>
                 </View>

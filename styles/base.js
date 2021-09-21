@@ -1,4 +1,4 @@
-import {StyleSheet, Dimensions} from 'react-native'
+import {StyleSheet, Dimensions, Appearance} from 'react-native'
 
 // ----------- Basics ----------- //
 export const dimensions = {
@@ -6,18 +6,39 @@ export const dimensions = {
   fullWidth: Dimensions.get('window').width
 }
 
-export const colors  = {
-  bg: '#fff',
-  bgDefault: '#f2f2f2',
-  text: '#000',
-  border: '#E5E5E5',
-  // blueish
-  bgInteract: '#D8E6FF',
-  textInteract: '#005DFF',
-  // reddish
-  bgDestruct: '#FFCAC9',
-  textDestruct: '#FF0300',
+export const getColors = () => {
+  let colorScheme = Appearance.getColorScheme()
+  if(!colorScheme.match(/light|dark/g)) colorScheme = 'light'
+  const palette = {
+    light: {
+      bg: '#fff',
+      bgDefault: '#f2f2f2',
+      text: '#000',
+      border: '#E5E5E5',
+      // blueish
+      bgInteract: '#D8E6FF',
+      textInteract: '#005DFF',
+      // reddish
+      bgDestruct: '#FFCAC9',
+      textDestruct: '#FF0300',
+    },
+    dark: {
+      bg: '#181818',
+      bgDefault: '#222',
+      text: '#d8d8d8',
+      border: '#2a2a2a',
+      // blueish
+      bgInteract: '#001B4A',
+      textInteract: '#D8E6FF',
+      // reddish
+      bgDestruct: '#3D0100',
+      textDestruct: '#FFCAC9',
+    }
+  }
+  return palette[colorScheme]
 }
+
+export const colors = getColors()
 
 export const padding = {
   xs: 4,
@@ -55,6 +76,7 @@ const baseStyles = {
     paddingTop: 0,
   },
   title: {
+    color: colors.text,
     fontSize: fonts.xl,
     fontWeight: '600',
     marginTop: padding.m,
@@ -95,6 +117,7 @@ const baseStyles = {
     marginRight: padding.m
   },
   cardTitle: {
+    color: colors.text,
     flex: 1,
     fontSize: fonts.xl
   },
@@ -129,13 +152,19 @@ const baseStyles = {
     fontWeight: 'normal'
   },
   textWarning: {
+    color: colors.text,
     textAlign: 'center',
     fontSize: fonts.l,
   },
   descriptionInput: {
     minHeight: 120,
   },
+  textCheckbox: {
+    color: colors.text,
+    marginLeft: 5,
+  },
   input: {
+    color: colors.text,
     width: '100%',
     flexDirection: 'row',
     backgroundColor: colors.bg,

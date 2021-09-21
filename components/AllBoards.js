@@ -33,7 +33,7 @@ class AllBoards extends React.Component {
       }
     }
   
-    componentDidMount() { 
+    componentDidMount() {
       this.loadBoards()
       this.props.navigation.setOptions({
         headerTitle: 'All Boards',

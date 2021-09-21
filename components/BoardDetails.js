@@ -130,6 +130,7 @@ class BoardDetails extends React.Component {
                                     draggingStyle={{opacity: 0}}
                                     dragReleasedStyle={{opacity: 0}}
                                     hoverStyle={[styles.card, {opacity: 0.6, shadowOpacity: 0}]}
+                                    longPressDelay={250}        
                                     onDragEnd={(event) => {
                                         // Shows selected card's details when the user just clicked the card
                                         if (event.dragTranslation.x < 5 &&
