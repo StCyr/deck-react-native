@@ -123,32 +123,44 @@ class BoardDetails extends React.Component {
                         {currentStack?.cards &&
                         <View style={styles.boardDetailsContainer}>
                             {Object.values(currentStack.cards).map(card => (
-                                <DraxView
+                                <Pressable
                                     key={card.id}
-                                    payload={card.id}
-                                    style={styles.card}
-                                    draggingStyle={{opacity: 0}}
-                                    dragReleasedStyle={{opacity: 0}}
-                                    hoverStyle={[styles.card, {opacity: 0.6, shadowOpacity: 0}]}
-                                    longPressDelay={250}        
-                                    onDragEnd={(event) => {
-                                        // Shows selected card's details when the user just clicked the card
-                                        if (event.dragTranslation.x < 5 &&
-                                            event.dragTranslation.x > -5 &&
-                                            event.dragTranslation.y < 5 &&
-                                            event.dragTranslation.y > -5) {
-                                            this.props.navigation.navigate('CardDetails',{
-                                                boardId: this.props.route.params.boardId,
-                                                stackId: this.state.index,
-                                                cardId: card.id
-                                            })
-                                        }
+                                    onPress={() => {
+                                        // Switches to selected stack
+                                        this.props.navigation.navigate('CardDetails',{
+                                            boardId: this.props.route.params.boardId,
+                                            stackId: this.state.index,
+                                            cardId: card.id
+                                        })
                                     }}
                                 >
-                                    <Text style={[styles.cardTitle, { width: '100%' }]}>
-                                        {card.title}
-                                    </Text>
-                                </DraxView>
+                                    <DraxView
+                                        key={card.id}
+                                        payload={card.id}
+                                        style={styles.card}
+                                        draggingStyle={{opacity: 0}}
+                                        dragReleasedStyle={{opacity: 0}}
+                                        hoverStyle={[styles.card, {opacity: 0.6, shadowOpacity: 0}]}
+                                        longPressDelay={250}   
+                                        onDragEnd={(event) => {
+                                            // Shows selected card's details when the user just clicked the card
+                                            if (event.dragTranslation.x < 5 &&
+                                                event.dragTranslation.x > -5 &&
+                                                event.dragTranslation.y < 5 &&
+                                                event.dragTranslation.y > -5) {
+                                                this.props.navigation.navigate('CardDetails',{
+                                                    boardId: this.props.route.params.boardId,
+                                                    stackId: this.state.index,
+                                                    cardId: card.id
+                                                })
+                                            }
+                                        }}
+                                    >
+                                        <Text style={[styles.cardTitle, { width: '100%' }]}>
+                                            {card.title}
+                                        </Text>
+                                    </DraxView>
+                                </Pressable>
                             ))}
                         </View>
                         }
