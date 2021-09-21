@@ -92,3 +92,24 @@ export const ca = {
     signIn: 'Iniciar la sessió',
     title : 'Títol: ',
 }
+
+export const de = {
+    create : 'Hinzufügen',
+    createBoard: 'Board hinzufügen',
+    createCard : 'Karte hinzufügen',
+    createStack : 'Liste hinzufügen',
+    delete : 'Löschen',
+    description : 'Beschreibung: ',
+    dueDate : 'Ablaufdatum: ',
+    edit : 'Bearbeiten',
+    logout: 'Abmelden',
+    moveCard : 'Karte verschieben',
+    noStack : 'Dieses Board hat keine Liste. Bitte lege zuerst eine Liste an.',
+    newBoardHint: 'Gib den Namen des Boards an, um es anzulegen',
+    newStackHint : 'Gib den Namen der neuen Liste ein',
+    save : 'Speichern',
+    setDueDate : 'Ablaufdatum setzen',
+    setUrl : 'Bitte gib die URL deines Nextcloud Servers an',
+    signIn: 'Anmelden',
+    title : 'Titel: ',
+}
