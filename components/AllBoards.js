@@ -147,16 +147,17 @@ class AllBoards extends React.Component {
         }
     })
     .then((resp) => {
-      console.log('boards retrieved from server')
-      // TODO check for error
-      this.setState({
-        refreshing: false,
-      })
-      resp.data.forEach(board => {
-        if (!board.archived) {
-          this.props.addBoard(board)
-        }
-      })
+      if (resp.status !== 200) {
+        console.log('Error', resp)
+      } else {
+        console.log('boards retrieved from server')
+        this.setState({refreshing: false})
+        resp.data.forEach(board => {
+          if (!board.archived) {
+           this.props.addBoard(board)
+          }
+        })
+      }
     })
     .catch((error) => {
       this.setState({
