@@ -14,6 +14,7 @@ import Card from './components/Card';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux'
 import { setServer } from './store/serverSlice';
+import { setTheme } from './store/themeSlice';
 import { setToken } from './store/tokenSlice';
 import * as Linking from 'expo-linking'; // For creating an URL handler to retrieve the device token
 import {encode as btoa} from 'base-64'; // btoa isn't supported by android (and maybe also iOS)
@@ -46,6 +47,14 @@ class App extends React.Component {
 
   componentDidMount() {
     this.loadFonts()
+    // get initial theme
+    this.setState({ colorScheme: Appearance.getColorScheme()})
+    this.props.setTheme(Appearance.getColorScheme());
+    // register theme change subscription
+    this._schemeSubscription = Appearance.addChangeListener(({ colorScheme }) => {
+      this.setState({ colorScheme })
+      this.props.setTheme(colorScheme);
+    });
     // Retrieve token from storage if available
     if (!env.expoDebug) {
       AsyncStorage.getItem('NCtoken').then(token => {
@@ -55,7 +64,7 @@ class App extends React.Component {
           AsyncStorage.getItem('NCserver').then(server => {
             if (server !== null) {
               console.log('server retrieved from asyncStorage', server)
-              this.props.setServer(server)    
+              this.props.setServer(server)
             }
           })
         }
@@ -89,7 +98,7 @@ class App extends React.Component {
       if (this.props.token.value === null || this.props.server.value === null) {
         // No token is stored yet, we need to get one
         return (
-            <NavigationContainer theme={Appearance.getColorScheme() === 'dark' ? DarkTheme : DefaultTheme}>
+            <NavigationContainer theme={this.state.colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
               <Stack.Navigator screenOptions={({navigation}) => {return {detachPreviousScreen: !navigation.isFocused()}}}>
                 <Stack.Screen name="Home" component={Home} options={{ title: 'Login' }}/>
                 <Stack.Screen name="Login" component={Login}/>
@@ -99,7 +108,7 @@ class App extends React.Component {
       } else {
         return (
           <KeyboardAvoidingView style={{ flex: 1 }} behavior='padding'>
-            <NavigationContainer theme={Appearance.getColorScheme() === 'dark' ? DarkTheme : DefaultTheme}>
+            <NavigationContainer theme={this.state.colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
               <Stack.Navigator screenOptions={({navigation}) => {return {detachPreviousScreen: !navigation.isFocused()}}}>
                 <Stack.Screen name="AllBoards" component={AllBoards} />
                 <Stack.Screen name="BoardDetails" component={BoardDetails} />
@@ -119,12 +128,14 @@ class App extends React.Component {
 // Connect to store
 const mapStateToProps = state => ({
   token: state.token,
-  server: state.server
+  server: state.server,
+  theme: state.theme,
 })
 const mapDispatchToProps = dispatch => (
   bindActionCreators( {
       setServer,
-      setToken
+      setToken,
+      setTheme,
   }, dispatch)
 )
 export default connect(

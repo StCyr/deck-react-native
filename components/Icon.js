@@ -1,7 +1,6 @@
 import React from 'react'
 import { createIconSetFromFontello } from '@expo/vector-icons'
 import fontelloConfig from '../assets/fonts/deck/config.json'
-import { colors } from '../styles/base'
 
 const CreateIcon = createIconSetFromFontello(
   fontelloConfig,
@@ -9,7 +8,7 @@ const CreateIcon = createIconSetFromFontello(
   'deck.ttf'
 )
 
-const Icon = ({ size = 24, color = colors.text, name = 'go', style }) => {
+const Icon = ({ size = 24, color = '#000', name = 'go', style }) => {
   return <CreateIcon name={name} size={size} color={color} style={style} />
 }
 

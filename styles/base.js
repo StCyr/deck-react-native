@@ -1,4 +1,4 @@
-import {StyleSheet, Dimensions, Appearance} from 'react-native'
+import {StyleSheet, Dimensions} from 'react-native'
 
 // ----------- Basics ----------- //
 export const dimensions = {
@@ -6,9 +6,7 @@ export const dimensions = {
   fullWidth: Dimensions.get('window').width
 }
 
-export const getColors = () => {
-  let colorScheme = Appearance.getColorScheme()
-  if(!colorScheme.match(/light|dark/g)) colorScheme = 'light'
+export const getColors = (theme) => {
   const palette = {
     light: {
       bg: '#fff',
@@ -35,10 +33,8 @@ export const getColors = () => {
       textDestruct: '#FFCAC9',
     }
   }
-  return palette[colorScheme]
+  return palette[theme]
 }
-
-export const colors = getColors()
 
 export const padding = {
   xs: 4,
@@ -67,138 +63,142 @@ const containerStyles = {
   padding: padding.m,
 }
 
-const baseStyles = {
-  container: {
-    ...containerStyles
-  },
-  boardDetailsContainer: {
-    ...containerStyles,
-    paddingTop: 0,
-  },
-  title: {
-    color: colors.text,
-    fontSize: fonts.xl,
-    fontWeight: '600',
-    marginTop: padding.m,
-    marginBottom: padding.s,
-  },
-  button: {
-    width: '100%',
-    borderRadius: padding.m,
-    padding: padding.m,
-    marginVertical: padding.s,
-    backgroundColor: colors.bgInteract,
-  },
-  buttonTitle: {
-    textAlign: 'center',
-    fontSize: fonts.l,
-    fontWeight: '600',
-    color: colors.textInteract,
-  },
-  buttonDestruct: {
-    backgroundColor: colors.bgDestruct,
-  },
-  buttonTitleDestruct: {
-    color: colors.textDestruct,
-  },
-  card: {
-    backgroundColor: colors.bg,
-    borderRadius: padding.m,
-    padding: padding.m,
-    marginBottom: padding.m,
-    flexDirection: 'row',
-    alignItems: 'center',
-    ...dropShadow,
-  },
-  cardColor: {
-    width: padding.m,
-    height: padding.m,
-    borderRadius: padding.m / 2,
-    marginRight: padding.m
-  },
-  cardTitle: {
-    color: colors.text,
-    flex: 1,
-    fontSize: fonts.xl
-  },
-  stackBar: {
-    flex: 1,
-    flexDirection: 'row',
-    borderBottomColor: colors.border,
-    borderBottomWidth: 1,
-    marginBottom: padding.m,
-    backgroundColor: colors.bgDefault,
-    width: '100%',
-    paddingLeft: padding.m,
-    paddingRight: padding.m,
-  },
-  stackTab: {
-    flexGrow: 1,
-    justifyContent: 'center',
-  },
-  stackTabDraggedOver: {
-    backgroundColor: colors.bgInteract,
-  },
-  stackTabText: {
-    textAlign: 'center',
-    textTransform: 'uppercase',
-    color: colors.text,
-    padding: padding.m,
-  },
-  stackTabTextSelected: {
-    fontWeight: 'bold'
-  },
-  stackTabTextNormal: {
-    fontWeight: 'normal'
-  },
-  textWarning: {
-    color: colors.text,
-    textAlign: 'center',
-    fontSize: fonts.l,
-  },
-  descriptionInput: {
-    minHeight: 120,
-  },
-  textCheckbox: {
-    color: colors.text,
-    marginLeft: 5,
-  },
-  input: {
-    color: colors.text,
-    width: '100%',
-    flexDirection: 'row',
-    backgroundColor: colors.bg,
-    borderColor: colors.border,
-    fontSize: fonts.m,
-    borderWidth: 1,
-    borderRadius: padding.s,
-    marginVertical: padding.s,
-    padding: padding.m,
-  },
-  inputButton: {
-    display: 'flex',
-    flexDirection: 'row',
-    width: '100%',
-    borderRadius: padding.m,
-    padding: padding.m,
-    marginVertical: padding.s,
-    backgroundColor: colors.bgInteract,
-  },
-  inputText: {
-    textAlign: 'center',
-    fontSize: fonts.m,
-    color: colors.textInteract,
-  },
-  inputField: {
-    marginVertical: padding.s,
-  },
-  inputLabel: {
-    fontWeight: 'bold'
-  },
+const baseStyles = (theme) => {
+  const colors = getColors(theme)
+  return {
+    container: {
+      ...containerStyles
+    },
+    boardDetailsContainer: {
+      ...containerStyles,
+      paddingTop: 0,
+    },
+    title: {
+      color: colors.text,
+      fontSize: fonts.xl,
+      fontWeight: '600',
+      marginTop: padding.m,
+      marginBottom: padding.s,
+    },
+    button: {
+      width: '100%',
+      borderRadius: padding.m,
+      padding: padding.m,
+      marginVertical: padding.s,
+      backgroundColor: colors.bgInteract,
+    },
+    buttonTitle: {
+      textAlign: 'center',
+      fontSize: fonts.l,
+      fontWeight: '600',
+      color: colors.textInteract,
+    },
+    buttonDestruct: {
+      backgroundColor: colors.bgDestruct,
+    },
+    buttonTitleDestruct: {
+      color: colors.textDestruct,
+    },
+    card: {
+      backgroundColor: colors.bg,
+      borderRadius: padding.m,
+      padding: padding.m,
+      marginBottom: padding.m,
+      flexDirection: 'row',
+      alignItems: 'center',
+      ...dropShadow,
+    },
+    cardColor: {
+      width: padding.m,
+      height: padding.m,
+      borderRadius: padding.m / 2,
+      marginRight: padding.m
+    },
+    cardTitle: {
+      color: colors.text,
+      flex: 1,
+      fontSize: fonts.xl
+    },
+    stackBar: {
+      flex: 1,
+      flexDirection: 'row',
+      borderBottomColor: colors.border,
+      borderBottomWidth: 1,
+      marginBottom: padding.m,
+      backgroundColor: colors.bgDefault,
+      width: '100%',
+      paddingLeft: padding.m,
+      paddingRight: padding.m,
+    },
+    stackTab: {
+      flexGrow: 1,
+      justifyContent: 'center',
+    },
+    stackTabDraggedOver: {
+      backgroundColor: colors.bgInteract,
+    },
+    stackTabText: {
+      textAlign: 'center',
+      textTransform: 'uppercase',
+      color: colors.text,
+      padding: padding.m,
+    },
+    stackTabTextSelected: {
+      fontWeight: 'bold'
+    },
+    stackTabTextNormal: {
+      fontWeight: 'normal'
+    },
+    textWarning: {
+      color: colors.text,
+      textAlign: 'center',
+      fontSize: fonts.l,
+    },
+    descriptionInput: {
+      minHeight: 120,
+    },
+    textCheckbox: {
+      color: colors.text,
+      marginLeft: 5,
+    },
+    input: {
+      color: colors.text,
+      width: '100%',
+      flexDirection: 'row',
+      backgroundColor: colors.bg,
+      borderColor: colors.border,
+      fontSize: fonts.m,
+      borderWidth: 1,
+      borderRadius: padding.s,
+      marginVertical: padding.s,
+      padding: padding.m,
+    },
+    inputButton: {
+      display: 'flex',
+      flexDirection: 'row',
+      width: '100%',
+      borderRadius: padding.m,
+      padding: padding.m,
+      marginVertical: padding.s,
+      backgroundColor: colors.bgInteract,
+    },
+    inputText: {
+      textAlign: 'center',
+      fontSize: fonts.m,
+      color: colors.textInteract,
+    },
+    inputField: {
+      marginVertical: padding.s,
+    },
+    inputLabel: {
+      fontWeight: 'bold'
+    },
+  }
 }
 
-const createStyles = (overrides = {}) => {
-  return StyleSheet.create({...baseStyles, ...overrides})
+const createStyles = (theme = 'light', overrides = {}) => {
+  const styles = baseStyles(theme)
+  return StyleSheet.create({...styles, ...overrides})
 }
 
 export default createStyles

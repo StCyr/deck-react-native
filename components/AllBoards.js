@@ -12,7 +12,6 @@ import axios from 'axios';
 import AppMenu from './AppMenu';
 import createStyles from '../styles/base.js'
 
-const styles = createStyles()
 
 // Component that display the user's boards
 class AllBoards extends React.Component {
@@ -44,7 +43,7 @@ class AllBoards extends React.Component {
     render() {
       return (
         <DraxProvider>
-          <ScrollView contentContainerStyle={styles.container}
+          <ScrollView contentContainerStyle={this.props.theme.container}
             refreshControl={
               <RefreshControl
                 refreshing={this.state.refreshing}
@@ -59,10 +58,10 @@ class AllBoards extends React.Component {
                       boardId: board.id
                     })
                   }}
-                  style={styles.card}
+                  style={this.props.theme.card}
                 >
-                  <View style={[styles.cardColor, {backgroundColor: `#${board.color}`}]} />
-                  <Text style={styles.cardTitle}>
+                  <View style={[this.props.theme.cardColor, {backgroundColor: `#${board.color}`}]} />
+                  <Text style={this.props.theme.cardTitle}>
                     {board.title}
                   </Text>
                   <Image
@@ -72,21 +71,21 @@ class AllBoards extends React.Component {
               )}
           </ScrollView>
           {!this.state.creatingBoard &&
-            <View style={[styles.container, {marginBottom: this.insets.bottom}]}>
+            <View style={[this.props.theme.container, {marginBottom: this.insets.bottom}]}>
               <Pressable
-                style={styles.button}
+                style={this.props.theme.button}
                 onPress={() => {this.setState({creatingBoard: true})}}
               >
-                <Text style={styles.buttonTitle}>
+                <Text style={this.props.theme.buttonTitle}>
                   {i18n.t('createBoard')}
                 </Text>
               </Pressable>
             </View>
           }
           {this.state.creatingBoard &&
-            <View style={[styles.container, {marginBottom: this.insets.bottom}]}>
-              <View style={styles.inputButton} >
-                <TextInput style={[styles.inputText, {flexGrow: 1}]}
+            <View style={[this.props.theme.container, {marginBottom: this.insets.bottom}]}>
+              <View style={this.props.theme.inputButton} >
+                <TextInput style={[this.props.theme.inputText, {flexGrow: 1}]}
                   value={this.state.newBoardName}
                   autoFocus={true}
                   maxLength={100}
@@ -173,7 +172,8 @@ class AllBoards extends React.Component {
 const mapStateToProps = state => ({
   boards: state.boards,
   server: state.server,
-  token: state.token
+  theme: state.theme,
+  token: state.token,
 })
 const mapDispatchToProps = dispatch => (
   bindActionCreators( {
