@@ -1,9 +1,11 @@
 import React from 'react';
 import env from './environment'; // For debugging
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { KeyboardAvoidingView } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { KeyboardAvoidingView, Appearance } from 'react-native';
+import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import * as Font from 'expo-font';
+import AppLoading from 'expo-app-loading';
 import Login from './components/Login';
 import Home from './components/Home';
 import AllBoards from './components/AllBoards';
@@ -12,6 +14,7 @@ import Card from './components/Card';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux'
 import { setServer } from './store/serverSlice';
+import { setTheme } from './store/themeSlice';
 import { setToken } from './store/tokenSlice';
 import * as Linking from 'expo-linking'; // For creating an URL handler to retrieve the device token
 import {encode as btoa} from 'base-64'; // btoa isn't supported by android (and maybe also iOS)
@@ -22,6 +25,18 @@ const Stack = createStackNavigator()
 // Application
 class App extends React.Component {
 
+  state = {
+    fontsLoaded: false,
+    colorScheme: 'light',
+  }
+
+  async loadFonts() {
+    await Font.loadAsync({
+      deck: require('./assets/fonts/deck/deck.ttf'),
+    })
+    this.setState({ fontsLoaded: true })
+  }
+
   constructor(props) {
     console.log('initialising app')
     super(props)
@@ -31,6 +46,15 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    this.loadFonts()
+    // get initial theme
+    this.setState({ colorScheme: Appearance.getColorScheme()})
+    this.props.setTheme(Appearance.getColorScheme());
+    // register theme change subscription
+    this._schemeSubscription = Appearance.addChangeListener(({ colorScheme }) => {
+      this.setState({ colorScheme })
+      this.props.setTheme(colorScheme);
+    });
     // Retrieve token from storage if available
     if (!env.expoDebug) {
       AsyncStorage.getItem('NCtoken').then(token => {
@@ -40,7 +64,7 @@ class App extends React.Component {
           AsyncStorage.getItem('NCserver').then(server => {
             if (server !== null) {
               console.log('server retrieved from asyncStorage', server)
-              this.props.setServer(server)    
+              this.props.setServer(server)
             }
           })
         }
@@ -70,29 +94,33 @@ class App extends React.Component {
   }
 
   render() {
-    if (this.props.token.value === null || this.props.server.value === null) {
-      // No token is stored yet, we need to get one
-      return (
-          <NavigationContainer>
-            <Stack.Navigator>
-              <Stack.Screen name="Home" component={Home} options={{ title: 'Login' }}/>
-              <Stack.Screen name="Login" component={Login}/>
-            </Stack.Navigator>
-          </NavigationContainer>
-      ) 
+    if(this.state.fontsLoaded) {
+      if (this.props.token.value === null || this.props.server.value === null) {
+        // No token is stored yet, we need to get one
+        return (
+            <NavigationContainer theme={this.state.colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+              <Stack.Navigator screenOptions={({navigation}) => {return {detachPreviousScreen: !navigation.isFocused()}}}>
+                <Stack.Screen name="Home" component={Home} options={{ title: 'Login' }}/>
+                <Stack.Screen name="Login" component={Login}/>
+              </Stack.Navigator>
+            </NavigationContainer>
+        ) 
+      } else {
+        return (
+          <KeyboardAvoidingView style={{ flex: 1 }} behavior='padding'>
+            <NavigationContainer theme={this.state.colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+              <Stack.Navigator screenOptions={({navigation}) => {return {detachPreviousScreen: !navigation.isFocused()}}}>
+                <Stack.Screen name="AllBoards" component={AllBoards} />
+                <Stack.Screen name="BoardDetails" component={BoardDetails} />
+                <Stack.Screen name="CardDetails" component={Card} />
+                <Stack.Screen name="NewCard" component={Card} />
+              </Stack.Navigator>
+            </NavigationContainer>
+          </KeyboardAvoidingView>
+        )
+      }
     } else {
-      return (
-        <KeyboardAvoidingView style={{ flex: 1 }} behavior='padding'>
-          <NavigationContainer>
-            <Stack.Navigator>
-              <Stack.Screen name="AllBoards" component={AllBoards} />
-              <Stack.Screen name="BoardDetails" component={BoardDetails} />
-              <Stack.Screen name="CardDetails" component={Card} />
-              <Stack.Screen name="NewCard" component={Card} />
-            </Stack.Navigator>
-          </NavigationContainer>
-        </KeyboardAvoidingView>
-      )
+      return <AppLoading />
     }
   }
 }
@@ -100,12 +128,14 @@ class App extends React.Component {
 // Connect to store
 const mapStateToProps = state => ({
   token: state.token,
-  server: state.server
+  server: state.server,
+  theme: state.theme,
 })
 const mapDispatchToProps = dispatch => (
   bindActionCreators( {
       setServer,
-      setToken
+      setToken,
+      setTheme,
   }, dispatch)
 )
 export default connect(

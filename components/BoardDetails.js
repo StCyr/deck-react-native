@@ -12,8 +12,6 @@ import createStyles from '../styles/base.js'
 import { initialWindowMetrics } from 'react-native-safe-area-context';
 import { i18n } from '../i18n/i18n.js';
 
-const styles = createStyles()
-
 // Component that display a board's cards, grouped by stack
 class BoardDetails extends React.Component {
 
@@ -52,14 +50,14 @@ class BoardDetails extends React.Component {
         if (stacks.length === 0 && !this.state.refreshing) {
             // Board has no stack
             return (
-                <View style={[styles.container, {marginBottom: this.insets.bottom}]}>
+                <View style={[this.props.theme.container, {marginBottom: this.insets.bottom}]}>
                     <View>
-                        <Text style={styles.textWarning}>
+                        <Text style={this.props.theme.textWarning}>
                             {i18n.t('noStack')}
                        </Text>
                     </View>
-                    <View style={styles.inputButton} >
-                        <TextInput style={[styles.inputText, {flexGrow: 1}]}
+                    <View style={this.props.theme.inputButton} >
+                        <TextInput style={[this.props.theme.inputText, {flexGrow: 1}]}
                                 value={this.state.newStackName}
                                 autoFocus={true}
                                 maxLength={100}
@@ -90,14 +88,14 @@ class BoardDetails extends React.Component {
                         ScrollView can use to make the containing view sticky,
                         without changing styles on the containing view */}
                         <View>
-                            <ScrollView style={styles.stackBar} 
+                            <ScrollView style={this.props.theme.stackBar} 
                                 horizontal
                                 contentContainerStyle={{ flex: 1 }} >
                                 {stacks.map(stack => (
                                     <DraxView
                                         key={stack.id}
-                                        style={styles.stackTab}
-                                        receivingStyle={styles.stackTabDraggedOver}
+                                        style={this.props.theme.stackTab}
+                                        receivingStyle={this.props.theme.stackTabDraggedOver}
                                         onReceiveDragDrop={({ dragged: { payload } }) => {
                                             console.log(`moving card ${payload}`);
                                             this.moveCard(payload, stack.id)
@@ -112,7 +110,7 @@ class BoardDetails extends React.Component {
                                                 })
                                             }}
                                         >
-                                            <Text style={[styles.stackTabText, this.state.index === stack.id ? styles.stackTabTextSelected : styles.stackTabTextNormal]}>
+                                            <Text style={[this.props.theme.stackTabText, this.state.index === stack.id ? this.props.theme.stackTabTextSelected : this.props.theme.stackTabTextNormal]}>
                                                 {stack.title}
                                             </Text>
                                         </Pressable>
@@ -121,46 +119,59 @@ class BoardDetails extends React.Component {
                             </ScrollView>
                         </View>
                         {currentStack?.cards &&
-                        <View style={styles.boardDetailsContainer}>
+                        <View style={this.props.theme.boardDetailsContainer}>
                             {Object.values(currentStack.cards).map(card => (
-                                <DraxView
+                                <Pressable
                                     key={card.id}
-                                    payload={card.id}
-                                    style={styles.card}
-                                    draggingStyle={{opacity: 0}}
-                                    dragReleasedStyle={{opacity: 0}}
-                                    hoverStyle={[styles.card, {opacity: 0.6, shadowOpacity: 0}]}
-                                    onDragEnd={(event) => {
-                                        // Shows selected card's details when the user just clicked the card
-                                        if (event.dragTranslation.x < 5 &&
-                                            event.dragTranslation.x > -5 &&
-                                            event.dragTranslation.y < 5 &&
-                                            event.dragTranslation.y > -5) {
-                                            this.props.navigation.navigate('CardDetails',{
-                                                boardId: this.props.route.params.boardId,
-                                                stackId: this.state.index,
-                                                cardId: card.id
-                                            })
-                                        }
+                                    onPress={() => {
+                                        // Switches to selected stack
+                                        this.props.navigation.navigate('CardDetails',{
+                                            boardId: this.props.route.params.boardId,
+                                            stackId: this.state.index,
+                                            cardId: card.id
+                                        })
                                     }}
                                 >
-                                    <Text style={[styles.cardTitle, { width: '100%' }]}>
-                                        {card.title}
-                                    </Text>
-                                </DraxView>
+                                    <DraxView
+                                        key={card.id}
+                                        payload={card.id}
+                                        style={this.props.theme.card}
+                                        draggingStyle={{opacity: 0}}
+                                        dragReleasedStyle={{opacity: 0}}
+                                        hoverStyle={[this.props.theme.card, {opacity: 0.6, shadowOpacity: 0}]}
+                                        longPressDelay={250}
+                                        onDragEnd={(event) => {
+                                            // Shows selected card's details when the user just clicked the card
+                                            if (event.dragTranslation.x < 5 &&
+                                                event.dragTranslation.x > -5 &&
+                                                event.dragTranslation.y < 5 &&
+                                                event.dragTranslation.y > -5) {
+                                                this.props.navigation.navigate('CardDetails',{
+                                                    boardId: this.props.route.params.boardId,
+                                                    stackId: this.state.index,
+                                                    cardId: card.id
+                                                })
+                                            }
+                                        }}
+                                    >
+                                        <Text style={[this.props.theme.cardTitle, { width: '100%' }]}>
+                                            {card.title}
+                                        </Text>
+                                    </DraxView>
+                                </Pressable>
                             ))}
                         </View>
                         }
                     </ScrollView>
-                    <View style={[styles.container, {marginBottom: this.insets.bottom}]}>
+                    <View style={[this.props.theme.container, {marginBottom: this.insets.bottom}]}>
                         <Pressable
-                            style={styles.button}
+                            style={this.props.theme.button}
                             onPress={() => {this.props.navigation.navigate('NewCard', {
                                 boardId: this.props.route.params.boardId,
                                 stackId: this.state.index,
                             })}}
                         >
-                            <Text style={styles.buttonTitle}>
+                            <Text style={this.props.theme.buttonTitle}>
                                 {i18n.t('createCard')}
                             </Text>
                         </Pressable>
@@ -272,6 +283,7 @@ class BoardDetails extends React.Component {
 const mapStateToProps = state => ({
     boards: state.boards,
     server: state.server,
+    theme: state.theme,
     token: state.token
 })
 

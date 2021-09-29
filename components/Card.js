@@ -13,8 +13,6 @@ import axios from 'axios';
 import createStyles from '../styles/base.js';
 import {i18n} from '../i18n/i18n.js';
 
-const styles = createStyles()
-
 class Card extends React.Component {
 
     constructor(props) {
@@ -70,12 +68,12 @@ class Card extends React.Component {
 
     render() {
         return (
-            <View style={[styles.container, {paddingBottom: 40, flex: 1}]}>
-                <View style={styles.inputField}>
-                    <Text h1 h1Style={styles.title}>
+            <View style={[this.props.theme.container, {paddingBottom: 40, flex: 1}]}>
+                <View style={this.props.theme.inputField}>
+                    <Text h1 h1Style={this.props.theme.title}>
                         {i18n.t('title')}
                     </Text>
-                    <TextInput style={styles.input} 
+                    <TextInput style={this.props.theme.input} 
                         editable={this.state.editable}
                         value={this.state.card.title}
                         onChangeText={title => { 
@@ -96,13 +94,13 @@ class Card extends React.Component {
                             })
                         }}
                     />
-                    <Text style={{marginLeft: 5}}>
+                    <Text style={this.props.theme.textCheckbox}>
                         {i18n.t('setDueDate')}
                     </Text>
                 </View>
                 { this.state.showDatePicker && 
-                    <View style={styles.inputField}>
-                        <Text h1 h1Style={styles.title}>
+                    <View style={this.props.theme.inputField}>
+                        <Text h1 h1Style={this.props.theme.title}>
                         {i18n.t('dueDate')}
                         </Text>
                         <DateTimePicker
@@ -118,11 +116,11 @@ class Card extends React.Component {
                         />
                     </View>
                 }
-                <View style={{...styles.inputField, flexGrow: 1}}>
-                    <Text h1 h1Style={styles.title}>
+                <View style={{...this.props.theme.inputField, flexGrow: 1}}>
+                    <Text h1 h1Style={this.props.theme.title}>
                         {i18n.t('description')}
                     </Text>
-                    <TextInput style={[styles.input, styles.descriptionInput]} 
+                    <TextInput style={[this.props.theme.input, this.props.theme.descriptionInput]} 
                         editable={this.state.editable}
                         multiline={true}
                         value={this.state.card.description}
@@ -135,7 +133,7 @@ class Card extends React.Component {
                     />
                 </View>
                 { typeof this.props.route.params.cardId === 'undefined'
-                    ? <Pressable style={styles.button}
+                    ? <Pressable style={this.props.theme.button}
                         onPress={() => {
                             // We must not set a due date when the 'set due date' checkbock isn't checked
                             if (!this.state.showDatePicker) {
@@ -149,23 +147,23 @@ class Card extends React.Component {
                             }
                         }}
                     >
-                        <Text style={styles.buttonTitle}>
+                        <Text style={this.props.theme.buttonTitle}>
                             {i18n.t('create')}
                         </Text>
                     </Pressable>
                     : this.state.editable === false
-                        ? <Pressable style={styles.button}
+                        ? <Pressable style={this.props.theme.button}
                             onPress={() => {
                                 this.setState({
                                     editable: true
                                 })
                             }}
                         >
-                            <Text style={styles.buttonTitle}>
+                            <Text style={this.props.theme.buttonTitle}>
                                 {i18n.t('edit')}
                             </Text>
                         </Pressable>
-                        : <Pressable style={styles.button}
+                        : <Pressable style={this.props.theme.button}
                             onPress={() => {
                             // We must not set a due date when the 'set due date' checkbock isn't checked
                             if (!this.state.showDatePicker) {
@@ -179,16 +177,16 @@ class Card extends React.Component {
                             }
                         }}
                         >
-                            <Text style={styles.buttonTitle}>
+                            <Text style={this.props.theme.buttonTitle}>
                                 {i18n.t('save')}
                             </Text>
                         </Pressable>
                 }
                 { this.state.editable === false &&
-                    <Pressable style={[styles.button, styles.buttonDestruct]}
+                    <Pressable style={[this.props.theme.button, this.props.theme.buttonDestruct]}
                         onPress={this.onDelete}
                     >
-                        <Text style={[styles.buttonTitle, styles.buttonTitleDestruct]}>
+                        <Text style={[this.props.theme.buttonTitle, this.props.theme.buttonTitleDestruct]}>
                             {i18n.t('delete')}
                         </Text>
                     </Pressable>
@@ -279,6 +277,7 @@ class Card extends React.Component {
 const mapStateToProps = state => ({
     boards: state.boards,
     server: state.server,
+    theme: state.theme,
     token: state.token
   })
   const mapDispatchToProps = dispatch => (

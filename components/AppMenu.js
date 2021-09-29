@@ -9,6 +9,7 @@ import { Image, Pressable, View } from 'react-native';
 import Menu, { MenuItem } from 'react-native-material-menu';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {i18n} from '../i18n/i18n.js';
+import Icon from './Icon.js';
 
 class AppMenu extends React.Component {
 
@@ -28,10 +29,7 @@ class AppMenu extends React.Component {
                                 this.menu.current.show();
                             }}
                         >
-                            <Image
-                                style={{ width: 24, height: 24 }}
-                                source={require('../assets/more.png')}
-                            />
+                            <Icon name='more' />
                         </Pressable>
                     }
                 >
