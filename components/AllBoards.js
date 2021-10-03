@@ -53,7 +53,8 @@ class AllBoards extends React.Component {
               {typeof Object.values(this.props.boards.value) !== 'undefined' && Object.values(this.props.boards.value).map((board) => 
                 <Board
                   key={board.id}
-                  board={board} />
+                  board={board}
+                  navigation={this.props.navigation} />
               )}
           </ScrollView>
           {!this.state.creatingBoard &&
