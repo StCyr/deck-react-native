@@ -8,7 +8,6 @@ import AppMenu from './AppMenu';
 import { Pressable, RefreshControl, ScrollView, Text, TextInput, View } from 'react-native';
 import { DraxProvider, DraxView } from 'react-native-drax';
 import axios from 'axios';
-import createStyles from '../styles/base.js'
 import { initialWindowMetrics } from 'react-native-safe-area-context';
 import { i18n } from '../i18n/i18n.js';
 
@@ -97,8 +96,11 @@ class BoardDetails extends React.Component {
                                         style={this.props.theme.stackTab}
                                         receivingStyle={this.props.theme.stackTabDraggedOver}
                                         onReceiveDragDrop={({ dragged: { payload } }) => {
-                                            console.log(`moving card ${payload}`);
-                                            this.moveCard(payload, stack.id)
+                                            // Don't try to move card when the drop stack is the same
+                                            if (stack.id !== payload.stackId) {
+                                                console.log(`moving card ${payload.id}`);
+                                                this.moveCard(payload.id, stack.id)
+                                            }
                                         }}
                                     >
                                         <Pressable
@@ -124,7 +126,7 @@ class BoardDetails extends React.Component {
                                 <Pressable
                                     key={card.id}
                                     onPress={() => {
-                                        // Switches to selected stack
+                                        // Navigates to the card's details page
                                         this.props.navigation.navigate('CardDetails',{
                                             boardId: this.props.route.params.boardId,
                                             stackId: this.state.index,
@@ -134,25 +136,12 @@ class BoardDetails extends React.Component {
                                 >
                                     <DraxView
                                         key={card.id}
-                                        payload={card.id}
+                                        payload={card}
                                         style={this.props.theme.card}
                                         draggingStyle={{opacity: 0}}
                                         dragReleasedStyle={{opacity: 0}}
                                         hoverStyle={[this.props.theme.card, {opacity: 0.6, shadowOpacity: 0}]}
                                         longPressDelay={250}
-                                        onDragEnd={(event) => {
-                                            // Shows selected card's details when the user just clicked the card
-                                            if (event.dragTranslation.x < 5 &&
-                                                event.dragTranslation.x > -5 &&
-                                                event.dragTranslation.y < 5 &&
-                                                event.dragTranslation.y > -5) {
-                                                this.props.navigation.navigate('CardDetails',{
-                                                    boardId: this.props.route.params.boardId,
-                                                    stackId: this.state.index,
-                                                    cardId: card.id
-                                                })
-                                            }
-                                        }}
                                     >
                                         <Text style={[this.props.theme.cardTitle, { width: '100%' }]}>
                                             {card.title}
