@@ -35,8 +35,13 @@ export const boardSlice = createSlice({
 
       return state
     },
-    deleteAllBoards: (state, action) => {
+    deleteAllBoards: (state) => {
+      console.log('All boards deleted from store')
       state.value = {}
+    },
+    deleteBoard: (state, action) => {
+      console.log('Board ' + action.payload.boardId + ' removed from store')
+      delete state.value[action.payload.boardId]
     },
     deleteCard: (state, action) => {
       delete state.value[action.payload.boardId].stacks.find(oneStack => oneStack.id === action.payload.stackId).cards[action.payload.cardId]
@@ -46,9 +51,12 @@ export const boardSlice = createSlice({
       state.value[action.payload.boardId].stacks.find(oneStack => oneStack.id === action.payload.newStackId).cards[action.payload.cardId] = card
       delete state.value[action.payload.boardId].stacks.find(oneStack => oneStack.id === action.payload.oldStackId).cards[action.payload.cardId]
     },
+    renameBoard: (state, action) => {
+      state.value[action.payload.boardId].title = action.payload.boardTitle
+    }
   }
 })
 
-export const { addBoard, addCard, addStack, deleteAllBoards, deleteCard, moveCard } = boardSlice.actions
+export const { addBoard, addCard, addStack, deleteAllBoards, deleteBoard, deleteCard, moveCard, renameBoard } = boardSlice.actions
 
 export default boardSlice.reducer

@@ -1,17 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux'
-import { addBoard } from '../store/boardSlice';
+import { addBoard, deleteAllBoards } from '../store/boardSlice';
 import { setServer } from '../store/serverSlice';
 import { setToken } from '../store/tokenSlice';
-import { Image, Pressable, RefreshControl, ScrollView, View, Text, TextInput } from 'react-native';
+import { Pressable, RefreshControl, ScrollView, View, Text, TextInput } from 'react-native';
 import { DraxProvider } from 'react-native-drax';
 import { initialWindowMetrics } from 'react-native-safe-area-context';
 import {i18n} from '../i18n/i18n.js';
 import axios from 'axios';
 import AppMenu from './AppMenu';
-import createStyles from '../styles/base.js'
-
+import Board from './Board';
 
 // Component that display the user's boards
 class AllBoards extends React.Component {
@@ -20,6 +19,7 @@ class AllBoards extends React.Component {
       super(props)
       this.state = {
         creatingBoard: false,
+        lastRefresh: new Date(0),
         refreshing: false,
         newBoardName: '',
       }
@@ -51,23 +51,9 @@ class AllBoards extends React.Component {
               />
             } >
               {typeof Object.values(this.props.boards.value) !== 'undefined' && Object.values(this.props.boards.value).map((board) => 
-                <Pressable
+                <Board
                   key={board.id}
-                  onPress={() => {
-                    this.props.navigation.navigate('BoardDetails',{
-                      boardId: board.id
-                    })
-                  }}
-                  style={this.props.theme.card}
-                >
-                  <View style={[this.props.theme.cardColor, {backgroundColor: `#${board.color}`}]} />
-                  <Text style={this.props.theme.cardTitle}>
-                    {board.title}
-                  </Text>
-                  <Image
-                    style={{ width: 24, height: 24 }}
-                    source={require('../assets/go.png')} />
-                </Pressable>
+                  board={board} />
               )}
           </ScrollView>
           {!this.state.creatingBoard &&
@@ -143,7 +129,8 @@ class AllBoards extends React.Component {
     axios.get(this.props.server.value + '/index.php/apps/deck/api/v1.0/boards', {
         headers: {
         'Content-Type': 'application/json',
-        'Authorization': this.props.token.value
+        'Authorization': this.props.token.value,
+// Doesn't work yet        'If-Modified-Since': this.state.lastRefresh.toUTCString()
         }
     })
     .then((resp) => {
@@ -151,7 +138,11 @@ class AllBoards extends React.Component {
         console.log('Error', resp)
       } else {
         console.log('boards retrieved from server')
-        this.setState({refreshing: false})
+        this.setState({
+          lastRefresh: new Date(),
+          refreshing: false
+        })
+        this.props.deleteAllBoards()
         resp.data.forEach(board => {
           if (!board.archived) {
            this.props.addBoard(board)
@@ -179,6 +170,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => (
   bindActionCreators( {
       addBoard,
+      deleteAllBoards,
       setServer,
       setToken
   }, dispatch)
