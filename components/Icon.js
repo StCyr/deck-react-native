@@ -8,8 +8,8 @@ const CreateIcon = createIconSetFromFontello(
   'deck.ttf'
 )
 
-const Icon = ({ size = 24, color = '#000', name = 'go', style }) => {
-  return <CreateIcon name={name} size={size} color={color} style={style} />
+const Icon = ({ size = 24, name = 'go', style }) => {
+  return <CreateIcon name={name} size={size} style={style} />
 }
 
 export default Icon

@@ -20,6 +20,7 @@ class BoardDetails extends React.Component {
             index: 0,   // the index of the stack currently shown
             newStackName: '',
             refreshing: false,
+            cardPressed: -1, // array of cards pressed
         }
         this.createCard = this.createStack.bind(this)
         this.loadBoard = this.loadBoard.bind(this)
@@ -34,6 +35,17 @@ class BoardDetails extends React.Component {
 
     // Function to change the displayed stack
     _handleIndexChange = index => this.setState({ index })
+
+    // Function to detect long press on card
+    cardPressedDown = (id) => {
+        this.setState({cardPressed: id})
+        setTimeout(() => {
+            if(this.state.cardPressed === id) {
+                console.log(`open context menu of card ${id}`)
+                this.setState({cardPressed: -1}) // reset
+            }
+        }, 1000)
+    }
 
     // Gets the board's details from the server and setup the page's header bar
     componentDidMount() {
@@ -142,6 +154,17 @@ class BoardDetails extends React.Component {
                                         dragReleasedStyle={{opacity: 0}}
                                         hoverStyle={[this.props.theme.card, {opacity: 0.6, shadowOpacity: 0}]}
                                         longPressDelay={250}
+                                        onDragStart={() => this.cardPressedDown(card.id)}
+                                        onDrag={({dragTranslation}) => {
+                                            if(dragTranslation.y > 5 || dragTranslation.y < -5) {
+                                                // if the card was actually moved, cancel opening the context menu
+                                                this.setState({cardPressed: -1})
+                                            }
+                                        }}
+                                        onDragEnd={({dragTranslation}) => {
+                                            // Shows selected card's details when the user just clicked the card
+                                            this.setState({cardPressed: -1})
+                                        }}
                                     >
                                         <Text style={[this.props.theme.cardTitle, { width: '100%' }]}>
                                             {card.title}

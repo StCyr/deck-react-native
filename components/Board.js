@@ -4,6 +4,7 @@ import { initialWindowMetrics } from 'react-native-safe-area-context';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux'
 import { addBoard, deleteBoard, renameBoard } from '../store/boardSlice';
+import Icon from './Icon';
 import axios from 'axios';
 import {i18n} from '../i18n/i18n.js';
 
@@ -79,9 +80,7 @@ class Board extends React.Component {
                         onSubmitEditing={() => this.renameBoard()}
                         returnKeyType='done' />
                 }
-                <Image
-                    style={{ width: 24, height: 24 }}
-                    source={require('../assets/go.png')} />
+                <Icon name='go' style={this.props.theme.icon} />
             </Pressable> 
         )
     }
