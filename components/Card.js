@@ -5,12 +5,11 @@ import {addCard, deleteCard } from '../store/boardSlice';
 import { setServer } from '../store/serverSlice';
 import { setToken } from '../store/tokenSlice';
 import AppMenu from './AppMenu';
-import { Pressable, ScrollView, Platform, KeyboardAvoidingView, TextInput, View } from 'react-native';
+import { Pressable, TextInput, View } from 'react-native';
 import { Text } from 'react-native-elements';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
-import createStyles from '../styles/base.js';
 import {i18n} from '../i18n/i18n.js';
 
 class Card extends React.Component {
@@ -182,15 +181,6 @@ class Card extends React.Component {
                             </Text>
                         </Pressable>
                 }
-                { this.state.editable === false &&
-                    <Pressable style={[this.props.theme.button, this.props.theme.buttonDestruct]}
-                        onPress={this.onDelete}
-                    >
-                        <Text style={[this.props.theme.buttonTitle, this.props.theme.buttonTitleDestruct]}>
-                            {i18n.t('delete')}
-                        </Text>
-                    </Pressable>
-                }                    
             </View>
         )
     }
@@ -223,32 +213,6 @@ class Card extends React.Component {
         })
     }
   
-    onDelete() {
-        axios.delete(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks/${this.props.route.params.stackId}/cards/${this.props.route.params.cardId}`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': this.props.token.value
-                },
-            })
-        .then((resp) => {
-            if (resp.status !== 200) {
-                console.log('Error', resp)
-            } else {
-                console.log('Card deleted')
-                this.props.deleteCard({
-                    boardId: this.props.route.params.boardId,
-                    stackId: this.props.route.params.stackId,
-                    cardId: this.state.card.id
-                })
-                this.props.navigation.goBack()
-            }
-        })
-        .catch((error) => {
-            console.log(error)
-        })
-    }
-
     onSave() {
         axios.put(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks/${this.props.route.params.stackId}/cards/${this.props.route.params.cardId}`,
             this.state.card,
@@ -283,7 +247,6 @@ const mapStateToProps = state => ({
   const mapDispatchToProps = dispatch => (
     bindActionCreators( {
         addCard,
-        deleteCard,
         setServer,
         setToken
     }, dispatch)

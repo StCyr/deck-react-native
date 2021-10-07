@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActionSheetIOS, Image, Pressable, View, Text, TextInput } from 'react-native';
+import { ActionSheetIOS, Pressable, View, Text, TextInput } from 'react-native';
 import { initialWindowMetrics } from 'react-native-safe-area-context';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux'

@@ -36,16 +36,17 @@ export const boardSlice = createSlice({
       		return state
     	},
     	deleteAllBoards: (state) => {
-      		console.log('All boards deleted from store')
       		state.value = {}
+      		console.log('All boards deleted from store')
     	},
     	deleteBoard: (state, action) => {
-      		console.log('Board ' + action.payload.boardId + ' removed from store')
       		delete state.value[action.payload.boardId]
+      		console.log('Board ' + action.payload.boardId + ' removed from store')
     	},
     	deleteCard: (state, action) => {
       		delete state.value[action.payload.boardId].stacks.find(oneStack => oneStack.id === action.payload.stackId).cards[action.payload.cardId]
-    	},
+			console.log('card ' + cardId + ' deleted from store')
+		},
     	moveCard: (state, action) => {
       		const card = state.value[action.payload.boardId].stacks.find(oneStack => oneStack.id === action.payload.oldStackId)?.cards[action.payload.cardId]
       		state.value[action.payload.boardId].stacks.find(oneStack => oneStack.id === action.payload.newStackId).cards[action.payload.cardId] = card

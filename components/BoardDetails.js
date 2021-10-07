@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { addStack, moveCard } from '../store/boardSlice';
+import { addStack, deleteCard, moveCard } from '../store/boardSlice';
 import { setServer } from '../store/serverSlice';
 import { setToken } from '../store/tokenSlice';
 import AppMenu from './AppMenu';
-import { Pressable, RefreshControl, ScrollView, Text, TextInput, View } from 'react-native';
+import { ActionSheetIOS, Pressable, RefreshControl, ScrollView, Text, TextInput, View } from 'react-native';
 import { DraxProvider, DraxView } from 'react-native-drax';
 import axios from 'axios';
 import { initialWindowMetrics } from 'react-native-safe-area-context';
@@ -36,12 +36,29 @@ class BoardDetails extends React.Component {
     // Function to change the displayed stack
     _handleIndexChange = index => this.setState({ index })
 
-    // Function to detect long press on card
+    // Function to detect long press on card and open a context menu
     cardPressedDown = (id) => {
         this.setState({cardPressed: id})
         setTimeout(() => {
             if(this.state.cardPressed === id) {
-                console.log(`open context menu of card ${id}`)
+                // Context menu
+                ActionSheetIOS.showActionSheetWithOptions(
+                    {
+                        options: [i18n.t("cancel"), i18n.t("rename"), i18n.t("delete")],
+                        destructiveButtonIndex: 2,
+                        cancelButtonIndex: 0,
+                    },
+                    buttonIndex => {
+                        if (buttonIndex === 0) {
+                            // Cancel action
+                        } else if (buttonIndex === 1) {
+                            // Makes title editable
+                        } else if (buttonIndex === 2) {
+                            // Delete card
+                            this.deleteCard(id)
+                        }
+                    }
+                )
                 this.setState({cardPressed: -1}) // reset
             }
         }, 500)
@@ -289,6 +306,32 @@ class BoardDetails extends React.Component {
             })
         })
     }
+
+    deleteCard(cardId) {
+        axios.delete(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks/${this.props.route.params.stackId}/cards/${cardId}`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': this.props.token.value
+                },
+            })
+        .then((resp) => {
+            if (resp.status !== 200) {
+                console.log('Error', resp)
+            } else {
+                console.log('Card deleted')
+                this.props.deleteCard({
+                    boardId: this.props.route.params.boardId,
+                    stackId: this.state.index,
+                    cardId,
+                })
+            }
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+    }
+
 }
 
 // Connect to store
@@ -302,6 +345,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => (
     bindActionCreators( {
         addStack,
+        deleteCard,
         moveCard,
         setServer,
         setToken
