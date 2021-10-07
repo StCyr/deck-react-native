@@ -18,6 +18,8 @@ import { setTheme } from './store/themeSlice';
 import { setToken } from './store/tokenSlice';
 import * as Linking from 'expo-linking'; // For creating an URL handler to retrieve the device token
 import {encode as btoa} from 'base-64'; // btoa isn't supported by android (and maybe also iOS)
+import * as Device from 'expo-device';
+import * as ScreenOrientation from 'expo-screen-orientation';
 
 // Create Stack navigator
 const Stack = createStackNavigator()
@@ -40,6 +42,11 @@ class App extends React.Component {
   	constructor(props) {
     	console.log('initialising app')
     	super(props)
+
+		// Force portrait mode on iPhones
+		if (Device.modelId.startsWith('iPhone')) {
+			ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)
+		}
 
      	// Register handler to catch Nextcloud's redirect after successfull login
     	Linking.addEventListener('url', (url) => {this.handleRedirect(url)})
