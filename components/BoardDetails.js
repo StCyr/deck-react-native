@@ -44,7 +44,7 @@ class BoardDetails extends React.Component {
                 console.log(`open context menu of card ${id}`)
                 this.setState({cardPressed: -1}) // reset
             }
-        }, 1000)
+        }, 500)
     }
 
     // Gets the board's details from the server and setup the page's header bar
