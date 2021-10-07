@@ -29,7 +29,7 @@ class AppMenu extends React.Component {
                                 this.menu.current.show();
                             }}
                         >
-                            <Icon name='more' />
+                            <Icon name='more' style={this.props.theme.icon} />
                         </Pressable>
                     }
                 >
@@ -68,6 +68,7 @@ class AppMenu extends React.Component {
 // Connect to store
 const mapStateToProps = state => ({
     server: state.server,
+    theme: state.theme,
     token: state.token
 })
 

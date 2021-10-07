@@ -4,7 +4,6 @@
     "description": "The power of Nextcloud Deck on your smartphone",
     "slug": "deck-react-native",
     "version": "0.6.1",
-    "orientation": "portrait",
     "icon": "./assets/icon.png",
     "scheme": "nc",
     "userInterfaceStyle": "automatic",

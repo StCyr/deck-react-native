@@ -8,7 +8,6 @@ import AppMenu from './AppMenu';
 import { Pressable, RefreshControl, ScrollView, Text, TextInput, View } from 'react-native';
 import { DraxProvider, DraxView } from 'react-native-drax';
 import axios from 'axios';
-import createStyles from '../styles/base.js'
 import { initialWindowMetrics } from 'react-native-safe-area-context';
 import { i18n } from '../i18n/i18n.js';
 
@@ -21,6 +20,7 @@ class BoardDetails extends React.Component {
             index: 0,   // the index of the stack currently shown
             newStackName: '',
             refreshing: false,
+            cardPressed: -1, // array of cards pressed
         }
         this.createCard = this.createStack.bind(this)
         this.loadBoard = this.loadBoard.bind(this)
@@ -35,6 +35,17 @@ class BoardDetails extends React.Component {
 
     // Function to change the displayed stack
     _handleIndexChange = index => this.setState({ index })
+
+    // Function to detect long press on card
+    cardPressedDown = (id) => {
+        this.setState({cardPressed: id})
+        setTimeout(() => {
+            if(this.state.cardPressed === id) {
+                console.log(`open context menu of card ${id}`)
+                this.setState({cardPressed: -1}) // reset
+            }
+        }, 500)
+    }
 
     // Gets the board's details from the server and setup the page's header bar
     componentDidMount() {
@@ -97,8 +108,11 @@ class BoardDetails extends React.Component {
                                         style={this.props.theme.stackTab}
                                         receivingStyle={this.props.theme.stackTabDraggedOver}
                                         onReceiveDragDrop={({ dragged: { payload } }) => {
-                                            console.log(`moving card ${payload}`);
-                                            this.moveCard(payload, stack.id)
+                                            // Don't try to move card when the drop stack is the same
+                                            if (stack.id !== payload.stackId) {
+                                                console.log(`moving card ${payload.id}`);
+                                                this.moveCard(payload.id, stack.id)
+                                            }
                                         }}
                                     >
                                         <Pressable
@@ -124,7 +138,7 @@ class BoardDetails extends React.Component {
                                 <Pressable
                                     key={card.id}
                                     onPress={() => {
-                                        // Switches to selected stack
+                                        // Navigates to the card's details page
                                         this.props.navigation.navigate('CardDetails',{
                                             boardId: this.props.route.params.boardId,
                                             stackId: this.state.index,
@@ -134,24 +148,22 @@ class BoardDetails extends React.Component {
                                 >
                                     <DraxView
                                         key={card.id}
-                                        payload={card.id}
+                                        payload={card}
                                         style={this.props.theme.card}
                                         draggingStyle={{opacity: 0}}
                                         dragReleasedStyle={{opacity: 0}}
                                         hoverStyle={[this.props.theme.card, {opacity: 0.6, shadowOpacity: 0}]}
                                         longPressDelay={250}
-                                        onDragEnd={(event) => {
-                                            // Shows selected card's details when the user just clicked the card
-                                            if (event.dragTranslation.x < 5 &&
-                                                event.dragTranslation.x > -5 &&
-                                                event.dragTranslation.y < 5 &&
-                                                event.dragTranslation.y > -5) {
-                                                this.props.navigation.navigate('CardDetails',{
-                                                    boardId: this.props.route.params.boardId,
-                                                    stackId: this.state.index,
-                                                    cardId: card.id
-                                                })
+                                        onDragStart={() => this.cardPressedDown(card.id)}
+                                        onDrag={({dragTranslation}) => {
+                                            if(dragTranslation.y > 5 || dragTranslation.y < -5) {
+                                                // if the card was actually moved, cancel opening the context menu
+                                                this.setState({cardPressed: -1})
                                             }
+                                        }}
+                                        onDragEnd={({dragTranslation}) => {
+                                            // Shows selected card's details when the user just clicked the card
+                                            this.setState({cardPressed: -1})
                                         }}
                                     >
                                         <Text style={[this.props.theme.cardTitle, { width: '100%' }]}>

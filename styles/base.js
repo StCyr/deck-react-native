@@ -80,6 +80,9 @@ const baseStyles = (theme) => {
       marginTop: padding.m,
       marginBottom: padding.s,
     },
+    icon: {
+      color: colors.text,
+    },
     button: {
       width: '100%',
       borderRadius: padding.m,

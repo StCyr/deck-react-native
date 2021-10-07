@@ -18,6 +18,7 @@
     "base-64": "^1.0.0",
     "expo": "^42.0.0",
     "expo-app-loading": "^1.1.2",
+    "expo-device": "~3.3.0",
     "expo-linking": "~2.3.1",
     "expo-localization": "~10.2.0",
     "expo-status-bar": "~1.0.4",
@@ -40,7 +41,8 @@
     "react-native-webview": "11.6.2",
     "react-redux": "^7.2.4",
     "redux": "^4.1.0",
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "expo-screen-orientation": "~3.3.0"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0"
