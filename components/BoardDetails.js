@@ -99,9 +99,11 @@ class BoardDetails extends React.Component {
                         ScrollView can use to make the containing view sticky,
                         without changing styles on the containing view */}
                         <View>
-                            <ScrollView style={this.props.theme.stackBar} 
+                            <ScrollView
+                                style={this.props.theme.stackBar}
                                 horizontal
-                                contentContainerStyle={{ flex: 1 }} >
+                                contentContainerStyle={this.props.theme.stackBarScrollInner}
+                            >
                                 {stacks.map(stack => (
                                     <DraxView
                                         key={stack.id}
