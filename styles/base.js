@@ -130,8 +130,11 @@ const baseStyles = (theme) => {
       marginBottom: padding.m,
       backgroundColor: colors.bgDefault,
       width: '100%',
-      paddingLeft: padding.m,
+    },
+    stackBarScrollInner: {
       paddingRight: padding.m,
+      paddingLeft: padding.m,
+      minWidth: '100%',
     },
     stackTab: {
       flexGrow: 1,
