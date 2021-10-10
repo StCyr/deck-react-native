@@ -45,7 +45,7 @@ export const boardSlice = createSlice({
     	},
     	deleteCard: (state, action) => {
       		delete state.value[action.payload.boardId].stacks.find(oneStack => oneStack.id === action.payload.stackId).cards[action.payload.cardId]
-			console.log('card ' + cardId + ' deleted from store')
+			console.log('card ' + action.payload.cardId + ' deleted from store')
 		},
     	moveCard: (state, action) => {
       		const card = state.value[action.payload.boardId].stacks.find(oneStack => oneStack.id === action.payload.oldStackId)?.cards[action.payload.cardId]

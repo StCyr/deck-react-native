@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {addCard, deleteCard } from '../store/boardSlice';
+import { addCard } from '../store/boardSlice';
 import { setServer } from '../store/serverSlice';
 import { setToken } from '../store/tokenSlice';
 import AppMenu from './AppMenu';
@@ -28,7 +28,6 @@ class Card extends React.Component {
         }
 
         this.onCreate = this.onCreate.bind(this);
-        this.onDelete = this.onDelete.bind(this);
         this.onSave = this.onSave.bind(this);
     }
 
