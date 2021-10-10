@@ -54,6 +54,12 @@ class BoardDetails extends React.Component {
             headerRight: () => (<AppMenu/>)
         })
         await this.loadBoard()
+        // Shows stack with order === 0, if stacks are available
+        if (this.props.boards.value[this.props.route.params.boardId].stacks?.length) {
+            this.setState({
+                index: this.props.boards.value[this.props.route.params.boardId].stacks[0].id,
+            })
+        }
     }
 
     render() {
@@ -248,12 +254,6 @@ class BoardDetails extends React.Component {
                     stack
                 })
             })
-            // Shows stack with order === 0, if stacks are available
-            if (this.props.boards.value[this.props.route.params.boardId].stacks?.length) {
-                this.setState({
-                    index: this.props.boards.value[this.props.route.params.boardId].stacks[0].id,
-                })
-            }
         })
     }
 
