@@ -48,12 +48,12 @@ class BoardDetails extends React.Component {
     }
 
     // Gets the board's details from the server and setup the page's header bar
-    componentDidMount() {
-        this.loadBoard()
+    async componentDidMount() {
         this.props.navigation.setOptions({
             headerTitle: 'Board details',
             headerRight: () => (<AppMenu/>)
         })
+        await this.loadBoard()
     }
 
     render() {
@@ -277,6 +277,8 @@ class BoardDetails extends React.Component {
         .then((resp) => {
             // TODO check for error
             console.log('card moved')
+            // Refresh board
+            return this.loadBoard()
         })
         .catch((error) => {
             // Reverts change and inform user
