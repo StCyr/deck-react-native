@@ -21,7 +21,7 @@ class Card extends React.Component {
         this.state = {
             card: {
                 description: '',
-                duedate: new Date(),
+                duedate: null,
                 title: ''
             },
             editable: false,
