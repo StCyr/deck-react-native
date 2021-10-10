@@ -105,7 +105,7 @@ class Card extends React.Component {
                         </Text>
                     </View>
                 }
-                { (this.state.showDatePicker || (!this.state.editable && this.state.card.duedate !== null)) &&
+                { this.state.showDatePicker &&
                     <View style={this.props.theme.inputField}>
                         <Text h1 h1Style={this.props.theme.title}>
                         {i18n.t('dueDate')}
