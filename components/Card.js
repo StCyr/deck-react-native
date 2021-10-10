@@ -5,7 +5,7 @@ import { addCard } from '../store/boardSlice';
 import { setServer } from '../store/serverSlice';
 import { setToken } from '../store/tokenSlice';
 import AppMenu from './AppMenu';
-import { Pressable, TextInput, View } from 'react-native';
+import { Pressable, ScrollView, TextInput, View } from 'react-native';
 import { Text } from 'react-native-elements';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -66,7 +66,7 @@ class Card extends React.Component {
 
     render() {
         return (
-            <View style={[this.props.theme.container, {paddingBottom: 40, flex: 1}]}>
+            <ScrollView keyboardShouldPersistTaps="handled" style={[this.props.theme.container, {paddingBottom: 40, flex: 1}]}>
                 <View style={this.props.theme.inputField}>
                     <Text h1 h1Style={this.props.theme.title}>
                         {i18n.t('title')}
@@ -114,7 +114,7 @@ class Card extends React.Component {
                         />
                     </View>
                 }
-                <View style={{...this.props.theme.inputField, flexGrow: 1}}>
+                <View keyboardShouldPersistTaps="handled" style={{...this.props.theme.inputField, flexGrow: 1}}>
                     <Text h1 h1Style={this.props.theme.title}>
                         {i18n.t('description')}
                     </Text>
@@ -180,7 +180,7 @@ class Card extends React.Component {
                             </Text>
                         </Pressable>
                 }
-            </View>
+            </ScrollView>
         )
     }
 
