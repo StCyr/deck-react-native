@@ -180,7 +180,7 @@ class BoardDetails extends React.Component {
                                                 this.setState({cardPressed: -1})
                                             }
                                         }}
-                                        onDragEnd={({dragTranslation}) => {
+                                        onDragEnd={() => {
                                             // Shows selected card's details when the user just clicked the card
                                             this.setState({cardPressed: -1})
                                         }}
