@@ -6,9 +6,9 @@ import tokenReducer from './tokenSlice'
 
 export default configureStore({
 	reducer: {
-    	boards: boardReducer,
-    	server: serverReducer,
-    	theme: themeReducer,
-    	token: tokenReducer
-  	},
+		boards: boardReducer,
+		server: serverReducer,
+		theme: themeReducer,
+		token: tokenReducer
+	},
 })

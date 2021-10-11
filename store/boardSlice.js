@@ -6,56 +6,56 @@ export const boardSlice = createSlice({
 		value: {},
 	},
 	reducers: {
-    	addBoard: (state, action) => {
-	      state.value[action.payload.id] = action.payload
-    	},
-	    addCard: (state, action) => {
-    	  state.value[action.payload.boardId].stacks.find(oneStack => oneStack.id === action.payload.stackId).cards[action.payload.card.id] = action.payload.card
-	    },
-    	addStack: (state, action) => {
-	    	// Stores cards in an object where cards are indexed by their id rather than in an array
-    	  	const cards = action.payload.stack.cards
-	      	action.payload.stack.cards = {}
-    	  	if (typeof cards !== 'undefined') {
-        		cards.forEach(card => {
-	          		action.payload.stack.cards[card.id] = card
-    	    	})
-	      	}
-	      	// Filter out existing stack with same id
-      		if (state.value[action.payload.boardId].stacks?.length) {
-        		state.value[action.payload.boardId].stacks = state.value[action.payload.boardId].stacks.filter(oneStack => oneStack.id !== action.payload.stack.id)
-      		} else {
-        		// Prepare empty stack array
-        		state.value[action.payload.boardId].stacks = [];
-      		}
-      		// Adds stack
-      		state.value[action.payload.boardId].stacks.push(action.payload.stack)
-      		// Sort stacks by order
-      		state.value[action.payload.boardId].stacks.sort((a, b) => a.order - b.order)
+		addBoard: (state, action) => {
+			state.value[action.payload.id] = action.payload
+		},
+		addCard: (state, action) => {
+			state.value[action.payload.boardId].stacks.find(oneStack => oneStack.id === action.payload.stackId).cards[action.payload.card.id] = action.payload.card
+		},
+		addStack: (state, action) => {
+			// Stores cards in an object where cards are indexed by their id rather than in an array
+			const cards = action.payload.stack.cards
+			action.payload.stack.cards = {}
+			if (typeof cards !== 'undefined') {
+				cards.forEach(card => {
+					action.payload.stack.cards[card.id] = card
+				})
+			}
+			// Filter out existing stack with same id
+			if (state.value[action.payload.boardId].stacks?.length) {
+				state.value[action.payload.boardId].stacks = state.value[action.payload.boardId].stacks.filter(oneStack => oneStack.id !== action.payload.stack.id)
+			} else {
+				// Prepare empty stack array
+				state.value[action.payload.boardId].stacks = [];
+			}
+			// Adds stack
+			state.value[action.payload.boardId].stacks.push(action.payload.stack)
+			// Sort stacks by order
+			state.value[action.payload.boardId].stacks.sort((a, b) => a.order - b.order)
 
-      		return state
-    	},
-    	deleteAllBoards: (state) => {
-      		state.value = {}
-      		console.log('All boards deleted from store')
-    	},
-    	deleteBoard: (state, action) => {
-      		delete state.value[action.payload.boardId]
-      		console.log('Board ' + action.payload.boardId + ' removed from store')
-    	},
-    	deleteCard: (state, action) => {
-      		delete state.value[action.payload.boardId].stacks.find(oneStack => oneStack.id === action.payload.stackId).cards[action.payload.cardId]
+			return state
+		},
+		deleteAllBoards: (state) => {
+			state.value = {}
+			console.log('All boards deleted from store')
+		},
+		deleteBoard: (state, action) => {
+			delete state.value[action.payload.boardId]
+			console.log('Board ' + action.payload.boardId + ' removed from store')
+		},
+		deleteCard: (state, action) => {
+			delete state.value[action.payload.boardId].stacks.find(oneStack => oneStack.id === action.payload.stackId).cards[action.payload.cardId]
 			console.log('card ' + action.payload.cardId + ' deleted from store')
 		},
-    	moveCard: (state, action) => {
-      		const card = state.value[action.payload.boardId].stacks.find(oneStack => oneStack.id === action.payload.oldStackId)?.cards[action.payload.cardId]
-      		state.value[action.payload.boardId].stacks.find(oneStack => oneStack.id === action.payload.newStackId).cards[action.payload.cardId] = card
-      		delete state.value[action.payload.boardId].stacks.find(oneStack => oneStack.id === action.payload.oldStackId).cards[action.payload.cardId]
-    	},
-    	renameBoard: (state, action) => {
-      	state.value[action.payload.boardId].title = action.payload.boardTitle
-    	}
-  	}
+		moveCard: (state, action) => {
+			const card = state.value[action.payload.boardId].stacks.find(oneStack => oneStack.id === action.payload.oldStackId)?.cards[action.payload.cardId]
+			state.value[action.payload.boardId].stacks.find(oneStack => oneStack.id === action.payload.newStackId).cards[action.payload.cardId] = card
+			delete state.value[action.payload.boardId].stacks.find(oneStack => oneStack.id === action.payload.oldStackId).cards[action.payload.cardId]
+		},
+		renameBoard: (state, action) => {
+		state.value[action.payload.boardId].title = action.payload.boardTitle
+		}
+	}
 })
 
 export const { addBoard, addCard, addStack, deleteAllBoards, deleteBoard, deleteCard, moveCard, renameBoard } = boardSlice.actions
