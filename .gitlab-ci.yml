@@ -1,6 +1,6 @@
 image: node
 
-stage:
+stages:
  - lint
 
 eslint:
