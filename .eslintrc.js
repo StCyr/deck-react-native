@@ -1,4 +1,9 @@
 module.exports = {
+    "settings": {
+        "react": {
+          "version": "detect",
+        },
+    },
     "env": {
         "browser": true,
         "commonjs": true,
@@ -19,5 +24,6 @@ module.exports = {
         "react"
     ],
     "rules": {
+        "react/prop-types": 0
     }
 };
