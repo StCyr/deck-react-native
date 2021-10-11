@@ -7,5 +7,6 @@ eslint:
  stage: lint
  script:
     - npm i eslint eslint-plugin-react
+    - node_modules/eslint/bin/eslint.js --version
     - node_modules/eslint/bin/eslint.js .
 
