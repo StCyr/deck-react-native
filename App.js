@@ -27,7 +27,6 @@ const Stack = createStackNavigator()
 // Application
 class App extends React.Component {
 
-
 	async loadFonts() {
 		await Font.loadAsync({
 			deck: require('./assets/fonts/deck/deck.ttf'),
@@ -87,7 +86,7 @@ class App extends React.Component {
 	}
 
 	// Function to retrieve the device's token and save it after user logged in
-	handleRedirect = async ({url}) => {
+	async handleRedirect({url}) {
 		if (url.startsWith('nc://login/server')) {
 			console.log('Received the expected nc:// redirect', url)
 			const user = decodeURIComponent(url.substring(url.lastIndexOf('user:')+5, url.lastIndexOf('&')))

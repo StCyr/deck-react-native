@@ -39,7 +39,7 @@ class BoardDetails extends React.Component {
     }
 
     // Function to detect long press on card and open a context menu
-    cardPressedDown = (id) => {
+    cardPressedDown(id) {
         this.setState({cardPressed: id})
         setTimeout(() => {
             if(this.state.cardPressed === id) {
