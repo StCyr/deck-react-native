@@ -198,7 +198,12 @@ class Card extends React.Component {
                 console.log('Error', resp)
             } else {
                 console.log('Card created')
-                this.state.card.id = resp.data.id
+                this.setState((previousSate) => ({
+                    card: {
+                        ...previousSate.card,
+                        id: resp.data
+                    }
+                })) 
                 this.props.addCard({
                     boardId: this.props.route.params.boardId,
                     stackId: this.props.route.params.stackId,
