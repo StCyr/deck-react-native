@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import { deleteAllBoards } from '../store/boardSlice';
 import { setServer } from '../store/serverSlice';
 import { setToken } from '../store/tokenSlice';
-import { Image, Pressable, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import Menu, { MenuItem } from 'react-native-material-menu';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {i18n} from '../i18n/i18n.js';
@@ -40,14 +40,14 @@ class AppMenu extends React.Component {
                                     'OCS-APIREQUEST': true,
                                     'Authorization': this.props.token.value
                                 }                    
-                            }).then(resp => {
+                            }).then(() => {
                                 console.log('User logged out from server')
                                 AsyncStorage.clear()
                                 this.props.setToken(null)
                                 this.props.setServer(null)
                                 this.props.deleteAllBoards()
                             })
-                            .catch(error => {
+                            .catch(() => {
                                 console.log('Error occured while logging user out from server. Trying to clear session here anyway')
                                 AsyncStorage.clear()
                                 this.props.setToken(null)

@@ -293,11 +293,11 @@ class BoardDetails extends React.Component {
                 'Authorization': this.props.token.value
             }
         })
-        .then((resp) => {
+        .then(() => {
             // TODO check for error
             console.log('card moved')
         })
-        .catch((error) => {
+        .catch(() => {
             // Reverts change and inform user
             // TODO inform user
             this.props.moveCard({

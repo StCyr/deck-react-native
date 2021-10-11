@@ -38,7 +38,7 @@ export default class CardMenu extends React.Component {
                 'Authorization': this.props.token.value
             }
         })
-        .then((resp) => {
+        .then(() => {
         })
         
     }
