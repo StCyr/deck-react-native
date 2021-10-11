@@ -1,3 +1,11 @@
-# This file is a template, and might need editing before it works on your project.
-include:
-  template: Jobs/Code-Quality.gitlab-ci.yml
+image: node
+
+stage:
+ - lint
+
+eslint:
+ stage: lint
+ script:
+    - npm i eslint eslint-plugin-react
+    - node_modules/eslint/bin/eslint.js .
+
