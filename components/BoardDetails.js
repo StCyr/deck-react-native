@@ -34,7 +34,9 @@ class BoardDetails extends React.Component {
     }
 
     // Function to change the displayed stack
-    _handleIndexChange = index => this.setState({ index })
+    _handleIndexChange(index) {
+        this.setState({ index })
+    }
 
     // Function to detect long press on card and open a context menu
     cardPressedDown = (id) => {

@@ -27,22 +27,23 @@ const Stack = createStackNavigator()
 // Application
 class App extends React.Component {
 
-	state = {
-		fontsLoaded: false,
-		colorScheme: 'light',
-	}
 
 	async loadFonts() {
 		await Font.loadAsync({
 			deck: require('./assets/fonts/deck/deck.ttf'),
 		})
-	this.setState({ fontsLoaded: true })
+		this.setState({ fontsLoaded: true })
 	}
 
 	constructor(props) {
 		console.log('initialising app')
 		super(props)
 
+		this.state = {
+			fontsLoaded: false,
+			colorScheme: 'light',
+		}
+	
 		// Force portrait mode on iPhones
 		if (Device.modelId.startsWith('iPhone')) {
 			ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)
