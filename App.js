@@ -44,7 +44,7 @@ class App extends React.Component {
 		}
 	
 		// Force portrait mode on iPhones
-		if (Device.modelId.startsWith('iPhone')) {
+		if (Device.modelId && Device.modelId.startsWith('iPhone')) {
 			ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)
 		}
 
