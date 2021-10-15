@@ -106,7 +106,7 @@ class Card extends React.Component {
                 { this.state.showDatePicker &&
                     <View style={this.props.theme.inputField}>
                         <Text h1 h1Style={this.props.theme.title}>
-                        {i18n.t('dueDate')}
+                            {i18n.t('dueDate')}
                         </Text>
                         <DateTimePicker
                             disabled={!this.state.editable}
