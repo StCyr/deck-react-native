@@ -10,6 +10,7 @@ import { Text } from 'react-native-elements';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
+import * as Localization from 'expo-localization';
 import {i18n} from '../i18n/i18n.js';
 
 class Card extends React.Component {
@@ -66,12 +67,16 @@ class Card extends React.Component {
 
     render() {
         return (
-            <ScrollView keyboardShouldPersistTaps="handled" style={[this.props.theme.container, {paddingBottom: 40, flex: 1}]}>
+            <ScrollView
+                keyboardShouldPersistTaps="handled"
+                style={[this.props.theme.container, {paddingBottom: 40, flex: 1}]}
+                contentContainerStyle={{flexGrow: 1}}
+            >
                 <View style={this.props.theme.inputField}>
                     <Text h1 h1Style={this.props.theme.title}>
                         {i18n.t('title')}
                     </Text>
-                    <TextInput style={this.props.theme.input} 
+                    <TextInput style={this.state.editable ? this.props.theme.input : this.props.theme.inputReadMode}
                         editable={this.state.editable}
                         value={this.state.card.title}
                         onChangeText={title => { 
@@ -108,24 +113,30 @@ class Card extends React.Component {
                         <Text h1 h1Style={this.props.theme.title}>
                             {i18n.t('dueDate')}
                         </Text>
-                        <DateTimePicker
-                            disabled={!this.state.editable}
-                            value={this.state.card.duedate ?? new Date()}
-                            mode="date"
-                            display="default"
-                            onChange={(event, dueDate) => {
-                                this.setState({
-                                    card: {...this.state.card, duedate: dueDate}
-                                })
-                            }}
-                        />
+                        { this.state.editable ?
+                            <DateTimePicker
+                                disabled={!this.state.editable}
+                                value={this.state.card.duedate ?? new Date()}
+                                mode="date"
+                                display="default"
+                                onChange={(event, dueDate) => {
+                                    this.setState({
+                                        card: {...this.state.card, duedate: dueDate}
+                                    })
+                                }}
+                            />
+                        :
+                            <Text style={this.props.theme.inputReadMode}>
+                               {this.state.card.duedate.toLocaleDateString(Localization.locale, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                            </Text>
+                        }
                     </View>
                 }
                 <View keyboardShouldPersistTaps="handled" style={{...this.props.theme.inputField, flexGrow: 1}}>
                     <Text h1 h1Style={this.props.theme.title}>
                         {i18n.t('description')}
                     </Text>
-                    <TextInput style={[this.props.theme.input, this.props.theme.descriptionInput]} 
+                    <TextInput style={this.state.editable ? [this.props.theme.input, this.props.theme.descriptionInput] : [this.props.theme.inputReadMode, this.props.theme.descriptionInput]}
                         editable={this.state.editable}
                         multiline={true}
                         value={this.state.card.description}

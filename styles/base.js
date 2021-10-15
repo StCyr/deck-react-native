@@ -179,6 +179,12 @@ const baseStyles = (theme) => {
       marginVertical: padding.s,
       padding: padding.m,
     },
+    inputReadMode: {
+      color: colors.text,
+      width: '100%',
+      flexDirection: 'row',
+      fontSize: fonts.m,
+    },
     inputButton: {
       display: 'flex',
       flexDirection: 'row',
