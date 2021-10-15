@@ -20,7 +20,7 @@ class Card extends React.Component {
         this.state = {
             card: {
                 description: '',
-                duedate: new Date(),
+                duedate: null,
                 title: ''
             },
             editable: false,
@@ -59,9 +59,9 @@ class Card extends React.Component {
             this.setState({
                 card: card,
                 editable: false,
-                showDatePicker: card.duedate ? true : false
+                showDatePicker: card.duedate !== null ? true : false
             })
-        })  
+        })
     }
 
     render() {
@@ -82,21 +82,28 @@ class Card extends React.Component {
                         placeholder='title'
                     />
                 </View>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <BouncyCheckbox
-                        disableText={true}
-                        isChecked={this.state.showDatePicker}
-                        onPress={(isChecked) => {
-                            this.setState({
-                                showDatePicker: isChecked
-                            })
-                        }}
-                    />
-                    <Text style={this.props.theme.textCheckbox}>
-                        {i18n.t('setDueDate')}
-                    </Text>
-                </View>
-                { this.state.showDatePicker && 
+                { this.state.editable &&
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <BouncyCheckbox
+                            disableText={true}
+                            isChecked={this.state.showDatePicker}
+                            onPress={(isChecked) => {
+                                this.setState({
+                                    showDatePicker: isChecked,
+                                    card: {
+                                        ...this.state.card,
+                                        // Unset duedate when checkbox is unchecked
+                                        duedate: isChecked ? new Date() : null
+                                    }
+                                })
+                            }}
+                        />
+                        <Text style={this.props.theme.textCheckbox}>
+                            {i18n.t('setDueDate')}
+                        </Text>
+                    </View>
+                }
+                { this.state.showDatePicker &&
                     <View style={this.props.theme.inputField}>
                         <Text h1 h1Style={this.props.theme.title}>
                         {i18n.t('dueDate')}
