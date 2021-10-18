@@ -35,14 +35,18 @@ class App extends React.Component {
 	}
 
 	constructor(props) {
+
 		console.log('initialising app')
+
 		super(props)
 
 		this.state = {
 			fontsLoaded: false,
 			colorScheme: 'light',
+			lastViewedBoard: null,
+			lastViewedStack: null
 		}
-	
+
 		// Force portrait mode on iPhones
 		if (Device.modelId && Device.modelId.startsWith('iPhone')) {
 			ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)
@@ -53,15 +57,27 @@ class App extends React.Component {
 	}
 
 	componentDidMount() {
+
 		this.loadFonts()
+
 		// get initial theme
 		this.setState({ colorScheme: Appearance.getColorScheme()})
 		this.props.setTheme(Appearance.getColorScheme());
+
 		// register theme change subscription
 		this._schemeSubscription = Appearance.addChangeListener(({ colorScheme }) => {
 			this.setState({ colorScheme })
 			this.props.setTheme(colorScheme);
 		});
+
+		// Retrieves last viewed board and stack if available
+		const p1 = AsyncStorage.getItem('lastViewedBoard')
+		const p2 = AsyncStorage.getItem('lastViewedStack')
+		Promise.all([p1,p2]).then((values) => {
+			this.setState({lastViewedBoard: values[0]})
+			this.setState({lastViewedStack: values[1]})
+		})
+
 		// Retrieve token from storage if available
 		if (!env.expoDebug) {
 			AsyncStorage.getItem('NCtoken').then(token => {
@@ -83,6 +99,7 @@ class App extends React.Component {
 			this.props.setToken(env.token)
 			this.props.setServer(env.server)
 		}
+
 	}
 
 	// Function to retrieve the device's token and save it after user logged in
@@ -116,8 +133,11 @@ class App extends React.Component {
 				return (
 					<KeyboardAvoidingView style={{ flex: 1 }} behavior='padding'>
 						<NavigationContainer theme={this.state.colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-							<Stack.Navigator screenOptions={({navigation}) => {return {detachPreviousScreen: !navigation.isFocused()}}}>
-								<Stack.Screen name="AllBoards" component={AllBoards} />
+							<Stack.Navigator
+								screenOptions={({navigation}) => {return {detachPreviousScreen: !navigation.isFocused()}}}
+								initialRouteName='AllBoards'
+							>
+								<Stack.Screen name="AllBoards" component={AllBoards} initialParams={{boardId: this.state.lastViewedBoard, stackId: this.state.lastViewedStack}}/>
 								<Stack.Screen name="BoardDetails" component={BoardDetails} />
 								<Stack.Screen name="CardDetails" component={Card} />
 								<Stack.Screen name="NewCard" component={Card} />
@@ -135,9 +155,9 @@ class App extends React.Component {
 
 // Connect to store
 const mapStateToProps = state => ({
-	token: state.token,
 	server: state.server,
 	theme: state.theme,
+	token: state.token,
 })
 const mapDispatchToProps = dispatch => (
 	bindActionCreators( {

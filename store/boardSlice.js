@@ -37,7 +37,6 @@ export const boardSlice = createSlice({
 		},
 		deleteAllBoards: (state) => {
 			state.value = {}
-			console.log('All boards deleted from store')
 		},
 		deleteBoard: (state, action) => {
 			delete state.value[action.payload.boardId]

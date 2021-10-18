@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { addStack, deleteCard, moveCard } from '../store/boardSlice';
 import { setServer } from '../store/serverSlice';
 import { setToken } from '../store/tokenSlice';
@@ -33,11 +34,6 @@ class BoardDetails extends React.Component {
         }
     }
 
-    // Function to change the displayed stack
-    _handleIndexChange(index) {
-        this.setState({ index })
-    }
-
     // Function to detect long press on card and open a context menu
     cardPressedDown(id) {
         this.setState({cardPressed: id})
@@ -66,19 +62,23 @@ class BoardDetails extends React.Component {
         }, 500)
     }
 
-    // Gets the board's details from the server and setup the page's header bar
     async componentDidMount() {
+
+        // Setup page's header bar
         this.props.navigation.setOptions({
             headerTitle: 'Board details',
             headerRight: () => (<AppMenu/>)
         })
-        await this.loadBoard()
-        // Shows stack with order === 0, if stacks are available
-        if (this.props.boards.value[this.props.route.params.boardId].stacks?.length) {
-            this.setState({
-                index: this.props.boards.value[this.props.route.params.boardId].stacks[0].id,
-            })
+
+        if (this.props.boards.value[this.props.route.params.boardId].stacks.length === 0) {
+            // Get board details if not yet done
+            await this.loadBoard()
         }
+
+        // Shows last visited stack or stack with order === 0
+        this.setState({
+            index:  this.props.route.params.stackId !== null ? parseInt(this.props.route.params.stackId) : this.props.boards.value[this.props.route.params.boardId].stacks[0].id,
+        })
     }
 
     render() {
@@ -145,10 +145,12 @@ class BoardDetails extends React.Component {
                                         <Pressable
                                             key={stack.id}
                                             onPress={() => {
-                                                // Switches to selected stack
+                                                console.log(`Navigating to stack ${stack.id}`)
+                                                // Switches to selected stack and remember navigation
                                                 this.setState({
                                                     index: stack.id
                                                 })
+                                                AsyncStorage.setItem('lastViewedStack', `${stack.id}`);
                                             }}
                                         >
                                             <Text style={[this.props.theme.stackTabText, this.state.index === stack.id ? this.props.theme.stackTabTextSelected : this.props.theme.stackTabTextNormal]}>
@@ -253,11 +255,12 @@ class BoardDetails extends React.Component {
         })
     }
 
-    loadBoard() {
+    async loadBoard() {
+        console.log('Retrieving cards from server')
         this.setState({
             refreshing: true
         })
-        axios.get(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks`, {
+        await axios.get(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': this.props.token.value
@@ -345,7 +348,7 @@ const mapStateToProps = state => ({
     boards: state.boards,
     server: state.server,
     theme: state.theme,
-    token: state.token
+    token: state.token,
 })
 
 const mapDispatchToProps = dispatch => (
@@ -354,11 +357,11 @@ const mapDispatchToProps = dispatch => (
         deleteCard,
         moveCard,
         setServer,
-        setToken
+        setToken,
     }, dispatch)
 )
 
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(BoardDetails)
