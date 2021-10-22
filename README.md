@@ -3,14 +3,6 @@ A react-native client for [Nextcloud Deck App](https://github.com/nextcloud/deck
 
 Android users may want to look at `https://github.com/stefan-niedermann/nextcloud-deck` which is a much more mature project.
 
-## Functionalities
-
-1. Nextcloud login/logout
-2. View boards
-3. View board 'stacks
-4. Create/Read/Update/Delete cards
-5. pull-to-refresh
-
 # Contribute
 
 ## Test
@@ -39,10 +31,6 @@ export default {
     token: 'Basic <your base64-encoded authentication credentials in the form 'user:password'',
 };
 ```
-
-## Design
-
-Design and medias look terrible. I'd particularly happilly accept any help on this matter. 
 
 ## Financial support
 
