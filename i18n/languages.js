@@ -100,6 +100,8 @@ export const ca = {
 }
 
 export const de = {
+    archive: 'Archivieren',
+    cancel: 'Abbrechen',
     create : 'Hinzufügen',
     createBoard: 'Board hinzufügen',
     createCard : 'Karte hinzufügen',
@@ -113,9 +115,10 @@ export const de = {
     noStack : 'Dieses Board hat keine Liste. Bitte lege zuerst eine Liste an.',
     newBoardHint: 'Gib den Namen des Boards an, um es anzulegen',
     newStackHint : 'Gib den Namen der neuen Liste ein',
+    rename: 'Umbenennen',
     save : 'Speichern',
     setDueDate : 'Ablaufdatum setzen',
-    setUrl : 'Bitte gib die URL deines Nextcloud Servers an',
+    setUrl : 'Bitte gib die URL Deines Nextcloud Servers an',
     signIn: 'Anmelden',
     title : 'Titel: ',
 }
