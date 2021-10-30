@@ -34,17 +34,21 @@ class AllBoards extends React.Component {
   
     async componentDidMount() {
 
-		this.props.navigation.setOptions({
-			headerTitle: 'All Boards',
-			headerRight: () => (<AppMenu navigation={this.props.navigation} setServer={this.props.setServer} setToken={this.props.setToken} />)
-		}, [this.props.navigation, this.props.setServer, this.props.setToken])
+      this.props.navigation.setOptions({
+        headerTitle: 'All Boards',
+        headerRight: () => (<AppMenu navigation={this.props.navigation} setServer={this.props.setServer} setToken={this.props.setToken} />)
+      }, [this.props.navigation, this.props.setServer, this.props.setToken])
 
-		await this.loadBoards()
+      await this.loadBoards()
 
-		this.props.navigation.navigate('BoardDetails',{
-			boardId: this.props.route.params.boardId,
-			stackId: this.props.route.params.stackId
-		})
+      // Navigate to last viewed board+stack on initial app load
+      if (this.props.route.params.navigation.boardId !== null) {
+        console.log('Initial app loading, navigating to last viewed board+stack')
+        this.props.navigation.navigate('BoardDetails', {
+          boardId: this.props.route.params.navigation.boardId,
+          stackId: this.props.route.params.navigation.stackId,
+        })
+      }
 
     }
   

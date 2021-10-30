@@ -70,8 +70,8 @@ class BoardDetails extends React.Component {
             headerRight: () => (<AppMenu/>)
         })
 
+        // Gets board details if not yet done
         if (this.props.boards.value[this.props.route.params.boardId].stacks.length === 0) {
-            // Get board details if not yet done
             await this.loadBoard()
         }
 
@@ -137,7 +137,7 @@ class BoardDetails extends React.Component {
                                         onReceiveDragDrop={({ dragged: { payload } }) => {
                                             // Don't try to move card when the drop stack is the same
                                             if (stack.id !== payload.stackId) {
-                                                console.log(`moving card ${payload.id}`);
+                                                console.log(`moving card ${payload.id}`)
                                                 this.moveCard(payload.id, stack.id)
                                             }
                                         }}
@@ -148,9 +148,12 @@ class BoardDetails extends React.Component {
                                                 console.log(`Navigating to stack ${stack.id}`)
                                                 // Switches to selected stack and remember navigation
                                                 this.setState({
-                                                    index: stack.id
+                                                    index: stack.id,
                                                 })
-                                                AsyncStorage.setItem('lastViewedStack', `${stack.id}`);
+                                                AsyncStorage.setItem('navigation', JSON.stringify({
+                                                    boardId: this.props.route.params.boardId,
+                                                    stackId: stack.id,
+                                                }))
                                             }}
                                         >
                                             <Text style={[this.props.theme.stackTabText, this.state.index === stack.id ? this.props.theme.stackTabTextSelected : this.props.theme.stackTabTextNormal]}>

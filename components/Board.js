@@ -34,9 +34,12 @@ class Board extends React.Component {
                     console.log(`navigating to board ${this.props.board.id}`)
                     this.props.navigation.navigate('BoardDetails',{
                         boardId: this.props.board.id,
-                        stackId: null
+                        stackId: null,
                     })
-                    AsyncStorage.setItem('lastViewedBoard', `${this.props.board.id}`);
+                    AsyncStorage.setItem('navigation', JSON.stringify({
+                        boardId: this.props.board.id,
+                        stackId: null,
+                    }));
                 }}
                 onLongPress={() => {
                     // Context menu

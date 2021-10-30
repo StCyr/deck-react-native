@@ -43,8 +43,7 @@ class App extends React.Component {
 		this.state = {
 			fontsLoaded: false,
 			colorScheme: 'light',
-			lastViewedBoard: null,
-			lastViewedStack: null
+			navigation: {},
 		}
 
 		// Force portrait mode on iPhones
@@ -71,11 +70,10 @@ class App extends React.Component {
 		});
 
 		// Retrieves last viewed board and stack if available
-		const p1 = AsyncStorage.getItem('lastViewedBoard')
-		const p2 = AsyncStorage.getItem('lastViewedStack')
-		Promise.all([p1,p2]).then((values) => {
-			this.setState({lastViewedBoard: values[0]})
-			this.setState({lastViewedStack: values[1]})
+		AsyncStorage.getItem('navigation').then(navigation => {
+			navigation = navigation != null ? JSON.parse(navigation) : { boardId: null, stackId: null }
+			console.log('Retrieved last navigated board+stack')
+			this.setState({navigation})
 		})
 
 		// Retrieve token from storage if available
@@ -118,7 +116,7 @@ class App extends React.Component {
 	}
 
 	render() {
-		if(this.state.fontsLoaded) {
+		if(this.state.fontsLoaded && Object.keys(this.state.navigation).length !== 0) {
 			if (this.props.token.value === null || this.props.server.value === null) {
 				// No token is stored yet, we need to get one
 				return (
@@ -137,7 +135,7 @@ class App extends React.Component {
 								screenOptions={({navigation}) => {return {detachPreviousScreen: !navigation.isFocused()}}}
 								initialRouteName='AllBoards'
 							>
-								<Stack.Screen name="AllBoards" component={AllBoards} initialParams={{boardId: this.state.lastViewedBoard, stackId: this.state.lastViewedStack}}/>
+								<Stack.Screen name="AllBoards" component={AllBoards} initialParams={{navigation: this.state.navigation}}/>
 								<Stack.Screen name="BoardDetails" component={BoardDetails} />
 								<Stack.Screen name="CardDetails" component={Card} />
 								<Stack.Screen name="NewCard" component={Card} />
