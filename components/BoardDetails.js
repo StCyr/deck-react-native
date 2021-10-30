@@ -10,6 +10,7 @@ import { ActionSheetIOS, Pressable, RefreshControl, ScrollView, Text, TextInput,
 import { DraxProvider, DraxView } from 'react-native-drax';
 import axios from 'axios';
 import { initialWindowMetrics } from 'react-native-safe-area-context';
+import { HeaderBackButton } from '@react-navigation/elements';
 import { i18n } from '../i18n/i18n.js';
 
 // Component that display a board's cards, grouped by stack
@@ -67,7 +68,17 @@ class BoardDetails extends React.Component {
         // Setup page's header bar
         this.props.navigation.setOptions({
             headerTitle: 'Board details',
-            headerRight: () => (<AppMenu/>)
+            headerRight: () => (<AppMenu/>),
+            headerLeft: () => (
+                <HeaderBackButton
+                    label = 'All boards'
+                    labelVisible = {true}
+                    onPress = {() => {
+                        AsyncStorage.removeItem('navigation')
+                        this.props.navigation.navigate('AllBoards')
+                    }}
+                />
+            )
         })
 
         // Gets board details if not yet done
