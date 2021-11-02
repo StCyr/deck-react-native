@@ -84,12 +84,13 @@ class BoardDetails extends React.Component {
         // Gets board details if not yet done
         if (this.props.boards.value[this.props.route.params.boardId].stacks.length === 0) {
             await this.loadBoard()
+        } else {
+            // Navigates to stack with order === 0
+            this.setState({
+                index:  this.props.boards.value[this.props.route.params.boardId].stacks[0].id,
+            })
         }
 
-        // Shows last visited stack or stack with order === 0
-        this.setState({
-            index:  this.props.route.params.stackId !== null ? parseInt(this.props.route.params.stackId) : this.props.boards.value[this.props.route.params.boardId].stacks[0].id,
-        })
     }
 
     render() {
@@ -270,29 +271,43 @@ class BoardDetails extends React.Component {
     }
 
     async loadBoard() {
-        console.log('Retrieving cards from server')
+
+        console.log('Retrieving board details from server')
         this.setState({
             refreshing: true
         })
+
         await axios.get(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': this.props.token.value
             }
-        })
-        .then((resp) => {
+        }).then((resp) => {
+
+            // TODO check for error
+            console.log('board details retrieved from server')
             this.setState({
                 refreshing: false
             })
-            console.log('cards retrieved from server')
-            // TODO check for error
+
+            // Update board's details in store
             resp.data.forEach(stack => {
                 this.props.addStack({
                     boardId: this.props.route.params.boardId,
                     stack
                 })
             })
+
+            // Shows last visited stack or stack with order === 0 (assumes server's answer is ordered)
+            // TODO: handle case where the remembered stackId has been deleted
+            if (resp.data.length > 0) {
+                this.setState({
+                    index:  this.props.route.params.stackId !== null ? parseInt(this.props.route.params.stackId) : resp.data[0].id,
+                })
+            }
+
         })
+
     }
 
     moveCard(cardId, stackId) {
