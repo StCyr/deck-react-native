@@ -6,7 +6,7 @@ import { setServer } from '../store/serverSlice';
 import { setToken } from '../store/tokenSlice';
 import AppMenu from './AppMenu';
 import { ActionSheetIOS, Pressable, RefreshControl, ScrollView, Text, TextInput, View } from 'react-native';
-import { DraxProvider, DraxView } from 'react-native-drax';
+import { DraxProvider, DraxScrollView, DraxView } from 'react-native-drax';
 import axios from 'axios';
 import { initialWindowMetrics } from 'react-native-safe-area-context';
 import { i18n } from '../i18n/i18n.js';
@@ -111,7 +111,9 @@ class BoardDetails extends React.Component {
             const currentStack = stacks.find(oneStack => oneStack.id === this.state.index);
             return (
                 <DraxProvider>
-                    <ScrollView
+                    <View style={{flex:1}}>
+                    <DraxScrollView
+                        contentContainerStyle={{flexGrow: 1}}
                         refreshControl={
                             <RefreshControl
                                 refreshing={this.state.refreshing}
@@ -201,7 +203,8 @@ class BoardDetails extends React.Component {
                             ))}
                         </View>
                         }
-                    </ScrollView>
+                    </DraxScrollView>
+                    </View>
                     <View style={[this.props.theme.container, {marginBottom: this.insets.bottom}]}>
                         <Pressable
                             style={this.props.theme.button}
