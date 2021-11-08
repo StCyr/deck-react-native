@@ -5,7 +5,7 @@ import { addStack, deleteCard, moveCard } from '../store/boardSlice';
 import { setServer } from '../store/serverSlice';
 import { setToken } from '../store/tokenSlice';
 import AppMenu from './AppMenu';
-import { ActionSheetIOS, Pressable, RefreshControl, ScrollView, Text, TextInput, View } from 'react-native';
+import { ActionSheetIOS, Pressable, RefreshControl, Text, TextInput, View } from 'react-native';
 import { DraxProvider, DraxScrollView, DraxView } from 'react-native-drax';
 import axios from 'axios';
 import { initialWindowMetrics } from 'react-native-safe-area-context';
@@ -126,7 +126,7 @@ class BoardDetails extends React.Component {
                         ScrollView can use to make the containing view sticky,
                         without changing styles on the containing view */}
                         <View>
-                            <ScrollView
+                            <DraxScrollView
                                 style={this.props.theme.stackBar}
                                 horizontal
                                 contentContainerStyle={this.props.theme.stackBarScrollInner}
@@ -159,7 +159,7 @@ class BoardDetails extends React.Component {
                                         </Pressable>
                                     </DraxView>
                                 ))}
-                            </ScrollView>
+                            </DraxScrollView>
                         </View>
                         {currentStack?.cards &&
                         <View style={this.props.theme.boardDetailsContainer}>
