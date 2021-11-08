@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { addStack, deleteCard, moveCard } from '../store/boardSlice';
 import { setServer } from '../store/serverSlice';
 import { setToken } from '../store/tokenSlice';
@@ -9,6 +10,7 @@ import { ActionSheetIOS, Pressable, RefreshControl, Text, TextInput, View } from
 import { DraxProvider, DraxScrollView, DraxView } from 'react-native-drax';
 import axios from 'axios';
 import { initialWindowMetrics } from 'react-native-safe-area-context';
+import { HeaderBackButton } from '@react-navigation/elements';
 import { i18n } from '../i18n/i18n.js';
 
 // Component that display a board's cards, grouped by stack
@@ -31,11 +33,6 @@ class BoardDetails extends React.Component {
             bottom: 0,
             top: 0,
         }
-    }
-
-    // Function to change the displayed stack
-    _handleIndexChange(index) {
-        this.setState({ index })
     }
 
     // Function to detect long press on card and open a context menu
@@ -66,19 +63,34 @@ class BoardDetails extends React.Component {
         }, 500)
     }
 
-    // Gets the board's details from the server and setup the page's header bar
     async componentDidMount() {
+
+        // Setup page's header bar
         this.props.navigation.setOptions({
             headerTitle: 'Board details',
-            headerRight: () => (<AppMenu/>)
+            headerRight: () => (<AppMenu/>),
+            headerLeft: () => (
+                <HeaderBackButton
+                    label = 'All boards'
+                    labelVisible = {true}
+                    onPress = {() => {
+                        AsyncStorage.removeItem('navigation')
+                        this.props.navigation.navigate('AllBoards')
+                    }}
+                />
+            )
         })
-        await this.loadBoard()
-        // Shows stack with order === 0, if stacks are available
-        if (this.props.boards.value[this.props.route.params.boardId].stacks?.length) {
+
+        // Gets board details if not yet done
+        if (this.props.boards.value[this.props.route.params.boardId].stacks.length === 0) {
+            await this.loadBoard()
+        } else {
+            // Navigates to stack with order === 0
             this.setState({
-                index: this.props.boards.value[this.props.route.params.boardId].stacks[0].id,
+                index:  this.props.boards.value[this.props.route.params.boardId].stacks[0].id,
             })
         }
+
     }
 
     render() {
@@ -139,7 +151,7 @@ class BoardDetails extends React.Component {
                                         onReceiveDragDrop={({ dragged: { payload } }) => {
                                             // Don't try to move card when the drop stack is the same
                                             if (stack.id !== payload.stackId) {
-                                                console.log(`moving card ${payload.id}`);
+                                                console.log(`moving card ${payload.id}`)
                                                 this.moveCard(payload.id, stack.id)
                                             }
                                         }}
@@ -147,10 +159,15 @@ class BoardDetails extends React.Component {
                                         <Pressable
                                             key={stack.id}
                                             onPress={() => {
-                                                // Switches to selected stack
+                                                console.log(`Navigating to stack ${stack.id}`)
+                                                // Switches to selected stack and remember navigation
                                                 this.setState({
-                                                    index: stack.id
+                                                    index: stack.id,
                                                 })
+                                                AsyncStorage.setItem('navigation', JSON.stringify({
+                                                    boardId: this.props.route.params.boardId,
+                                                    stackId: stack.id,
+                                                }))
                                             }}
                                         >
                                             <Text style={[this.props.theme.stackTabText, this.state.index === stack.id ? this.props.theme.stackTabTextSelected : this.props.theme.stackTabTextNormal]}>
@@ -256,29 +273,44 @@ class BoardDetails extends React.Component {
         })
     }
 
-    loadBoard() {
+    async loadBoard() {
+
+        console.log('Retrieving board details from server')
         this.setState({
             refreshing: true
         })
-        axios.get(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks`, {
+
+        await axios.get(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': this.props.token.value
             }
-        })
-        .then((resp) => {
+        }).then((resp) => {
+
+            // TODO check for error
+            console.log('board details retrieved from server')
             this.setState({
                 refreshing: false
             })
-            console.log('cards retrieved from server')
-            // TODO check for error
+
+            // Update board's details in store
             resp.data.forEach(stack => {
                 this.props.addStack({
                     boardId: this.props.route.params.boardId,
                     stack
                 })
             })
+
+            // Shows last visited stack or stack with order === 0 (assumes server's answer is ordered)
+            // TODO: handle case where the remembered stackId has been deleted
+            if (resp.data.length > 0) {
+                this.setState({
+                    index:  this.props.route.params.stackId !== null ? parseInt(this.props.route.params.stackId) : resp.data[0].id,
+                })
+            }
+
         })
+
     }
 
     moveCard(cardId, stackId) {
@@ -348,7 +380,7 @@ const mapStateToProps = state => ({
     boards: state.boards,
     server: state.server,
     theme: state.theme,
-    token: state.token
+    token: state.token,
 })
 
 const mapDispatchToProps = dispatch => (
@@ -357,11 +389,11 @@ const mapDispatchToProps = dispatch => (
         deleteCard,
         moveCard,
         setServer,
-        setToken
+        setToken,
     }, dispatch)
 )
 
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(BoardDetails)

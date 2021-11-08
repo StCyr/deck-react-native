@@ -16,28 +16,40 @@ import Board from './Board';
 class AllBoards extends React.Component {
   
     constructor(props) {
-      super(props)
-      this.state = {
-        creatingBoard: false,
-        lastRefresh: new Date(0),
-        refreshing: false,
-        newBoardName: '',
-      }
-      this.loadBoards = this.loadBoards.bind(this);
-      this.insets = initialWindowMetrics?.insets ?? {
-        left: 0,
-        right: 0,
-        bottom: 0,
-        top: 0,
-      }
-    }
+		super(props)
+		this.state = {
+			creatingBoard: false,
+			lastRefresh: new Date(0),
+			refreshing: false,
+			newBoardName: '',
+		}
+		this.loadBoards = this.loadBoards.bind(this);
+		this.insets = initialWindowMetrics?.insets ?? {
+			left: 0,
+			right: 0,
+			bottom: 0,
+			top: 0,
+		}
+	}
   
-    componentDidMount() {
-      this.loadBoards()
+    async componentDidMount() {
+
       this.props.navigation.setOptions({
         headerTitle: 'All Boards',
         headerRight: () => (<AppMenu navigation={this.props.navigation} setServer={this.props.setServer} setToken={this.props.setToken} />)
       }, [this.props.navigation, this.props.setServer, this.props.setToken])
+
+      await this.loadBoards()
+
+      // Navigate to last viewed board+stack on initial app load
+      if (this.props.route.params.navigation.boardId !== null) {
+        console.log('Initial app loading, navigating to last viewed board+stack')
+        this.props.navigation.navigate('BoardDetails', {
+          boardId: this.props.route.params.navigation.boardId,
+          stackId: this.props.route.params.navigation.stackId,
+        })
+      }
+
     }
   
     render() {
@@ -122,12 +134,13 @@ class AllBoards extends React.Component {
     })
   }
 
-  loadBoards() {
-    // Get all user boards
+  // Gets all user boards
+  async loadBoards() {
+	console.log('Retrieving boards from server')
     this.setState({
       refreshing: true
     })
-    axios.get(this.props.server.value + '/index.php/apps/deck/api/v1.0/boards', {
+    await axios.get(this.props.server.value + '/index.php/apps/deck/api/v1.0/boards', {
         headers: {
         'Content-Type': 'application/json',
         'Authorization': this.props.token.value,

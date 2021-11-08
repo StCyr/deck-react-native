@@ -35,14 +35,17 @@ class App extends React.Component {
 	}
 
 	constructor(props) {
+
 		console.log('initialising app')
+
 		super(props)
 
 		this.state = {
 			fontsLoaded: false,
 			colorScheme: 'light',
+			navigation: {},
 		}
-	
+
 		// Force portrait mode on iPhones
 		if (Device.modelId && Device.modelId.startsWith('iPhone')) {
 			ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)
@@ -53,15 +56,26 @@ class App extends React.Component {
 	}
 
 	componentDidMount() {
+
 		this.loadFonts()
+
 		// get initial theme
 		this.setState({ colorScheme: Appearance.getColorScheme()})
 		this.props.setTheme(Appearance.getColorScheme());
+
 		// register theme change subscription
 		this._schemeSubscription = Appearance.addChangeListener(({ colorScheme }) => {
 			this.setState({ colorScheme })
 			this.props.setTheme(colorScheme);
 		});
+
+		// Retrieves last viewed board and stack if available
+		AsyncStorage.getItem('navigation').then(navigation => {
+			navigation = navigation != null ? JSON.parse(navigation) : { boardId: null, stackId: null }
+			console.log('Retrieved last navigated board+stack')
+			this.setState({navigation})
+		})
+
 		// Retrieve token from storage if available
 		if (!env.expoDebug) {
 			AsyncStorage.getItem('NCtoken').then(token => {
@@ -83,6 +97,7 @@ class App extends React.Component {
 			this.props.setToken(env.token)
 			this.props.setServer(env.server)
 		}
+
 	}
 
 	// Function to retrieve the device's token and save it after user logged in
@@ -101,7 +116,7 @@ class App extends React.Component {
 	}
 
 	render() {
-		if(this.state.fontsLoaded) {
+		if(this.state.fontsLoaded && Object.keys(this.state.navigation).length !== 0) {
 			if (this.props.token.value === null || this.props.server.value === null) {
 				// No token is stored yet, we need to get one
 				return (
@@ -116,8 +131,11 @@ class App extends React.Component {
 				return (
 					<KeyboardAvoidingView style={{ flex: 1 }} behavior='padding'>
 						<NavigationContainer theme={this.state.colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-							<Stack.Navigator screenOptions={({navigation}) => {return {detachPreviousScreen: !navigation.isFocused()}}}>
-								<Stack.Screen name="AllBoards" component={AllBoards} />
+							<Stack.Navigator
+								screenOptions={({navigation}) => {return {detachPreviousScreen: !navigation.isFocused()}}}
+								initialRouteName='AllBoards'
+							>
+								<Stack.Screen name="AllBoards" component={AllBoards} initialParams={{navigation: this.state.navigation}}/>
 								<Stack.Screen name="BoardDetails" component={BoardDetails} />
 								<Stack.Screen name="CardDetails" component={Card} />
 								<Stack.Screen name="NewCard" component={Card} />
@@ -135,9 +153,9 @@ class App extends React.Component {
 
 // Connect to store
 const mapStateToProps = state => ({
-	token: state.token,
 	server: state.server,
 	theme: state.theme,
+	token: state.token,
 })
 const mapDispatchToProps = dispatch => (
 	bindActionCreators( {

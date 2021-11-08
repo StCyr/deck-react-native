@@ -1,4 +1,5 @@
 import React from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ActionSheetIOS, Pressable, View, Text, TextInput } from 'react-native';
 import { initialWindowMetrics } from 'react-native-safe-area-context';
 import { connect } from 'react-redux';
@@ -30,9 +31,15 @@ class Board extends React.Component {
             <Pressable
                 onPress={() => {
                     // Opens board's details page
+                    console.log(`navigating to board ${this.props.board.id}`)
                     this.props.navigation.navigate('BoardDetails',{
-                        boardId: this.props.board.id
+                        boardId: this.props.board.id,
+                        stackId: null,
                     })
+                    AsyncStorage.setItem('navigation', JSON.stringify({
+                        boardId: this.props.board.id,
+                        stackId: null,
+                    }));
                 }}
                 onLongPress={() => {
                     // Context menu
