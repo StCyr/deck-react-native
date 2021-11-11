@@ -1,4 +1,5 @@
 export const en = {
+    addStack: 'Add stack',
     archive: 'Archive',
     cancel: 'Cancel',
     create : 'Create',
@@ -6,6 +7,7 @@ export const en = {
     createCard : 'Create card',
     createStack : 'Create stack',
     delete : 'Delete',
+    deleteStack: 'Delete stack',
     description : 'Description: ',
     dueDate : 'Due date: ',
     edit : 'Edit',
@@ -14,7 +16,8 @@ export const en = {
     noStack : 'This board has no stack. Start working by first creating a stack.',
     newBoardHint: 'Type the name of a board to create one',
     newStackHint : 'Type here the name of a new list',
-    rename: 'rename',
+    rename: 'Rename',
+    renameStack: 'Rename stack',
     save : 'Save',
     setDueDate : 'Set due date',
     setUrl : 'Please enter the URL of your Nextcloud server',
@@ -23,6 +26,7 @@ export const en = {
 }
 
 export const fr = {
+    addStack: 'Ajouter une liste',
     archive: 'Archiver',
     cancel: 'Annuler',
     create : 'Créer',
@@ -30,6 +34,7 @@ export const fr = {
     createCard : 'Créer une carte',
     createStack : 'Créer une liste',
     delete : 'Supprimer',
+    deleteStack: 'Supprimer la liste',
     description : 'Description: ',
     dueDate : 'Echéance: ',
     edit : 'Modifier',
@@ -39,6 +44,7 @@ export const fr = {
     newBoardHint: 'Tapez un nom pour créer un tableau',
     newStackHint : 'Entrez le nom de votre nouvelle liste ici',
     rename: 'Renommer',
+    renameStack: 'Renommer la liste',
     save : 'Sauvegarder',
     setDueDate : 'Définir une échéance',
     setUrl : 'Veuillez entrer l\'URL de votre serveur Nextcloud',

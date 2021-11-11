@@ -45,6 +45,11 @@ export const boardSlice = createSlice({
 		deleteCard: (state, action) => {
 			delete state.value[action.payload.boardId].stacks.find(oneStack => oneStack.id === action.payload.stackId).cards[action.payload.cardId]
 		},
+		deleteStack: (state, action) => {
+			const stackIndex = state.value[action.payload.boardId].stacks.findIndex(stack => stack.id === action.payload.stackId)
+			console.log(`deleting stack with index$ {stackIndex}`)
+			delete state.value[action.payload.boardId].stacks.splice(stackIndex, 1)
+		},
 		moveCard: (state, action) => {
 			const card = state.value[action.payload.boardId].stacks.find(oneStack => oneStack.id === action.payload.oldStackId)?.cards[action.payload.cardId]
 			state.value[action.payload.boardId].stacks.find(oneStack => oneStack.id === action.payload.newStackId).cards[action.payload.cardId] = card
@@ -56,6 +61,6 @@ export const boardSlice = createSlice({
 	}
 })
 
-export const { addBoard, addCard, addStack, deleteAllBoards, deleteBoard, deleteCard, moveCard, renameBoard } = boardSlice.actions
+export const { addBoard, addCard, addStack, deleteAllBoards, deleteBoard, deleteCard, deleteStack, moveCard, renameBoard } = boardSlice.actions
 
 export default boardSlice.reducer

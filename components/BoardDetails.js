@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { addStack, deleteCard, moveCard } from '../store/boardSlice';
+import { addStack, deleteCard, deleteStack, moveCard } from '../store/boardSlice';
 import { setServer } from '../store/serverSlice';
 import { setToken } from '../store/tokenSlice';
 import AppMenu from './AppMenu';
@@ -19,6 +19,7 @@ class BoardDetails extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            addingStack: false,
             index: 0,   // the index of the stack currently shown
             newStackName: '',
             refreshing: false,
@@ -112,7 +113,7 @@ class BoardDetails extends React.Component {
                                 onChangeText={newStackName => {
                                     this.setState({ newStackName })
                                 }}
-                                onSubmitEditing={() => this.createStack()}
+                                onSubmitEditing={() => this.createStack(this.state.newStackName)}
                                 placeholder={i18n.t('newStackHint')}
                                 returnKeyType='send'
                         />
@@ -159,8 +160,8 @@ class BoardDetails extends React.Component {
                                         <Pressable
                                             key={stack.id}
                                             onPress={() => {
-                                                console.log(`Navigating to stack ${stack.id}`)
                                                 // Switches to selected stack and remember navigation
+                                                console.log(`Navigating to stack ${stack.id}`)
                                                 this.setState({
                                                     index: stack.id,
                                                 })
@@ -168,6 +169,27 @@ class BoardDetails extends React.Component {
                                                     boardId: this.props.route.params.boardId,
                                                     stackId: stack.id,
                                                 }))
+                                            }}
+                                            onLongPress={() => {
+                                                // Context menu
+                                                ActionSheetIOS.showActionSheetWithOptions(
+                                                    {
+                                                        options: [i18n.t("cancel"), i18n.t("renameStack"), i18n.t("addStack"), i18n.t("deleteStack")],
+                                                        destructiveButtonIndex: 3,
+                                                        cancelButtonIndex: 0,
+                                                    },
+                                                    buttonIndex => {
+                                                        if (buttonIndex === 0) {
+                                                            // cancel action
+                                                        } else if (buttonIndex === 1) {
+                                                            // TODO
+                                                        } else if (buttonIndex === 2) {
+                                                            this.setState({addingStack: true})
+                                                        } else if (buttonIndex === 3) {
+                                                            this.deleteStack(stack.id)
+                                                        }
+                                                    }
+                                                )                
                                             }}
                                         >
                                             <Text style={[this.props.theme.stackTabText, this.state.index === stack.id ? this.props.theme.stackTabTextSelected : this.props.theme.stackTabTextNormal]}>
@@ -222,29 +244,52 @@ class BoardDetails extends React.Component {
                         }
                     </DraxScrollView>
                     </View>
-                    <View style={[this.props.theme.container, {marginBottom: this.insets.bottom}]}>
-                        <Pressable
-                            style={this.props.theme.button}
-                            onPress={() => {this.props.navigation.navigate('NewCard', {
-                                boardId: this.props.route.params.boardId,
-                                stackId: this.state.index,
-                            })}}
-                        >
-                            <Text style={this.props.theme.buttonTitle}>
-                                {i18n.t('createCard')}
-                            </Text>
-                        </Pressable>
-                    </View>
+                    {!this.state.addingStack &&
+                        <View style={[this.props.theme.container, {marginBottom: this.insets.bottom}]}>
+                            <Pressable
+                                style={this.props.theme.button}
+                                onPress={() => {this.props.navigation.navigate('NewCard', {
+                                    boardId: this.props.route.params.boardId,
+                                    stackId: this.state.index,
+                                })}}
+                            >
+                                <Text style={this.props.theme.buttonTitle}>
+                                    {i18n.t('createCard')}
+                                </Text>
+                            </Pressable>
+                        </View>
+                    }
+                    {this.state.addingStack &&
+                        <View style={[this.props.theme.container, {marginBottom: this.insets.bottom}]}>
+                            <View style={this.props.theme.inputButton} >
+                                <TextInput style={[this.props.theme.inputText, {flexGrow: 1}]}
+                                    value={this.state.newStackName}
+                                    autoFocus={true}
+                                    maxLength={100}
+                                    onBlur={() => {
+                                        this.setState({addingStack: false})
+                                        this.setState({ newStackName: '' })
+                                    }}
+                                    onChangeText={newStackName => {
+                                        this.setState({ newStackName })
+                                    }}
+                                    onSubmitEditing={() => this.createStack(this.state.newStackName)}
+                                    placeholder={i18n.t('newStackHint')}
+                                    returnKeyType='send'
+                                />
+                            </View>
+                        </View>
+                    }
                 </DraxProvider>
             )
         }
     }
 
-    createStack() {
-        console.log('Creating stack', this.state.newStackName)
+    createStack(stackName) {
+        console.log('Creating stack', stackName)
         axios.post(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks`,
             {
-                title: this.state.newStackName,
+                title: stackName,
                 order: 10 // TODO depends on other stacks in the board
             },
             {
@@ -258,14 +303,20 @@ class BoardDetails extends React.Component {
                 console.log('Error', resp)
             } else {
                 console.log('Stack created')
+                // Add stack to board in store
                 this.props.addStack({
                     boardId: this.props.route.params.boardId,
                     stack: resp.data
                 })
-                // Select new stack
-                this.setState({
-                    index: this.props.boards.value[this.props.route.params.boardId].stacks[0].id,
-                })
+                // Navigate to stack when it's the first one created
+                if (this.state.index === 0 ) {
+                    this.setState({
+                        index: this.props.boards.value[this.props.route.params.boardId].stacks[0].id,
+                    })
+                }
+                // Reset newStackName and hide newStackName button
+                this.setState({addingStack: false})
+                this.setState({ newStackName: '' })
             }
         })
         .catch((error) => {
@@ -348,7 +399,33 @@ class BoardDetails extends React.Component {
         })
     }
 
+    deleteStack(stackId) {
+        console.log(`deleting stack ${stackId}`)
+        axios.delete(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks/${stackId}`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': this.props.token.value
+                },
+            })
+        .then((resp) => {
+            if (resp.status !== 200) {
+                console.log('Error', resp)
+            } else {
+                console.log('Stack deleted')
+                this.props.deleteStack({
+                    boardId: this.props.route.params.boardId,
+                    stackId,
+                })
+            }
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+    }
+
     deleteCard(cardId) {
+        console.log(`deleting card ${cardId}`)
         axios.delete(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks/${this.props.route.params.stackId}/cards/${cardId}`,
             {
                 headers: {
@@ -387,6 +464,7 @@ const mapDispatchToProps = dispatch => (
     bindActionCreators( {
         addStack,
         deleteCard,
+        deleteStack,
         moveCard,
         setServer,
         setToken,
