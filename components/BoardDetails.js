@@ -67,7 +67,7 @@ class BoardDetails extends React.Component {
 
         // Setup page's header bar
         this.props.navigation.setOptions({
-            headerTitle: 'Board details',
+            headerTitle: this.props.boards.value[this.props.route.params.boardId].title,
             headerRight: () => (<AppMenu/>),
             headerLeft: () => (
                 <HeaderBackButton
