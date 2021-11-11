@@ -19,33 +19,22 @@ class Card extends React.Component {
         super(props)
 
         this.state = {
-            card: {
-                description: '',
-                duedate: null,
-                title: ''
-            },
+            card: {},
             editable: false,
             showDatePicker: false,
         }
 
-        this.onCreate = this.onCreate.bind(this);
         this.onSave = this.onSave.bind(this);
     }
 
     componentDidMount() {
+        // Setup page header
         this.props.navigation.setOptions({
             headerTitle: typeof this.props.route.params.cardId === 'undefined' ? 'New card' : 'Card details',
             headerRight: () => (<AppMenu navigation={this.props.navigation} setServer={this.props.setServer} setToken={this.props.setToken} />)
         }, [this.props.navigation, this.props.setServer, this.props.setToken])
 
-        if (typeof this.props.route.params.cardId === 'undefined') {
-            console.log('Creating new card')
-            this.setState({
-                editable: true,
-            })
-            return
-        }
-
+        // Getting card details from server
         console.log('Getting card details from server')
         axios.get(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks/${this.props.route.params.stackId}/cards/${this.props.route.params.cardId}`, {
             headers: {
@@ -201,40 +190,7 @@ class Card extends React.Component {
             </ScrollView>
         )
     }
-
-    onCreate() {
-        axios.post(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks/${this.props.route.params.stackId}/cards`,
-            this.state.card,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': this.props.token.value
-                },
-            })
-        .then((resp) => {
-            if (resp.status !== 200) {
-                console.log('Error', resp)
-            } else {
-                console.log('Card created')
-                this.setState((previousSate) => ({
-                    card: {
-                        ...previousSate.card,
-                        id: resp.data
-                    }
-                })) 
-                this.props.addCard({
-                    boardId: this.props.route.params.boardId,
-                    stackId: this.props.route.params.stackId,
-                    card: this.state.card
-                })
-                this.props.navigation.goBack()
-            }
-        })
-        .catch((error) => {
-            console.log(error)
-        })
-    }
-  
+ 
     onSave() {
         axios.put(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks/${this.props.route.params.stackId}/cards/${this.props.route.params.cardId}`,
             this.state.card,

@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { addStack, deleteCard, deleteStack, moveCard } from '../store/boardSlice';
+import { addCard, addStack, deleteCard, deleteStack, moveCard } from '../store/boardSlice';
 import { setServer } from '../store/serverSlice';
 import { setToken } from '../store/tokenSlice';
 import AppMenu from './AppMenu';
@@ -19,13 +19,17 @@ class BoardDetails extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            addingCard: false,
             addingStack: false,
             index: 0,   // the index of the stack currently shown
+            newCardName: '',
             newStackName: '',
             refreshing: false,
             cardPressed: -1, // array of cards pressed
         }
-        this.createCard = this.createStack.bind(this)
+        this.createCard = this.createCard.bind(this)
+        this.createStack = this.createStack.bind(this)
+        this.deleteStack = this.deleteStack.bind(this)
         this.loadBoard = this.loadBoard.bind(this)
         this.moveCard = this.moveCard.bind(this)
         this.insets = initialWindowMetrics?.insets ?? {
@@ -244,19 +248,39 @@ class BoardDetails extends React.Component {
                         }
                     </DraxScrollView>
                     </View>
-                    {!this.state.addingStack &&
+                    {(!this.state.addingStack && !this.state.addingCard) &&
                         <View style={[this.props.theme.container, {marginBottom: this.insets.bottom}]}>
                             <Pressable
                                 style={this.props.theme.button}
-                                onPress={() => {this.props.navigation.navigate('NewCard', {
-                                    boardId: this.props.route.params.boardId,
-                                    stackId: this.state.index,
-                                })}}
+                                onPress={() => {
+                                    this.setState({addingCard: true})
+                                }}
                             >
                                 <Text style={this.props.theme.buttonTitle}>
                                     {i18n.t('createCard')}
                                 </Text>
                             </Pressable>
+                        </View>
+                    }
+                    {this.state.addingCard &&
+                        <View style={[this.props.theme.container, {marginBottom: this.insets.bottom}]}>
+                            <View style={this.props.theme.inputButton} >
+                                <TextInput style={[this.props.theme.inputText, {flexGrow: 1}]}
+                                    value={this.state.newCardName}
+                                    autoFocus={true}
+                                    maxLength={100}
+                                    onBlur={() => {
+                                        this.setState({addingCard: false})
+                                        this.setState({ newCardName: '' })
+                                    }}
+                                    onChangeText={newCardName => {
+                                        this.setState({ newCardName })
+                                    }}
+                                    onSubmitEditing={() => this.createCard(this.state.newCardName)}
+                                    placeholder={i18n.t('newCardHint')}
+                                    returnKeyType='send'
+                                />
+                            </View>
                         </View>
                     }
                     {this.state.addingStack &&
@@ -283,6 +307,44 @@ class BoardDetails extends React.Component {
                 </DraxProvider>
             )
         }
+    }
+
+    createCard(cardName) {
+        console.log('Creating card', cardName)
+        const stacks = this.props.boards.value[this.props.route.params.boardId].stacks;
+        const currentStack = stacks.find(oneStack => oneStack.id === this.state.index);
+        axios.post(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks/${currentStack.id}/cards`,
+            {
+                description: '',
+                duedate: null,
+                title: cardName,
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': this.props.token.value
+                },
+            })
+        .then((resp) => {
+            if (resp.status !== 200) {
+                console.log('Error', resp)
+            } else {
+                console.log('Card created')
+                // card to stack in store
+                this.props.addCard({
+                    boardId: this.props.route.params.boardId,
+                    stackId: currentStack.id,
+                    card: resp.data,
+                })
+                // Reset newCardName and hide newCardName button
+                this.setState({addingCard: false})
+                this.setState({ newCardName: '' })
+                
+            }
+        })
+        .catch((error) => {
+            console.log(error)
+        })
     }
 
     createStack(stackName) {
@@ -462,6 +524,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => (
     bindActionCreators( {
+        addCard,
         addStack,
         deleteCard,
         deleteStack,
