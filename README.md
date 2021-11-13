@@ -7,7 +7,7 @@ Android users may want to look at `https://github.com/stefan-niedermann/nextclou
 
 ## Test
 
-Contact me at `cyr.deck [at] bollu.be` to become part of the internal tester group.
+You can test the application using Expo Go: https://expo.dev/@stcyr/deck-react-native or contact me at `cyr.deck [at] bollu.be` to become part of the Testflight internal tester group.
 
 Test the app and report as much bugs as you can at (preferably) https://framagit.org/StCyr/deck-react-native.
 
