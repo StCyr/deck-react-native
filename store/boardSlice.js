@@ -13,12 +13,12 @@ export const boardSlice = createSlice({
 			state.value[action.payload.boardId].stacks.find(oneStack => oneStack.id === action.payload.stackId).cards[action.payload.card.id] = action.payload.card
 		},
 		addStack: (state, action) => {
-			// Stores cards in an object where cards are indexed by their id rather than in an array
+			// Stores cards in an object where cards are indexed by their order rather than in an array
 			const cards = action.payload.stack.cards
 			action.payload.stack.cards = {}
 			if (typeof cards !== 'undefined') {
 				cards.forEach(card => {
-					action.payload.stack.cards[card.id] = card
+					action.payload.stack.cards[card.order] = card
 				})
 			}
 			// Filter out existing stack with same id
