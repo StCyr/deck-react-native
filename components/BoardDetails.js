@@ -21,7 +21,7 @@ class BoardDetails extends React.Component {
         this.state = {
             addingCard: false,
             addingStack: false,
-            index: 0,   // the index of the stack currently shown
+            index: null,   // the index of the stack currently shown
             newCardName: '',
             newStackName: '',
             refreshing: false,
@@ -418,7 +418,7 @@ class BoardDetails extends React.Component {
             // TODO: handle case where the remembered stackId has been deleted
             if (resp.data.length > 0) {
                 this.setState({
-                    index:  this.props.route.params.stackId !== null ? parseInt(this.props.route.params.stackId) : resp.data[0].id,
+                    index:  (this.props.route.params.stackId !== null && this.state.index === null) ? parseInt(this.props.route.params.stackId) : this.state.index ?? resp.data[0].id,
                 })
             }
 

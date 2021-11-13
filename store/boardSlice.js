@@ -47,7 +47,6 @@ export const boardSlice = createSlice({
 		},
 		deleteStack: (state, action) => {
 			const stackIndex = state.value[action.payload.boardId].stacks.findIndex(stack => stack.id === action.payload.stackId)
-			console.log(`deleting stack with index$ {stackIndex}`)
 			delete state.value[action.payload.boardId].stacks.splice(stackIndex, 1)
 		},
 		moveCard: (state, action) => {
