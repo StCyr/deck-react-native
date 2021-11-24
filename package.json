@@ -22,6 +22,7 @@
     "expo-device": "~4.0.3",
     "expo-linking": "~2.4.2",
     "expo-localization": "~11.0.0",
+    "expo-screen-orientation": "~4.0.3",
     "expo-status-bar": "~1.1.0",
     "i18n-js": "^3.8.0",
     "react": "17.0.1",
@@ -37,13 +38,13 @@
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.8.0",
     "react-native-tab-view": "^3.0.1",
+    "react-native-toast-message": "^2.0.2",
     "react-native-vector-icons": "^8.1.0",
     "react-native-web": "0.17.1",
     "react-native-webview": "11.13.0",
     "react-redux": "^7.2.4",
     "redux": "^4.1.0",
-    "tslib": "^2.3.0",
-    "expo-screen-orientation": "~4.0.3"
+    "tslib": "^2.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

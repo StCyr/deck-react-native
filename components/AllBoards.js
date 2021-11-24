@@ -7,6 +7,7 @@ import { setToken } from '../store/tokenSlice';
 import { Pressable, RefreshControl, ScrollView, View, Text, TextInput } from 'react-native';
 import { DraxProvider } from 'react-native-drax';
 import { initialWindowMetrics } from 'react-native-safe-area-context';
+import Toast from 'react-native-toast-message';
 import {i18n} from '../i18n/i18n.js';
 import axios from 'axios';
 import AppMenu from './AppMenu';
@@ -122,13 +123,23 @@ class AllBoards extends React.Component {
         })
     .then((resp) => {
         if (resp.status !== 200) {
-            console.log('Error', resp)
+          Toast.show({
+            type: 'error',
+            text1: i18n.t('error'),
+            text2: resp,
+          })
+          console.log('Error', resp)
         } else {
             console.log('Board created')
             this.props.addBoard(resp.data)
         }
     })
     .catch((error) => {
+      Toast.show({
+        type: 'error',
+        text1: i18n.t('error'),
+        text2: error.message,
+      })
       this.setState({ newBoardName: '' })
       console.log(error)
     })
@@ -149,6 +160,11 @@ class AllBoards extends React.Component {
     })
     .then((resp) => {
       if (resp.status !== 200) {
+        Toast.show({
+          type: 'error',
+          text1: i18n.t('error'),
+          text2: resp,
+        })
         console.log('Error', resp)
       } else {
         console.log('boards retrieved from server')
@@ -165,6 +181,11 @@ class AllBoards extends React.Component {
       }
     })
     .catch((error) => {
+      Toast.show({
+        type: 'error',
+        text1: i18n.t('error'),
+        text2: error.message,
+      })
       this.setState({
         refreshing: false
       })

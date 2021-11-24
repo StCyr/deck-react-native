@@ -11,6 +11,7 @@ import { DraxProvider, DraxScrollView, DraxView } from 'react-native-drax';
 import axios from 'axios';
 import { initialWindowMetrics } from 'react-native-safe-area-context';
 import { HeaderBackButton } from '@react-navigation/elements';
+import Toast from 'react-native-toast-message';
 import { i18n } from '../i18n/i18n.js';
 
 // Component that display a board's cards, grouped by stack
@@ -327,6 +328,11 @@ class BoardDetails extends React.Component {
             })
         .then((resp) => {
             if (resp.status !== 200) {
+                Toast.show({
+                    type: 'error',
+                    text1: i18n.t('error'),
+                    text2: resp,
+                })
                 console.log('Error', resp)
             } else {
                 console.log('Card created')
@@ -343,6 +349,11 @@ class BoardDetails extends React.Component {
             }
         })
         .catch((error) => {
+            Toast.show({
+                type: 'error',
+                text1: i18n.t('error'),
+                text2: error.message,
+            })
             console.log(error)
         })
     }
@@ -362,7 +373,12 @@ class BoardDetails extends React.Component {
             })
         .then((resp) => {
             if (resp.status !== 200) {
-                console.log('Error', resp)
+                 Toast.show({
+                    type: 'error',
+                    text1: i18n.t('error'),
+                    text2: resp,
+                })
+               console.log('Error', resp)
             } else {
                 console.log('Stack created')
                 // Add stack to board in store
@@ -382,7 +398,12 @@ class BoardDetails extends React.Component {
             }
         })
         .catch((error) => {
-            console.log(error)
+            Toast.show({
+                type: 'error',
+                text1: i18n.t('error'),
+                text2: error.message,
+            })
+           console.log(error)
         })
     }
 
@@ -399,29 +420,42 @@ class BoardDetails extends React.Component {
                 'Authorization': this.props.token.value
             }
         }).then((resp) => {
-
-            // TODO check for error
-            console.log('board details retrieved from server')
-            this.setState({
-                refreshing: false
-            })
-
-            // Update board's details in store
-            resp.data.forEach(stack => {
-                this.props.addStack({
-                    boardId: this.props.route.params.boardId,
-                    stack
+            if (resp.status !== 200) {
+                Toast.show({
+                    type: 'error',
+                    text1: i18n.t('error'),
+                    text2: resp,
                 })
-            })
-
-            // Shows last visited stack or stack with order === 0 (assumes server's answer is ordered)
-            // TODO: handle case where the remembered stackId has been deleted
-            if (resp.data.length > 0) {
+                console.log('Error', resp)
+            } else {
+                console.log('board details retrieved from server')
                 this.setState({
-                    index:  (this.props.route.params.stackId !== null && this.state.index === null) ? parseInt(this.props.route.params.stackId) : this.state.index ?? resp.data[0].id,
+                    refreshing: false
                 })
-            }
 
+                // Update board's details in store
+                resp.data.forEach(stack => {
+                    this.props.addStack({
+                        boardId: this.props.route.params.boardId,
+                        stack
+                    })
+                })
+
+                // Shows last visited stack or stack with order === 0 (assumes server's answer is ordered)
+                // TODO: handle case where the remembered stackId has been deleted
+                if (resp.data.length > 0) {
+                    this.setState({
+                        index:  (this.props.route.params.stackId !== null && this.state.index === null) ? parseInt(this.props.route.params.stackId) : this.state.index ?? resp.data[0].id,
+                    })
+                }
+            }
+        }).catch((error) => {
+            Toast.show({
+                type: 'error',
+                text1: i18n.t('error'),
+                text2: error.message,
+            })
+            console.log(error)
         })
 
     }
@@ -443,15 +477,28 @@ class BoardDetails extends React.Component {
                 'Authorization': this.props.token.value
             }
         })
-        .then(() => {
-            // TODO check for error
-            console.log('card moved')
-            // Refresh board
-            return this.loadBoard()
+        .then((resp) => {
+            if (resp.status !== 200) {
+                Toast.show({
+                    type: 'error',
+                    text1: i18n.t('error'),
+                    text2: resp,
+                })
+                console.log('Error', resp)
+            } else {
+                console.log('card moved')
+                // Refresh board
+                return this.loadBoard()
+            }
         })
-        .catch(() => {
+        .catch((error) => {
             // Reverts change and inform user
-            // TODO inform user
+            console.log(error)
+            Toast.show({
+                type: 'error',
+                text1: i18n.t('error'),
+                text2: error.message,
+            })
             this.props.moveCard({
                 boardId: this.props.route.params.boardId,
                 oldStackId: stackId,
@@ -472,6 +519,11 @@ class BoardDetails extends React.Component {
             })
         .then((resp) => {
             if (resp.status !== 200) {
+                Toast.show({
+                    type: 'error',
+                    text1: i18n.t('error'),
+                    text2: resp,
+                })
                 console.log('Error', resp)
             } else {
                 console.log('Stack deleted')
@@ -482,6 +534,11 @@ class BoardDetails extends React.Component {
             }
         })
         .catch((error) => {
+            Toast.show({
+                type: 'error',
+                text1: i18n.t('error'),
+                text2: error.message,
+            })
             console.log(error)
         })
     }
@@ -497,6 +554,11 @@ class BoardDetails extends React.Component {
             })
         .then((resp) => {
             if (resp.status !== 200) {
+                Toast.show({
+                    type: 'error',
+                    text1: i18n.t('error'),
+                    text2: resp,
+                })
                 console.log('Error', resp)
             } else {
                 console.log('Card deleted')
@@ -508,7 +570,12 @@ class BoardDetails extends React.Component {
             }
         })
         .catch((error) => {
-            console.log(error)
+            Toast.show({
+                type: 'error',
+                text1: i18n.t('error'),
+                text2: error.message,
+            })
+           console.log(error)
         })
     }
 

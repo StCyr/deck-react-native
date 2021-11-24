@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { KeyboardAvoidingView, Appearance } from 'react-native';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import Toast from 'react-native-toast-message'
 import * as Font from 'expo-font';
 import AppLoading from 'expo-app-loading';
 import Login from './components/Login';
@@ -141,6 +142,7 @@ class App extends React.Component {
 								<Stack.Screen name="NewCard" component={Card} />
 							</Stack.Navigator>
 						</NavigationContainer>
+						<Toast />
 					</KeyboardAvoidingView>
 				)
 			}

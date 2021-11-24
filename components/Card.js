@@ -11,6 +11,7 @@ import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
 import * as Localization from 'expo-localization';
+import Toast from 'react-native-toast-message';
 import {i18n} from '../i18n/i18n.js';
 
 class Card extends React.Component {
@@ -202,6 +203,11 @@ class Card extends React.Component {
             })
         .then((resp) => {
             if (resp.status !== 200) {
+                Toast.show({
+                    type: 'error',
+                    text1: i18n.t('error'),
+                    text2: resp,
+                })
                 console.log('Error', resp)
             } else {
                 console.log('Card saved')
@@ -209,6 +215,11 @@ class Card extends React.Component {
             }
         })
         .catch((error) => {
+            Toast.show({
+                type: 'error',
+                text1: i18n.t('error'),
+                text2: error.message,
+            })
             console.log(error)
         })
     }

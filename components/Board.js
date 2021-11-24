@@ -4,6 +4,7 @@ import { ActionSheetIOS, Pressable, View, Text, TextInput } from 'react-native';
 import { initialWindowMetrics } from 'react-native-safe-area-context';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux'
+import Toast from 'react-native-toast-message';
 import { addBoard, deleteBoard, renameBoard } from '../store/boardSlice';
 import Icon from './Icon';
 import axios from 'axios';
@@ -108,6 +109,11 @@ class Board extends React.Component {
             })
         .then((resp) => {
             if (resp.status !== 200) {
+                Toast.show({
+                    type: 'error',
+                    text1: i18n.t('error'),
+                    text2: resp,
+                })
                 this.props.addBoard(this.props.board)
                 console.log('Error', resp)
             } else {
@@ -115,6 +121,11 @@ class Board extends React.Component {
             }
         })
         .catch((error) => {
+            Toast.show({
+                type: 'error',
+                text1: i18n.t('error'),
+                text2: error.message,
+            })
             this.props.addBoard(this.props.board)
             console.log(error)
         })    
@@ -131,6 +142,11 @@ class Board extends React.Component {
             })
         .then((resp) => {
             if (resp.status !== 200) {
+                Toast.show({
+                    type: 'error',
+                    text1: i18n.t('error'),
+                    text2: resp,
+                })
                 this.props.addBoard(this.props.board)
                 console.log('Error', resp)
             } else {
@@ -138,6 +154,11 @@ class Board extends React.Component {
             }
         })
         .catch((error) => {
+            Toast.show({
+                type: 'error',
+                text1: i18n.t('error'),
+                text2: error.message,
+            })
             this.props.addBoard(this.props.board)
             console.log(error)
         })    
@@ -163,6 +184,11 @@ class Board extends React.Component {
             })
         .then((resp) => {
             if (resp.status !== 200) {
+                Toast.show({
+                    type: 'error',
+                    text1: i18n.t('error'),
+                    text2: resp,
+                })
                 this.props.renameBoard({
                     boardId: this.props.board.id,
                     boardTitle: boardNameBackup
@@ -173,6 +199,11 @@ class Board extends React.Component {
             }
         })
         .catch((error) => {
+            Toast.show({
+                type: 'error',
+                text1: i18n.t('error'),
+                text2: error.message,
+            })
             this.props.renameBoard({
                 boardId: this.props.board.id,
                 boardTitle: boardNameBackup
