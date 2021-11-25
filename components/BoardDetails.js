@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { addCard, addStack, deleteCard, deleteStack, moveCard } from '../store/boardSlice';
+import { addCard, addLabel, addStack, deleteCard, deleteStack, moveCard } from '../store/boardSlice';
 import { setServer } from '../store/serverSlice';
 import { setToken } from '../store/tokenSlice';
 import AppMenu from './AppMenu';
@@ -239,9 +239,22 @@ class BoardDetails extends React.Component {
                                             this.setState({cardPressed: -1})
                                         }}
                                     >
-                                        <Text style={[this.props.theme.cardTitle, { width: '100%' }]}>
-                                            {card.title}
-                                        </Text>
+                                        <View>
+                                            <Text style={[this.props.theme.cardTitle, { width: '100%' }]}>
+                                                {card.title}
+                                            </Text>
+                                            <View style={this.props.theme.cardLabelContainer} >
+                                                {Object.values(card.labels).map(label => (
+                                                    <View
+                                                        key={label.id}
+                                                        style={[this.props.theme.cardLabel, { backgroundColor: '#' + label.color}]} >
+                                                        <Text style={this.props.theme.cardLabelText}>
+                                                            {label.title}
+                                                        </Text>
+                                                    </View>                                                    
+                                                ))}
+                                            </View>
+                                        </View>
                                     </DraxView>
                                 </Pressable>
                             ))}
@@ -407,13 +420,53 @@ class BoardDetails extends React.Component {
         })
     }
 
+    // Loads the detailed information of the board
     async loadBoard() {
 
-        console.log('Retrieving board details from server')
+        // Shows loading spinner
         this.setState({
             refreshing: true
         })
 
+        // Retrieves board details (eg:labels)
+        // TODO: Merge both axios requests
+        console.log('Retrieving board details from server')
+        await axios.get(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': this.props.token.value
+            }
+        }).then((resp) => {
+            if (resp.status !== 200) {
+                Toast.show({
+                    type: 'error',
+                    text1: i18n.t('error'),
+                    text2: resp,
+                })
+                console.log('Error', resp)
+            } else {
+                console.log('board details retrieved from server')
+
+                // Add labels to board in store
+                resp.data.labels.forEach(label => {
+                    this.props.addLabel({
+                        boardId: this.props.route.params.boardId,
+                        label
+                    })
+                })
+
+            }
+        }).catch((error) => {
+            Toast.show({
+                type: 'error',
+                text1: i18n.t('error'),
+                text2: error.message,
+            })
+            console.log(error)
+        })
+
+        // Retrieves board stacks
+        console.log('Retrieving board stacks from server')
         await axios.get(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks`, {
             headers: {
                 'Content-Type': 'application/json',
@@ -429,11 +482,8 @@ class BoardDetails extends React.Component {
                 console.log('Error', resp)
             } else {
                 console.log('board details retrieved from server')
-                this.setState({
-                    refreshing: false
-                })
 
-                // Update board's details in store
+                // Add stacks to board in store
                 resp.data.forEach(stack => {
                     this.props.addStack({
                         boardId: this.props.route.params.boardId,
@@ -458,7 +508,11 @@ class BoardDetails extends React.Component {
             console.log(error)
         })
 
-    }
+        // Hides loading spinner
+        this.setState({
+            refreshing: false
+        })
+}
 
     moveCard(cardId, stackId) {
         this.props.moveCard({
@@ -592,6 +646,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => (
     bindActionCreators( {
         addCard,
+        addLabel,
         addStack,
         deleteCard,
         deleteStack,

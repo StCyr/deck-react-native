@@ -37,6 +37,7 @@ export const getColors = (theme) => {
 }
 
 export const padding = {
+  xxs: 2,
   xs: 4,
   s: 8,
   m: 16,
@@ -45,6 +46,7 @@ export const padding = {
 }
 
 export const fonts = {
+  xs: 12,
   s: 15,
   m: 17,
   l: 19,
@@ -116,6 +118,23 @@ const baseStyles = (theme) => {
       height: padding.m,
       borderRadius: padding.m / 2,
       marginRight: padding.m
+    },
+    cardLabel: {
+      borderRadius: padding.s,
+      marginRight: padding.xxs,
+      minWidth: 0,
+      paddingLeft: padding.xs,
+      paddingRight: padding.xs,
+    },
+    cardLabelContainer: {
+      flex: 1,
+      flexDirection: 'row',
+      marginTop: padding.xs,
+    },
+    cardLabelText: {
+      fontSize: fonts.xs,
+      justifyContent: 'center',
+      textAlign: 'center',
     },
     cardTitle: {
       color: colors.text,

@@ -12,8 +12,11 @@ export const boardSlice = createSlice({
 		addCard: (state, action) => {
 			state.value[action.payload.boardId].stacks.find(oneStack => oneStack.id === action.payload.stackId).cards[action.payload.card.id] = action.payload.card
 		},
+		addLabel: (state, action) => {
+			state.value[action.payload.boardId].labels.push(action.payload.label)
+		},
 		addStack: (state, action) => {
-			// Stores cards in an object where cards are indexed by their order rather than in an array
+			// Stores stacks in an object where stacks are indexed by their order rather than in an array
 			const cards = action.payload.stack.cards
 			action.payload.stack.cards = {}
 			if (typeof cards !== 'undefined') {
@@ -60,6 +63,6 @@ export const boardSlice = createSlice({
 	}
 })
 
-export const { addBoard, addCard, addStack, deleteAllBoards, deleteBoard, deleteCard, deleteStack, moveCard, renameBoard } = boardSlice.actions
+export const { addBoard, addCard, addLabel, addStack, deleteAllBoards, deleteBoard, deleteCard, deleteStack, moveCard, renameBoard } = boardSlice.actions
 
 export default boardSlice.reducer
