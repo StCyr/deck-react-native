@@ -239,8 +239,10 @@ class BoardDetails extends React.Component {
                                             this.setState({cardPressed: -1})
                                         }}
                                     >
-                                        <View>
-                                            <Text style={[this.props.theme.cardTitle, { width: '100%' }]}>
+                                        <View style={{flex: 1}}>
+                                            <Text 
+                                                style={[this.props.theme.cardTitle, { width: '100%' }]}
+                                                numberOfLines={1} >
                                                 {card.title}
                                             </Text>
                                             <View style={this.props.theme.cardLabelContainer} >
