@@ -16,12 +16,21 @@ export const boardSlice = createSlice({
 			state.value[action.payload.boardId].labels.push(action.payload.label)
 		},
 		addStack: (state, action) => {
-			// Stores stacks in an object where stacks are indexed by their order rather than in an array
+			// Stores stacks in an object where cards are indexed by their order rather than in an array
 			const cards = action.payload.stack.cards
 			action.payload.stack.cards = {}
 			if (typeof cards !== 'undefined') {
 				cards.forEach(card => {
-					action.payload.stack.cards[card.order] = card
+					if(action.payload.stack.cards[card.order] === undefined) {
+						action.payload.stack.cards[card.order] = card
+					} else {
+						// Card with specified order already exists, put it in the next available slot
+						var i = card.order++
+						while(action.payload.stack.cards[i] !== undefined) {
+							i++
+						}
+						action.payload.stack.cards[i] = card
+					}
 				})
 			}
 			// Filter out existing stack with same id
