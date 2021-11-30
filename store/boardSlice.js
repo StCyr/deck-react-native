@@ -10,7 +10,27 @@ export const boardSlice = createSlice({
 			state.value[action.payload.id] = action.payload
 		},
 		addCard: (state, action) => {
-			state.value[action.payload.boardId].stacks.find(oneStack => oneStack.id === action.payload.stackId).cards[action.payload.card.id] = action.payload.card
+			// Finds related stack
+			const stack = state.value[action.payload.boardId].stacks.find(oneStack => oneStack.id === action.payload.stackId)
+			// Adds card to stack
+			if (stack.cards[action.payload.card.order] === undefined) {
+				stack.cards[action.payload.card.order] = action.payload.card
+			} else {
+					// Card with specified order already exists, put it in the next available slot
+					var i = action.payload.card.order++
+					while(stack.cards[i] !== undefined) {
+						i++
+					}
+					stack.cards[i] = action.payload.card
+			}
+			// Adds updated stack to store
+			state.value[action.payload.boardId].stacks = state.value[action.payload.boardId].stacks.map(oneStack => {
+				if (oneStack.id !== action.payload.stackId) {
+					return oneStack
+				} else {
+					return stack
+				}
+			})
 		},
 		addLabel: (state, action) => {
 			state.value[action.payload.boardId].labels.push(action.payload.label)
