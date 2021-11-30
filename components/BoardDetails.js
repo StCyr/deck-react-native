@@ -246,7 +246,7 @@ class BoardDetails extends React.Component {
                                                 {card.title}
                                             </Text>
                                             <View style={this.props.theme.cardLabelContainer} >
-                                                {Object.values(card.labels).map(label => (
+                                                {card.labels && Object.values(card.labels).map(label => (
                                                     <View
                                                         key={label.id}
                                                         style={[this.props.theme.cardLabel, { backgroundColor: '#' + label.color}]} >
