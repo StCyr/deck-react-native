@@ -172,7 +172,8 @@ class AllBoards extends React.Component {
 				})
 				this.props.deleteAllBoards()
 				resp.data.forEach(board => {
-					if (!board.archived) {
+					// Do not display deleted and archived boards
+					if (!board.archived && !board.deletedAt) {
 						this.props.addBoard(board)
 					}
 				})
