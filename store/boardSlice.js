@@ -16,7 +16,7 @@ export const boardSlice = createSlice({
 			state.value[action.payload.boardId].labels.push(action.payload.label)
 		},
 		addStack: (state, action) => {
-			// Stores stacks in an object where stacks are indexed by their order rather than in an array
+			// Stores cards as an object indexed by cards' id rather than in an array
 			const cards = action.payload.stack.cards
 			action.payload.stack.cards = {}
 			if (typeof cards !== 'undefined') {

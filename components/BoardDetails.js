@@ -207,7 +207,7 @@ class BoardDetails extends React.Component {
                         </View>
                         {currentStack?.cards &&
                         <View style={this.props.theme.boardDetailsContainer}>
-                            {Object.values(currentStack.cards).map(card => (
+                            {Object.values(currentStack.cards).sort((a,b) => a.order - b.order).map(card => (
                                 <Pressable
                                     key={card.id}
                                     onPress={() => {
