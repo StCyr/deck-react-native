@@ -351,7 +351,7 @@ class BoardDetails extends React.Component {
                 console.log('Error', resp)
             } else {
                 console.log('Card created')
-                // Adds card to stack in store
+                // card to stack in store
                 this.props.addCard({
                     boardId: this.props.route.params.boardId,
                     stackId: currentStack.id,
