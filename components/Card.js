@@ -215,12 +215,20 @@ class Card extends React.Component {
             }
         })
         .catch((error) => {
-            Toast.show({
-                type: 'error',
-                text1: i18n.t('error'),
-                text2: error.message,
-            })
             console.log(error)
+            if (error.message === 'Request failed with status code 403') {
+                Toast.show({
+                    type: 'error',
+                    text1: i18n.t('error'),
+                    text2: i18n.t('unauthorizedToEditCard'),
+                })
+            } else {
+                Toast.show({
+                    type: 'error',
+                    text1: i18n.t('error'),
+                    text2: error.message,
+                })
+            }
         })
     }
 

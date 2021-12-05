@@ -15,16 +15,17 @@ export const en = {
     logout: 'Logout',
     moveCard : 'Move card',
     noStack : 'This board has no stack. Start working by first creating a stack.',
-    newBoardHint: 'Type the name of a board to create one',
-    newCardHint: 'Type here the title of your card',
+    newBoardHint : 'Type the name of a board to create one',
+    newCardHint : 'Type here the title of your card',
     newStackHint : 'Type here the name of a new list',
-    rename: 'Rename',
-    renameStack: 'Rename stack',
+    rename : 'Rename',
+    renameStack : 'Rename stack',
     save : 'Save',
     setDueDate : 'Set due date',
     setUrl : 'Please enter the URL of your Nextcloud server',
-    signIn: 'Sign In',
+    signIn : 'Sign In',
     title : 'Title: ',
+    unauthorizedToEditCard : 'You are not authorized to edit this card'
 }
 
 export const fr = {
@@ -54,6 +55,7 @@ export const fr = {
     setUrl : 'Veuillez entrer l\'URL de votre serveur Nextcloud',
     signIn: 'S\'identifier',
     title : 'Titre: ',
+    unauthorizedToEditCard : 'Vous n\'êtes pas autorisé à modifier cette carte'
 }
 
 export const ru = {
