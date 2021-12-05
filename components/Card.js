@@ -211,6 +211,11 @@ class Card extends React.Component {
                 console.log('Error', resp)
             } else {
                 console.log('Card saved')
+                this.props.addCard({
+                    boardId: this.props.route.params.boardId,
+                    stackId: this.props.route.params.stackId,
+                    card: this.state.card
+                })
                 this.props.navigation.goBack()
             }
         })
