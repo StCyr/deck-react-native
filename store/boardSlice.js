@@ -21,7 +21,7 @@ export const boardSlice = createSlice({
 			action.payload.stack.cards = {}
 			if (typeof cards !== 'undefined') {
 				cards.forEach(card => {
-					action.payload.stack.cards[card.order] = card
+					action.payload.stack.cards[card.id] = card
 				})
 			}
 			// Filter out existing stack with same id
