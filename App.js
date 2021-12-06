@@ -139,7 +139,6 @@ class App extends React.Component {
 								<Stack.Screen name="AllBoards" component={AllBoards} initialParams={{navigation: this.state.navigation}}/>
 								<Stack.Screen name="BoardDetails" component={BoardDetails} />
 								<Stack.Screen name="CardDetails" component={CardDetails} />
-								<Stack.Screen name="NewCard" component={Card} />
 							</Stack.Navigator>
 						</NavigationContainer>
 						<Toast />
