@@ -2,10 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { addCard, addLabel, addStack, deleteCard, deleteStack, moveCard } from '../store/boardSlice';
+import { addCard, addLabel, addStack, deleteStack, moveCard } from '../store/boardSlice';
 import { setServer } from '../store/serverSlice';
 import { setToken } from '../store/tokenSlice';
 import AppMenu from './AppMenu';
+import Card from './Card';
 import { ActionSheetIOS, Pressable, RefreshControl, Text, TextInput, View } from 'react-native';
 import { DraxProvider, DraxScrollView, DraxView } from 'react-native-drax';
 import axios from 'axios';
@@ -39,34 +40,6 @@ class BoardDetails extends React.Component {
             bottom: 0,
             top: 0,
         }
-    }
-
-    // Function to detect long press on card and open a context menu
-    cardPressedDown(id) {
-        this.setState({cardPressed: id})
-        setTimeout(() => {
-            if(this.state.cardPressed === id) {
-                // Context menu
-                ActionSheetIOS.showActionSheetWithOptions(
-                    {
-                        options: [i18n.t("cancel"), i18n.t("rename"), i18n.t("delete")],
-                        destructiveButtonIndex: 2,
-                        cancelButtonIndex: 0,
-                    },
-                    buttonIndex => {
-                        if (buttonIndex === 0) {
-                            // Cancel action
-                        } else if (buttonIndex === 1) {
-                            // TODO Makes title editable
-                        } else if (buttonIndex === 2) {
-                            // Delete card
-                            this.deleteCard(id)
-                        }
-                    }
-                )
-                this.setState({cardPressed: -1}) // reset
-            }
-        }, 500)
     }
 
     async componentDidMount() {
@@ -208,57 +181,13 @@ class BoardDetails extends React.Component {
                         {currentStack?.cards &&
                         <View style={this.props.theme.boardDetailsContainer}>
                             {Object.values(currentStack.cards).sort((a,b) => a.order - b.order).map(card => (
-                                <Pressable
+                                <Card
+                                    card={card}
                                     key={card.id}
-                                    onPress={() => {
-                                        // Navigates to the card's details page
-                                        this.props.navigation.navigate('CardDetails',{
-                                            boardId: this.props.route.params.boardId,
-                                            stackId: this.state.index,
-                                            cardId: card.id
-                                        })
-                                    }}
-                                >
-                                    <DraxView
-                                        key={card.id}
-                                        payload={card}
-                                        style={this.props.theme.card}
-                                        draggingStyle={{opacity: 0}}
-                                        dragReleasedStyle={{opacity: 0}}
-                                        hoverStyle={[this.props.theme.card, {opacity: 0.6, shadowOpacity: 0}]}
-                                        longPressDelay={250}
-                                        onDragStart={() => this.cardPressedDown(card.id)}
-                                        onDrag={({dragTranslation}) => {
-                                            if(dragTranslation.y > 5 || dragTranslation.y < -5) {
-                                                // if the card was actually moved, cancel opening the context menu
-                                                this.setState({cardPressed: -1})
-                                            }
-                                        }}
-                                        onDragEnd={() => {
-                                            // Shows selected card's details when the user just clicked the card
-                                            this.setState({cardPressed: -1})
-                                        }}
-                                    >
-                                        <View style={{flex: 1}}>
-                                            <Text 
-                                                style={[this.props.theme.cardTitle, { width: '100%' }]}
-                                                numberOfLines={1} >
-                                                {card.title}
-                                            </Text>
-                                            <View style={this.props.theme.cardLabelContainer} >
-                                                {card.labels && Object.values(card.labels).map(label => (
-                                                    <View
-                                                        key={label.id}
-                                                        style={[this.props.theme.cardLabel, { backgroundColor: '#' + label.color}]} >
-                                                        <Text style={this.props.theme.cardLabelText}>
-                                                            {label.title}
-                                                        </Text>
-                                                    </View>                                                    
-                                                ))}
-                                            </View>
-                                        </View>
-                                    </DraxView>
-                                </Pressable>
+                                    navigation={this.props.navigation} 
+                                    route={this.props.route}
+                                    stackId={currentStack.id}
+                                     />
                             ))}
                         </View>
                         }
@@ -599,42 +528,6 @@ class BoardDetails extends React.Component {
         })
     }
 
-    deleteCard(cardId) {
-        console.log(`deleting card ${cardId}`)
-        axios.delete(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks/${this.props.route.params.stackId}/cards/${cardId}`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': this.props.token.value
-                },
-            })
-        .then((resp) => {
-            if (resp.status !== 200) {
-                Toast.show({
-                    type: 'error',
-                    text1: i18n.t('error'),
-                    text2: resp,
-                })
-                console.log('Error', resp)
-            } else {
-                console.log('Card deleted')
-                this.props.deleteCard({
-                    boardId: this.props.route.params.boardId,
-                    stackId: this.state.index,
-                    cardId,
-                })
-            }
-        })
-        .catch((error) => {
-            Toast.show({
-                type: 'error',
-                text1: i18n.t('error'),
-                text2: error.message,
-            })
-           console.log(error)
-        })
-    }
-
 }
 
 // Connect to store
@@ -650,7 +543,6 @@ const mapDispatchToProps = dispatch => (
         addCard,
         addLabel,
         addStack,
-        deleteCard,
         deleteStack,
         moveCard,
         setServer,
