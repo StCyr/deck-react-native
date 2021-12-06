@@ -14,7 +14,7 @@ import * as Localization from 'expo-localization';
 import Toast from 'react-native-toast-message';
 import {i18n} from '../i18n/i18n.js';
 
-class Card extends React.Component {
+class CardDetails extends React.Component {
 
     constructor(props) {
         super(props)
@@ -256,4 +256,4 @@ const mapStateToProps = state => ({
   export default connect(
     mapStateToProps,
     mapDispatchToProps
-  )(Card)
+  )(CardDetails)

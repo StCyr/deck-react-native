@@ -57,7 +57,7 @@ class BoardDetails extends React.Component {
                         if (buttonIndex === 0) {
                             // Cancel action
                         } else if (buttonIndex === 1) {
-                            // Makes title editable
+                            // TODO Makes title editable
                         } else if (buttonIndex === 2) {
                             // Delete card
                             this.deleteCard(id)
@@ -187,7 +187,7 @@ class BoardDetails extends React.Component {
                                                         if (buttonIndex === 0) {
                                                             // cancel action
                                                         } else if (buttonIndex === 1) {
-                                                            // TODO
+                                                            // TODO Rename stack
                                                         } else if (buttonIndex === 2) {
                                                             this.setState({addingStack: true})
                                                         } else if (buttonIndex === 3) {

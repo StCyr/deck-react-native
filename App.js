@@ -11,7 +11,7 @@ import Login from './components/Login';
 import Home from './components/Home';
 import AllBoards from './components/AllBoards';
 import BoardDetails from './components/BoardDetails';
-import Card from './components/Card';
+import CardDetails from './components/CardDetails';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux'
 import { setServer } from './store/serverSlice';
@@ -138,7 +138,7 @@ class App extends React.Component {
 							>
 								<Stack.Screen name="AllBoards" component={AllBoards} initialParams={{navigation: this.state.navigation}}/>
 								<Stack.Screen name="BoardDetails" component={BoardDetails} />
-								<Stack.Screen name="CardDetails" component={Card} />
+								<Stack.Screen name="CardDetails" component={CardDetails} />
 								<Stack.Screen name="NewCard" component={Card} />
 							</Stack.Navigator>
 						</NavigationContainer>
