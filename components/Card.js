@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ActionSheetIOS, Pressable, Text, View } from 'react-native';
+import { ActionSheetIOS, Pressable, Text, TextInput, View } from 'react-native';
 import { DraxView } from 'react-native-drax';
 import Toast from 'react-native-toast-message';
 import { useDispatch, useSelector } from 'react-redux'
@@ -10,6 +10,8 @@ import axios from 'axios';
 // A component representing a card in a stack list
 const Card = ({card, navigation, route, stackId}) => {
 
+    const [newCardName, setNewCardName] = useState('')
+    const [editMode, setEditMode] = useState(false)
     const [timeoutId, setTimeoutId] = useState(-1);
     const theme = useSelector(state => state.theme)
     const server = useSelector(state => state.server)
@@ -17,7 +19,7 @@ const Card = ({card, navigation, route, stackId}) => {
     const dispatch = useDispatch()
 
     // Function to detect long press on card and open a context menu
-    function cardPressedDown(cardId) {
+    function cardPressedDown() {
         // Sets a timeout that will display a context menu if it is not canceled later by a drag of the card
         const id = setTimeout(() => {
             ActionSheetIOS.showActionSheetWithOptions(
@@ -30,10 +32,11 @@ const Card = ({card, navigation, route, stackId}) => {
                     if (buttonIndex === 0) {
                         // Cancel action
                     } else if (buttonIndex === 1) {
-                        // TODO Makes title editable
+                        // Makes card's title editable
+                        setEditMode(true)
                     } else if (buttonIndex === 2) {
                          // Delete card
-                        removeCard(cardId)
+                        removeCard()
                     }
                 }
             )
@@ -42,16 +45,16 @@ const Card = ({card, navigation, route, stackId}) => {
     }
 
     // Function to delete the card
-    function removeCard(cardId) {
-        console.log(`deleting card ${cardId}`)
+    function removeCard() {
+        console.log(`deleting card ${card.id}`)
         // Opportunistically deletes card from the store. We'll add it back if deleting it from the server fails.
         dispatch(deleteCard({
             boardId: route.params.boardId,
             stackId,
-            cardId,
+            cardId: card.id,
         }))
         // Deletes card from server
-        axios.delete(server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${cardId}`,
+        axios.delete(server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${stackId}/cards/${card.id}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -88,6 +91,81 @@ const Card = ({card, navigation, route, stackId}) => {
         })
     }
 
+    // Function to rename a card
+    function changeCardTitle() {
+        console.log(`Renaming card "${card.title}" to "${newCardName}"`)
+        // Changes card title and keep a backup of its name in case something goes wrong
+        const oldCardName = card.title
+        // Opportunistically replaces card in the store. We'll replace it back if updating it from the server fails.
+         dispatch(addCard({
+            boardId: route.params.boardId,
+            stackId,
+            card: {
+                ...card,
+                ...{
+                    title: newCardName
+                }
+            }
+        }))
+        // Update the card on the server
+        axios.put(server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${stackId}/cards/${card.id}`,
+            {
+                ...card,
+                ...{
+                    title: newCardName
+                }
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token.value
+                },
+            })
+        .then((resp) => {
+            if (resp.status !== 200) {
+                Toast.show({
+                    type: 'error',
+                    text1: i18n.t('error'),
+                    text2: resp,
+                })
+                console.log('Error', resp)
+                dispatch(addCard({
+                    boardId: route.params.boardId,
+                    stackId: stackId,
+                    card: {
+                        ...card,
+                        ...{
+                            title: oldCardName
+                        }
+                    }
+                }))
+           } else {
+                console.log('Card renamed successfully')
+                setEditMode(false)
+                setNewCardName('')
+            }
+        })
+        .catch((error) => {
+            Toast.show({
+                type: 'error',
+                text1: i18n.t('error'),
+                text2: error.message,
+            })
+            console.log(error)
+            card.title = oldCardName
+            dispatch(addCard({
+                boardId: route.params.boardId,
+                stackId,
+                card: {
+                    ...card,
+                    ...{
+                        title: oldCardName
+                    }
+                }
+            }))
+        })
+    }
+
     return (
         <Pressable
             key={card.id}
@@ -95,7 +173,7 @@ const Card = ({card, navigation, route, stackId}) => {
                 // Navigates to the card's details page
                 navigation.navigate('CardDetails',{
                     boardId: route.params.boardId,
-                    stackId: route.params.stackId,
+                    stackId,
                     cardId: card.id
                 })
             }} >
@@ -107,7 +185,7 @@ const Card = ({card, navigation, route, stackId}) => {
                 dragReleasedStyle={{opacity: 0}}
                 hoverStyle={[theme.card, {opacity: 0.6, shadowOpacity: 0}]}
                 longPressDelay={250}
-                onDragStart={() => cardPressedDown(card.id)}
+                onDragStart={() => cardPressedDown()}
                 onDrag={({dragTranslation}) => {
                     if((dragTranslation.y > 5 || dragTranslation.y < -5) && timeoutId !== -1) {
                         // if the card was actually moved, cancel opening the context menu
@@ -121,11 +199,27 @@ const Card = ({card, navigation, route, stackId}) => {
                     setTimeoutId(-1)
                 }} >
                 <View style={{flex: 1}}>
-                    <Text 
-                        style={[theme.cardTitle, { width: '100%' }]}
-                        numberOfLines={1} >
-                        {card.title}
-                    </Text>
+                     { editMode ?
+                        <TextInput style={[theme.inputText, {flexGrow: 1}]}
+                        value={newCardName}
+                        autoFocus={true}
+                        maxLength={100}
+                        onBlur={() => {
+                            setEditMode(false)
+                            setNewCardName('')
+                        }}
+                        onChangeText={name => {
+                            setNewCardName(name)
+                        }}
+                        onSubmitEditing={() => changeCardTitle()}
+                        placeholder={card.title}
+                        returnKeyType='send' /> :
+                        <Text
+                            style={[theme.cardTitle, { width: '100%' }]}
+                            numberOfLines={1} >
+                            {card.title}
+                        </Text>
+                    }
                     <View style={theme.cardLabelContainer} >
                         {card.labels && Object.values(card.labels).map(label => (
                             <View

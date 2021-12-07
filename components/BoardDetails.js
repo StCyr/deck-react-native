@@ -256,9 +256,7 @@ class BoardDetails extends React.Component {
 
     createCard(cardName) {
         console.log('Creating card', cardName)
-        const stacks = this.props.boards.value[this.props.route.params.boardId].stacks;
-        const currentStack = stacks.find(oneStack => oneStack.id === this.state.index);
-        axios.post(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks/${currentStack.id}/cards`,
+        axios.post(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks/${this.state.index}/cards`,
             {
                 description: '',
                 duedate: null,
@@ -283,7 +281,7 @@ class BoardDetails extends React.Component {
                 // card to stack in store
                 this.props.addCard({
                     boardId: this.props.route.params.boardId,
-                    stackId: currentStack.id,
+                    stackId: this.state.index,
                     card: resp.data,
                 })
                 // Reset newCardName and hide newCardName button
