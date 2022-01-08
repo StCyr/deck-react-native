@@ -50,7 +50,7 @@ class BoardDetails extends React.Component {
             headerRight: () => (<AppMenu/>),
             headerLeft: () => (
                 <HeaderBackButton
-                    label = 'All boards'
+                    label = {i18n.t('allBoards')}
                     labelVisible = {true}
                     onPress = {() => {
                         AsyncStorage.removeItem('navigation')
