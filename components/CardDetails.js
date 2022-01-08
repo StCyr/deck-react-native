@@ -122,6 +122,24 @@ class CardDetails extends React.Component {
                         }
                     </View>
                 }
+                { this.state.card.labels?.length > 0 &&
+                    <View>
+                        <Text h1 h1Style={this.props.theme.title}>
+                            {i18n.t('labels')}
+                        </Text>
+                        <View style={this.props.theme.cardLabelContainer} >
+                            {this.state.card.labels && Object.values(this.state.card.labels).map(label => (
+                                <View
+                                    key={label.id}
+                                    style={[this.props.theme.cardDetailsLabel, { backgroundColor: '#' + label.color}]} >
+                                    <Text style={this.props.theme.cardDetailsLabelText} >
+                                        {label.title}
+                                    </Text>
+                                </View>
+                            ))}
+                        </View>
+                    </View>
+                }
                 <View keyboardShouldPersistTaps="handled" style={{...this.props.theme.inputField, flexGrow: 1}}>
                     <Text h1 h1Style={this.props.theme.title}>
                         {i18n.t('description')}
