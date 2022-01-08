@@ -1,5 +1,6 @@
 export const en = {
     addStack: 'Add stack',
+    all: 'All',
     allBoards: 'All Boards',
     archive: 'Archive',
     cancel: 'Cancel',
@@ -32,6 +33,7 @@ export const en = {
 
 export const fr = {
     addStack: 'Ajouter une liste',
+    all: 'Tous',
     allBoards: 'Tous les tableaux',
     archive: 'Archiver',
     cancel: 'Annuler',

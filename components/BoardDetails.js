@@ -45,12 +45,13 @@ class BoardDetails extends React.Component {
     async componentDidMount() {
 
         // Setup page's header bar
+        const title = this.props.boards.value[this.props.route.params.boardId].title
         this.props.navigation.setOptions({
-            headerTitle: this.props.boards.value[this.props.route.params.boardId].title,
+            headerTitle: title.length > 25 ? title.slice(0,24) + '...' : title,
             headerRight: () => (<AppMenu/>),
             headerLeft: () => (
                 <HeaderBackButton
-                    label = {i18n.t('allBoards')}
+                    label = {i18n.t('all')}
                     labelVisible = {true}
                     onPress = {() => {
                         AsyncStorage.removeItem('navigation')
