@@ -6,7 +6,7 @@ import { setServer } from '../store/serverSlice';
 import { setToken } from '../store/tokenSlice';
 import AppMenu from './AppMenu';
 import { Pressable, ScrollView, TextInput, View } from 'react-native';
-import { Text } from 'react-native-elements';
+import { Avatar, Text } from 'react-native-elements';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
@@ -128,7 +128,7 @@ class CardDetails extends React.Component {
                             {i18n.t('labels')}
                         </Text>
                         <View style={this.props.theme.cardLabelContainer} >
-                            {this.state.card.labels && Object.values(this.state.card.labels).map(label => (
+                            {this.state.card.labels.map(label => (
                                 <View
                                     key={label.id}
                                     style={[this.props.theme.cardDetailsLabel, { backgroundColor: '#' + label.color}]} >
@@ -137,6 +137,23 @@ class CardDetails extends React.Component {
                                     </Text>
                                 </View>
                             ))}
+                        </View>
+                    </View>
+                }
+                { this.state.card.assignedUsers?.length > 0 &&
+                    <View>
+                        <Text h1 h1Style={this.props.theme.title}>
+                            {i18n.t('assignees')}
+                        </Text>
+                        <View style={this.props.theme.cardLabelContainer} >
+                            {this.state.card.assignedUsers.map(user =>
+                                <Avatar
+                                    size={32}
+                                    rounded
+                                    source={{uri: this.props.server.value + '/index.php/avatar/' + user.participant.uid + '/32?v=2'}}
+                                    title={user.participant.displayname}
+                                    key={user.id} />
+                            )}
                         </View>
                     </View>
                 }
