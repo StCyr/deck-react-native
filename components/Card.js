@@ -5,6 +5,7 @@ import { Avatar } from 'react-native-elements';
 import Toast from 'react-native-toast-message';
 import { useDispatch, useSelector } from 'react-redux'
 import { addCard, deleteCard } from '../store/boardSlice';
+import LabelList from './LabelList';
 import { i18n } from '../i18n/i18n.js';
 import axios from 'axios';
 
@@ -221,17 +222,10 @@ const Card = ({card, navigation, route, stackId}) => {
                             {card.title}
                         </Text>
                     }
-                    <View style={theme.cardLabelContainer} >
-                        {card.labels && Object.values(card.labels).map(label => (
-                            <View
-                                key={label.id}
-                                style={[theme.cardLabel, { backgroundColor: '#' + label.color}]} >
-                                <Text style={theme.cardLabelText} >
-                                    {label.title}
-                                </Text>
-                            </View>                                                    
-                        ))}
-                    </View>
+                    <LabelList
+                        editable={false}
+                        cardLabels={card.labels}
+                        size='small' />
                     <View>
                         <View>
                         </View>

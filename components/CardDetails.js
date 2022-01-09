@@ -5,6 +5,7 @@ import { addCard } from '../store/boardSlice';
 import { setServer } from '../store/serverSlice';
 import { setToken } from '../store/tokenSlice';
 import AppMenu from './AppMenu';
+import LabelList from './LabelList';
 import { Pressable, ScrollView, TextInput, View } from 'react-native';
 import { Avatar, Text } from 'react-native-elements';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
@@ -26,6 +27,7 @@ class CardDetails extends React.Component {
         }
 
         this.onSave = this.onSave.bind(this);
+        this.udpateCardLabelsHandler = this.udpateCardLabelsHandler.bind(this)
     }
 
     componentDidMount() {
@@ -53,6 +55,18 @@ class CardDetails extends React.Component {
                 showDatePicker: card.duedate !== null ? true : false
             })
         })
+    }
+
+    // Handler to let the LabelList child update the card's labels
+    udpateCardLabelsHandler(values) {
+        const boardLabels = this.props.boards.value[this.props.route.params.boardId].labels
+        const labels = boardLabels.filter(label => {
+            return values.indexOf(label.id) !== -1
+        })    
+        console.log('updated labels')
+ //       this.setState({
+ //           card: {...this.state.card, labels}
+ //       })  
     }
 
     render() {
@@ -123,21 +137,15 @@ class CardDetails extends React.Component {
                     </View>
                 }
                 { this.state.card.labels?.length > 0 &&
-                    <View>
+                    <View style={{zIndex: 10000}}>
                         <Text h1 h1Style={this.props.theme.title}>
                             {i18n.t('labels')}
                         </Text>
-                        <View style={this.props.theme.cardLabelContainer} >
-                            {this.state.card.labels.map(label => (
-                                <View
-                                    key={label.id}
-                                    style={[this.props.theme.cardDetailsLabel, { backgroundColor: '#' + label.color}]} >
-                                    <Text style={this.props.theme.cardDetailsLabelText} >
-                                        {label.title}
-                                    </Text>
-                                </View>
-                            ))}
-                        </View>
+                        <LabelList 
+                            editable = {this.state.editable}
+                            boardLabels = {this.props.boards.value[this.props.route.params.boardId].labels}
+                            cardLabels = {this.state.card.labels}
+                            udpateCardLabelsHandler = {this.udpateCardLabelsHandler} />
                     </View>
                 }
                 { this.state.card.assignedUsers?.length > 0 &&
@@ -148,9 +156,9 @@ class CardDetails extends React.Component {
                         <View style={this.props.theme.cardLabelContainer} >
                             {this.state.card.assignedUsers.map(user =>
                                 <Avatar
-                                    size={32}
+                                    size={40}
                                     rounded
-                                    source={{uri: this.props.server.value + '/index.php/avatar/' + user.participant.uid + '/32?v=2'}}
+                                    source={{uri: this.props.server.value + '/index.php/avatar/' + user.participant.uid + '/40?v=2'}}
                                     title={user.participant.displayname}
                                     key={user.id} />
                             )}
