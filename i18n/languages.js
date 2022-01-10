@@ -1,17 +1,23 @@
 export const en = {
     addStack: 'Add stack',
+    all: 'All',
+    allBoards: 'All Boards',
     archive: 'Archive',
+    assignees: 'Assignees',
+    back: 'Back',
     cancel: 'Cancel',
+    cardDetails: 'Card details',
     create : 'Create',
     createBoard: 'Create board',
     createCard : 'Create card',
     createStack : 'Create stack',
     delete : 'Delete',
     deleteStack: 'Delete stack',
-    description : 'Description: ',
-    dueDate : 'Due date: ',
+    description : 'Description',
+    dueDate : 'Due date',
     edit : 'Edit',
     error: 'Error',
+    labels: 'Labels',
     logout: 'Logout',
     moveCard : 'Move card',
     noStack : 'This board has no stack. Start working by first creating a stack.',
@@ -24,24 +30,30 @@ export const en = {
     setDueDate : 'Set due date',
     setUrl : 'Please enter the URL of your Nextcloud server',
     signIn : 'Sign In',
-    title : 'Title: ',
+    title : 'Title',
     unauthorizedToEditCard : 'You are not authorized to edit this card'
 }
 
 export const fr = {
     addStack: 'Ajouter une liste',
+    all: 'Tous',
+    allBoards: 'Tous les tableaux',
     archive: 'Archiver',
+    assignees: 'Assignés',
+    back: 'Retour',
     cancel: 'Annuler',
+    cardDetails: 'Détail de la carte',
     create : 'Créer',
     createBoard: 'Créer un tableau',
     createCard : 'Créer une carte',
     createStack : 'Créer une liste',
     delete : 'Supprimer',
     deleteStack: 'Supprimer la liste',
-    description : 'Description: ',
-    dueDate : 'Echéance: ',
+    description : 'Description',
+    dueDate : 'Echéance',
     edit : 'Modifier',
     error: 'Erreur',
+    labels: 'Etiquettes',
     logout: 'Logout',
     moveCard : 'Déplacer la carte',
     noStack : 'Ce tableau n\'a pas de liste. Commencez par en créer une.',
@@ -54,7 +66,7 @@ export const fr = {
     setDueDate : 'Définir une échéance',
     setUrl : 'Veuillez entrer l\'URL de votre serveur Nextcloud',
     signIn: 'S\'identifier',
-    title : 'Titre: ',
+    title : 'Titre',
     unauthorizedToEditCard : 'Vous n\'êtes pas autorisé à modifier cette carte'
 }
 
@@ -62,8 +74,8 @@ export const ru = {
     create : 'Создать',
     createCard : 'Создать карточку',
     delete : 'Удалить',
-    description : 'Описание: ',
-    dueDate : 'Дата исполнения: ',
+    description : 'Описание',
+    dueDate : 'Дата исполнения',
     edit : 'Редактировать',
     logout: 'Выйти',
     moveCard : 'Переместить карточку',
@@ -71,15 +83,15 @@ export const ru = {
     setDueDate : 'Задать дату исполнения',
     setUrl : 'Введите URL-адрес вашего сервера Nextcloud',
     signIn: 'Sign In',
-    title : 'Заголовок: ',
+    title : 'Заголовок',
 }
 
 export const ua = {
     create : 'Створити',
     createCard : 'Створити картку',
     delete : 'Видалити',
-    description : 'Опис: ',
-    dueDate : 'Дата виконання: ',
+    description : 'Опис',
+    dueDate : 'Дата виконання',
     edit : 'Редагувати',
     logout: 'Вийти',
     moveCard : 'Перемістити картку',
@@ -87,7 +99,7 @@ export const ua = {
     setDueDate : 'Задати дату виконання',
     setUrl : 'Введіть URL-адресу вашого серверу Nextcloud',
     signIn: 'Sign In',
-    title : 'Заголовок: ',
+    title : 'Заголовок',
 }
 
 export const ca = {
@@ -96,8 +108,8 @@ export const ca = {
     createCard : 'Crear targeta',
     createStack : 'Crear llista',
     delete : 'Esborrar',
-    description : 'Descripció: ',
-    dueDate : 'Data de venciment: ',
+    description : 'Descripció',
+    dueDate : 'Data de venciment',
     edit : 'Editar',
     logout: 'Tancar la sessió',
     moveCard : 'Moure targeta',
@@ -108,7 +120,7 @@ export const ca = {
     setDueDate : 'Inserir data de venciment',
     setUrl : 'Si us plau, escriviu l\'adreça del vostre servidor Nextcloud',
     signIn: 'Iniciar la sessió',
-    title : 'Títol: ',
+    title : 'Títol',
 }
 
 export const de = {

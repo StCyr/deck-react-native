@@ -36,7 +36,7 @@ class AllBoards extends React.Component {
 	async componentDidMount() {
 
 		this.props.navigation.setOptions({
-			headerTitle: 'All Boards',
+			headerTitle: i18n.t('allBoards'),
 			headerRight: () => (<AppMenu navigation={this.props.navigation} setServer={this.props.setServer} setToken={this.props.setToken} />)
 		}, [this.props.navigation, this.props.setServer, this.props.setToken])
 

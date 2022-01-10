@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { ActionSheetIOS, Pressable, Text, TextInput, View } from 'react-native';
 import { DraxView } from 'react-native-drax';
+import { Avatar } from 'react-native-elements';
 import Toast from 'react-native-toast-message';
 import { useDispatch, useSelector } from 'react-redux'
 import { addCard, deleteCard } from '../store/boardSlice';
+import LabelList from './LabelList';
 import { i18n } from '../i18n/i18n.js';
 import axios from 'axios';
 
@@ -220,16 +222,23 @@ const Card = ({card, navigation, route, stackId}) => {
                             {card.title}
                         </Text>
                     }
-                    <View style={theme.cardLabelContainer} >
-                        {card.labels && Object.values(card.labels).map(label => (
-                            <View
-                                key={label.id}
-                                style={[theme.cardLabel, { backgroundColor: '#' + label.color}]} >
-                                <Text style={theme.cardLabelText} >
-                                    {label.title}
-                                </Text>
-                            </View>                                                    
-                        ))}
+                    <LabelList
+                        editable={false}
+                        cardLabels={card.labels}
+                        size='small' />
+                    <View>
+                        <View>
+                        </View>
+                        <View style={theme.cardLabelContainer}>
+                            {card.assignedUsers.map(user =>
+                                <Avatar
+                                    size={32}
+                                    rounded
+                                    source={{uri: server.value + '/index.php/avatar/' + user.participant.uid + '/32?v=2'}}
+                                    title={user.participant.displayname}
+                                    key={user.id} />
+                            )}
+                        </View>
                     </View>
                 </View>
             </DraxView>

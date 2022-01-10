@@ -119,6 +119,13 @@ const baseStyles = (theme) => {
       borderRadius: padding.m / 2,
       marginRight: padding.m
     },
+    cardDetailsLabel: {
+      borderRadius: padding.l,
+      marginRight: padding.s,
+      minWidth: 0,
+      paddingLeft: padding.s,
+      paddingRight: padding.s,
+    },
     cardLabel: {
       borderRadius: padding.s,
       marginRight: padding.xxs,
@@ -130,6 +137,11 @@ const baseStyles = (theme) => {
       flex: 1,
       flexDirection: 'row',
       marginTop: padding.xs,
+    },
+    cardDetailsLabelText: {
+      fontSize: fonts.m,
+      justifyContent: 'center',
+      textAlign: 'center',
     },
     cardLabelText: {
       fontSize: fonts.xs,
