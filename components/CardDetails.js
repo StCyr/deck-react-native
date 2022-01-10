@@ -6,6 +6,8 @@ import AppMenu from './AppMenu'
 import LabelList from './LabelList'
 import { Pressable, ScrollView, TextInput, View } from 'react-native'
 import { Avatar, Text } from 'react-native-elements'
+import { HeaderBackButton } from '@react-navigation/elements';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import BouncyCheckbox from "react-native-bouncy-checkbox"
 import DateTimePicker from '@react-native-community/datetimepicker'
 import axios from 'axios'
@@ -33,8 +35,19 @@ const CardDetails = () => {
     useEffect(() => {
         // Setup page header
         navigation.setOptions({
-            headerTitle: typeof route.params.cardId === 'undefined' ? 'New card' : 'Card details',
-            headerRight: () => (<AppMenu />)
+            headerTitle: i18n.t('cardDetails'),
+            headerRight: () => (<AppMenu />),
+            headerLeft: () => (
+                <HeaderBackButton
+                    label = {i18n.t('back')}
+                    labelVisible = {true}
+                    onPress = {() => {
+                        AsyncStorage.removeItem('navigation')
+                        navigation.goBack()
+                    }}
+                />
+            )
+
         })
 
         // Getting card details from server
