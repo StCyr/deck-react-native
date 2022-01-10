@@ -14,9 +14,9 @@
 //
 //===============================================================================================================================================
 
-import React, { useState } from 'react';
-import { Text, View } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
+import React, { useEffect, useState } from 'react'
+import { Text, View } from 'react-native'
+import DropDownPicker from 'react-native-dropdown-picker'
 import { useSelector } from 'react-redux'
 
 // LabelList is displayed into a scrollview and I'm assuming there won't ever be a ton of labels to display
@@ -29,7 +29,15 @@ const LabelList = ({editable, boardLabels, cardLabels, size='normal', udpateCard
 
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(cardLabels.map(item => item.id));
+
     const theme = useSelector(state => state.theme)
+
+    // Updates parent when value changes
+    useEffect(() => {
+        if (typeof udpateCardLabelsHandler !== 'undefined') {
+            udpateCardLabelsHandler(value)
+        }
+    }, [value])
 
     // default style. Will be overriden later depending on the size props
     var viewStyle = theme.cardDetailsLabel
@@ -80,7 +88,6 @@ const LabelList = ({editable, boardLabels, cardLabels, size='normal', udpateCard
                 items={items}
                 multiple={true}
                 open={open}
-                onChangeValue={(value) => udpateCardLabelsHandler(value)}
                 value={value}
                 setOpen={setOpen}
                 setValue={setValue} />

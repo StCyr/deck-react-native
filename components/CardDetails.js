@@ -1,247 +1,114 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { addCard } from '../store/boardSlice';
-import { setServer } from '../store/serverSlice';
-import { setToken } from '../store/tokenSlice';
-import AppMenu from './AppMenu';
-import LabelList from './LabelList';
-import { Pressable, ScrollView, TextInput, View } from 'react-native';
-import { Avatar, Text } from 'react-native-elements';
-import BouncyCheckbox from "react-native-bouncy-checkbox";
-import DateTimePicker from '@react-native-community/datetimepicker';
-import axios from 'axios';
-import * as Localization from 'expo-localization';
-import Toast from 'react-native-toast-message';
-import {i18n} from '../i18n/i18n.js';
+import React, { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigation, useRoute } from '@react-navigation/native'
+import { addCard } from '../store/boardSlice'
+import AppMenu from './AppMenu'
+import LabelList from './LabelList'
+import { Pressable, ScrollView, TextInput, View } from 'react-native'
+import { Avatar, Text } from 'react-native-elements'
+import BouncyCheckbox from "react-native-bouncy-checkbox"
+import DateTimePicker from '@react-native-community/datetimepicker'
+import axios from 'axios'
+import * as Localization from 'expo-localization'
+import Toast from 'react-native-toast-message'
+import {i18n} from '../i18n/i18n.js'
 
-class CardDetails extends React.Component {
+const CardDetails = () => {
 
-    constructor(props) {
-        super(props)
+    const theme = useSelector(state => state.theme)
+    const server = useSelector(state => state.server)
+    const token = useSelector(state => state.token)
+    const boards = useSelector(state => state.boards)
+    const dispatch = useDispatch()
 
-        this.state = {
-            card: {},
-            editable: false,
-            showDatePicker: false,
-        }
+    const navigation = useNavigation()
+    const route = useRoute()
 
-        this.onSave = this.onSave.bind(this);
-        this.udpateCardLabelsHandler = this.udpateCardLabelsHandler.bind(this)
-    }
+    const [card, setCard] = useState({})
+    const [cardLabelsBackup, setcardLabelsBackup] = useState([])
+    const [editMode, setEditMode] = useState(false)
+    const [showDatePicker, setShowDatePicker] = useState(false)
 
-    componentDidMount() {
+    // ComponentDidMount
+    useEffect(() => {
         // Setup page header
-        this.props.navigation.setOptions({
-            headerTitle: typeof this.props.route.params.cardId === 'undefined' ? 'New card' : 'Card details',
-            headerRight: () => (<AppMenu navigation={this.props.navigation} setServer={this.props.setServer} setToken={this.props.setToken} />)
-        }, [this.props.navigation, this.props.setServer, this.props.setToken])
+        navigation.setOptions({
+            headerTitle: typeof route.params.cardId === 'undefined' ? 'New card' : 'Card details',
+            headerRight: () => (<AppMenu />)
+        })
 
         // Getting card details from server
         console.log('Getting card details from server')
-        axios.get(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks/${this.props.route.params.stackId}/cards/${this.props.route.params.cardId}`, {
+        axios.get(server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}`, {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': this.props.token.value
+                'Authorization': token.value
             }
         })
         .then((resp) => {
             // TODO check for error
-            const card = resp.data
-            card.duedate = card.duedate ? new Date(card.duedate) : null
-            this.setState({
-                card: card,
-                editable: false,
-                showDatePicker: card.duedate !== null ? true : false
-            })
+            const newCard = resp.data
+            // Formats card's duedate properly for DateTimePicker
+            if (newCard.duedate) {
+                newCard.duedate = new Date(newCard.duedate)
+                setShowDatePicker(true)
+            }
+            setCard(newCard)
+            setcardLabelsBackup(newCard.labels)
         })
-    }
+    }, [])
 
     // Handler to let the LabelList child update the card's labels
-    udpateCardLabelsHandler(values) {
-        const boardLabels = this.props.boards.value[this.props.route.params.boardId].labels
+    const udpateCardLabelsHandler = (values) => {
+        const boardLabels = boards.value[route.params.boardId].labels
         const labels = boardLabels.filter(label => {
             return values.indexOf(label.id) !== -1
         })    
-        console.log('updated labels')
- //       this.setState({
- //           card: {...this.state.card, labels}
- //       })  
+        setCard({
+            ...card,
+            labels
+        })
     }
 
-    render() {
-        return (
-            <ScrollView
-                keyboardShouldPersistTaps="handled"
-                style={[this.props.theme.container, {paddingBottom: 40, flex: 1}]}
-                contentContainerStyle={{flexGrow: 1}}
-            >
-                <View style={this.props.theme.inputField}>
-                    <Text h1 h1Style={this.props.theme.title}>
-                        {i18n.t('title')}
-                    </Text>
-                    <TextInput style={this.state.editable ? this.props.theme.input : this.props.theme.inputReadMode}
-                        editable={this.state.editable}
-                        value={this.state.card.title}
-                        onChangeText={title => { 
-                            this.setState({
-                                card: {...this.state.card, title}
-                            })
-                        }}
-                        placeholder='title'
-                    />
-                </View>
-                { this.state.editable &&
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                        <BouncyCheckbox
-                            disableText={true}
-                            isChecked={this.state.showDatePicker}
-                            onPress={(isChecked) => {
-                                this.setState({
-                                    showDatePicker: isChecked,
-                                    card: {
-                                        ...this.state.card,
-                                        // Unset duedate when checkbox is unchecked
-                                        duedate: isChecked ? new Date() : null
-                                    }
-                                })
-                            }}
-                        />
-                        <Text style={this.props.theme.textCheckbox}>
-                            {i18n.t('setDueDate')}
-                        </Text>
-                    </View>
-                }
-                { this.state.showDatePicker &&
-                    <View style={this.props.theme.inputField}>
-                        <Text h1 h1Style={this.props.theme.title}>
-                            {i18n.t('dueDate')}
-                        </Text>
-                        { this.state.editable ?
-                            <DateTimePicker
-                                disabled={!this.state.editable}
-                                value={this.state.card.duedate ?? new Date()}
-                                mode="date"
-                                display="default"
-                                onChange={(event, dueDate) => {
-                                    this.setState({
-                                        card: {...this.state.card, duedate: dueDate}
-                                    })
-                                }}
-                            />
-                        :
-                            <Text style={this.props.theme.inputReadMode}>
-                               {this.state.card.duedate.toLocaleDateString(Localization.locale, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-                            </Text>
+    // Saves card and its labels
+    const saveCard = () => {
+        // Adds new labels
+        card.labels.forEach(label => {
+            if (cardLabelsBackup.every(backupLabel => backupLabel.id !== label.id)) {
+                console.log('Adding label', label.id)
+                axios.put(server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}/assignLabel`,
+                    {labelId: label.id},
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': token.value
                         }
-                    </View>
-                }
-                { this.state.card.labels?.length > 0 &&
-                    <View style={{zIndex: 10000}}>
-                        <Text h1 h1Style={this.props.theme.title}>
-                            {i18n.t('labels')}
-                        </Text>
-                        <LabelList 
-                            editable = {this.state.editable}
-                            boardLabels = {this.props.boards.value[this.props.route.params.boardId].labels}
-                            cardLabels = {this.state.card.labels}
-                            udpateCardLabelsHandler = {this.udpateCardLabelsHandler} />
-                    </View>
-                }
-                { this.state.card.assignedUsers?.length > 0 &&
-                    <View>
-                        <Text h1 h1Style={this.props.theme.title}>
-                            {i18n.t('assignees')}
-                        </Text>
-                        <View style={this.props.theme.cardLabelContainer} >
-                            {this.state.card.assignedUsers.map(user =>
-                                <Avatar
-                                    size={40}
-                                    rounded
-                                    source={{uri: this.props.server.value + '/index.php/avatar/' + user.participant.uid + '/40?v=2'}}
-                                    title={user.participant.displayname}
-                                    key={user.id} />
-                            )}
-                        </View>
-                    </View>
-                }
-                <View keyboardShouldPersistTaps="handled" style={{...this.props.theme.inputField, flexGrow: 1}}>
-                    <Text h1 h1Style={this.props.theme.title}>
-                        {i18n.t('description')}
-                    </Text>
-                    <TextInput style={this.state.editable ? [this.props.theme.input, this.props.theme.descriptionInput] : [this.props.theme.inputReadMode, this.props.theme.descriptionInput]}
-                        editable={this.state.editable}
-                        multiline={true}
-                        value={this.state.card.description}
-                        onChangeText={description => { 
-                            this.setState({
-                                card: {...this.state.card, description}
-                            })
-                        }}
-                        placeholder='description (optional)'
-                    />
-                </View>
-                { typeof this.props.route.params.cardId === 'undefined'
-                    ? <Pressable style={this.props.theme.button}
-                        onPress={() => {
-                            // We must not set a due date when the 'set due date' checkbock isn't checked
-                            if (!this.state.showDatePicker) {
-                                const card = this.state.card
-                                delete card.duedate
-                                this.setState({
-                                    card: card
-                                }, this.onCreate)
-                            } else {
-                                this.onCreate()
-                            }
-                        }}
-                    >
-                        <Text style={this.props.theme.buttonTitle}>
-                            {i18n.t('create')}
-                        </Text>
-                    </Pressable>
-                    : this.state.editable === false
-                        ? <Pressable style={this.props.theme.button}
-                            onPress={() => {
-                                this.setState({
-                                    editable: true
-                                })
-                            }}
-                        >
-                            <Text style={this.props.theme.buttonTitle}>
-                                {i18n.t('edit')}
-                            </Text>
-                        </Pressable>
-                        : <Pressable style={this.props.theme.button}
-                            onPress={() => {
-                            // We must not set a due date when the 'set due date' checkbock isn't checked
-                            if (!this.state.showDatePicker) {
-                                const card = this.state.card
-                                delete card.duedate
-                                this.setState({
-                                    card: card
-                                }, this.onSave)
-                            } else {
-                                this.onSave()
-                            }
-                        }}
-                        >
-                            <Text style={this.props.theme.buttonTitle}>
-                                {i18n.t('save')}
-                            </Text>
-                        </Pressable>
-                }
-            </ScrollView>
-        )
-    }
- 
-    onSave() {
-        axios.put(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks/${this.props.route.params.stackId}/cards/${this.props.route.params.cardId}`,
-            this.state.card,
+                    }
+                )
+            }
+        })
+        // Removes labels
+        cardLabelsBackup.forEach(backupLabel => {
+            if (card.labels.every(label => label.id !== backupLabel.id)) {
+                console.log('Removing label', backupLabel.id)
+                axios.put(server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}/removeLabel`,
+                    {labelId: backupLabel.id},
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': token.value
+                        }
+                    }
+                )
+            }
+        })
+        // Saves card
+        axios.put(server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}`,
+            card,
             {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': this.props.token.value
+                    'Authorization': token.value
                 },
             })
         .then((resp) => {
@@ -254,12 +121,12 @@ class CardDetails extends React.Component {
                 console.log('Error', resp)
             } else {
                 console.log('Card saved')
-                this.props.addCard({
-                    boardId: this.props.route.params.boardId,
-                    stackId: this.props.route.params.stackId,
-                    card: this.state.card
-                })
-                this.props.navigation.goBack()
+                dispatch(addCard({
+                    boardId: route.params.boardId,
+                    stackId: route.params.stackId,
+                    card: {...card, duedate: card.duedate.toString()},
+                }))
+                navigation.goBack()
             }
         })
         .catch((error) => {
@@ -280,23 +147,131 @@ class CardDetails extends React.Component {
         })
     }
 
+    return (
+        <ScrollView
+            keyboardShouldPersistTaps="handled"
+            style={[theme.container, {paddingBottom: 40, flex: 1}]}
+            contentContainerStyle={{flexGrow: 1}}
+        >
+            <View style={theme.inputField}>
+                <Text h1 h1Style={theme.title}>
+                    {i18n.t('title')}
+                </Text>
+                <TextInput style={editMode ? theme.input : theme.inputReadMode}
+                    editable={editMode}
+                    value={card.title}
+                    onChangeText={title => { setCard({...card, title}) }}
+                    placeholder='title'
+                />
+            </View>
+            { editMode &&
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <BouncyCheckbox
+                        disableText={true}
+                        isChecked={showDatePicker}
+                        onPress={(isChecked) => {
+                            setShowDatePicker(isChecked)
+                            // Sets or delete the card's duedate property
+                            const copyOfCard = {...card}
+                            if (!isChecked) {
+                                delete copyOfCard['duedate']
+                            } else {
+                                copyOfCard['duedate'] = new Date()
+                            }
+                            // Updates card
+                            setCard(copyOfCard)
+                        }}
+                    />
+                    <Text style={theme.textCheckbox}>
+                        {i18n.t('setDueDate')}
+                    </Text>
+                </View>
+            }
+            { showDatePicker &&
+                <View style={theme.inputField}>
+                    <Text h1 h1Style={theme.title}>
+                        {i18n.t('dueDate')}
+                    </Text>
+                    { editMode ?
+                        <DateTimePicker
+                            disabled={!editMode}
+                            value={card.duedate ?? new Date()}
+                            mode="date"
+                            display="default"
+                            onChange={(event, newDuedate) => {
+                                setCard({...card, duedate: newDuedate})
+                            }}
+                        />
+                    :
+                        <Text style={theme.inputReadMode}>
+                           {card.duedate?.toLocaleDateString(Localization.locale, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                        </Text>
+                    }
+                </View>
+            }
+            { card.labels?.length > 0 &&
+                <View style={{zIndex: 10000}}>
+                    <Text h1 h1Style={theme.title}>
+                        {i18n.t('labels')}
+                    </Text>
+                    <LabelList
+                        editable = {editMode}
+                        boardLabels = {boards.value[route.params.boardId].labels}
+                        cardLabels = {card.labels}
+                        udpateCardLabelsHandler = {udpateCardLabelsHandler} />
+                </View>
+            }
+            { card.assignedUsers?.length > 0 &&
+                <View>
+                    <Text h1 h1Style={theme.title}>
+                        {i18n.t('assignees')}
+                    </Text>
+                    <View style={theme.cardLabelContainer} >
+                        {card.assignedUsers.map(user =>
+                            <Avatar
+                            size={40}
+                                rounded
+                                source={{uri: server.value + '/index.php/avatar/' + user.participant.uid + '/40?v=2'}}
+                                title={user.participant.displayname}
+                                key={user.id} />
+                        )}
+                    </View>
+                </View>
+            }
+            <View keyboardShouldPersistTaps="handled" style={{...theme.inputField, flexGrow: 1}}>
+                <Text h1 h1Style={theme.title}>
+                    {i18n.t('description')}
+                </Text>
+                <TextInput style={editMode ? [theme.input, theme.descriptionInput] : [theme.inputReadMode, theme.descriptionInput]}
+                    editable={editMode}
+                    multiline={true}
+                    value={card.description}
+                    onChangeText={description => {
+                        setCard({...card, description})
+                    }}
+                    placeholder='description (optional)'
+                />
+            </View>
+            { editMode === false ?
+                <Pressable
+                    style={theme.button}
+                    onPress={() => { setEditMode(true) }} >
+                    <Text style={theme.buttonTitle}>
+                        {i18n.t('edit')}
+                    </Text>
+                </Pressable>
+            :
+                <Pressable style={theme.button}
+                    onPress={() => {
+                        saveCard()
+                    }} >
+                    <Text style={theme.buttonTitle}>
+                        {i18n.t('save')}
+                    </Text>
+                </Pressable>
+            }
+        </ScrollView>
+    )
 }
 
-// Connect to store
-const mapStateToProps = state => ({
-    boards: state.boards,
-    server: state.server,
-    theme: state.theme,
-    token: state.token
-  })
-  const mapDispatchToProps = dispatch => (
-    bindActionCreators( {
-        addCard,
-        setServer,
-        setToken
-    }, dispatch)
-  )
-  export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(CardDetails)
+export default CardDetails
