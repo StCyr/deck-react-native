@@ -222,7 +222,7 @@ const CardDetails = () => {
                     }
                 </View>
             }
-            { card.labels?.length > 0 &&
+            { (card.labels?.length > 0 || editMode) &&
                 <View style={{zIndex: 10000}}>
                     <Text h1 h1Style={theme.title}>
                         {i18n.t('labels')}
