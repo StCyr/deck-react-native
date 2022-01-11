@@ -137,7 +137,7 @@ const CardDetails = () => {
                 dispatch(addCard({
                     boardId: route.params.boardId,
                     stackId: route.params.stackId,
-                    card: {...card, duedate: card.duedate.toString()},
+                    card: {...card, duedate: card.duedate?.toString()},
                 }))
                 navigation.goBack()
             }
