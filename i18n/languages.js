@@ -128,6 +128,7 @@ export const ca = {
 }
 
 export const de = {
+    addStack: 'Liste hinzufügen',
     archive: 'Archivieren',
     cancel: 'Abbrechen',
     create : 'Hinzufügen',
@@ -135,18 +136,23 @@ export const de = {
     createCard : 'Karte hinzufügen',
     createStack : 'Liste hinzufügen',
     delete : 'Löschen',
-    description : 'Beschreibung',
-    dueDate : 'Ablaufdatum',
+    deleteStack: 'Liste löschen',
+    description : 'Beschreibung: ',
+    dueDate : 'Ablaufdatum: ',
     edit : 'Bearbeiten',
+    error: 'Fehler',
     logout: 'Abmelden',
     moveCard : 'Karte verschieben',
     noStack : 'Dieses Board hat keine Liste. Bitte lege zuerst eine Liste an.',
     newBoardHint: 'Gib den Namen des Boards an, um es anzulegen',
+    newCardHint : 'Geben Sie hier den Titel der Karte ein',
     newStackHint : 'Gib den Namen der neuen Liste ein',
     rename: 'Umbenennen',
+    renameStack : 'Liste umbenennen',
     save : 'Speichern',
     setDueDate : 'Ablaufdatum setzen',
     setUrl : 'Bitte gib die URL Deines Nextcloud Servers an',
     signIn: 'Anmelden',
-    title : 'Titel',
+    title : 'Titel: ',
+    unauthorizedToEditCard : 'Sie sind nicht berechtigt, diese Karte zu bearbeiten'
 }
