@@ -236,6 +236,19 @@ const baseStyles = (theme) => {
     inputLabel: {
       fontWeight: 'bold'
     },
+    spinnerContainer: {
+      position: 'absolute',
+      justifyContent: 'center',
+      width: '100%',
+      height: '100%',
+      zIndex: 10000
+    },
+    spinnerText: {
+      textAlign: 'center',
+      fontSize: fonts.xl,
+      color: '#666666',
+      marginBottom: 5
+    }
   }
 }
 

@@ -60,7 +60,8 @@ class AllBoards extends React.Component {
 					refreshControl={
 						<RefreshControl
 							refreshing={this.state.refreshing}
-							onRefresh={this.loadBoards} />
+							onRefresh={this.loadBoards}
+							size='large' />
 					} >
 						{typeof Object.values(this.props.boards.value) !== 'undefined' && Object.values(this.props.boards.value).map((board) => 
 							<Board

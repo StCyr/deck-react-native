@@ -110,6 +110,7 @@ class BoardDetails extends React.Component {
                             <RefreshControl
                                 refreshing={this.state.refreshing}
                                 onRefresh={this.loadBoard}
+                                size='large'
                             />
                         }
                         stickyHeaderIndices={[0]}

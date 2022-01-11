@@ -4,10 +4,11 @@ import { useNavigation, useRoute } from '@react-navigation/native'
 import { addCard } from '../store/boardSlice'
 import AppMenu from './AppMenu'
 import LabelList from './LabelList'
+import Spinner from './Spinner'
 import { Pressable, ScrollView, TextInput, View } from 'react-native'
 import { Avatar, Text } from 'react-native-elements'
-import { HeaderBackButton } from '@react-navigation/elements';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { HeaderBackButton } from '@react-navigation/elements'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import BouncyCheckbox from "react-native-bouncy-checkbox"
 import DateTimePicker from '@react-native-community/datetimepicker'
 import axios from 'axios'
@@ -26,6 +27,8 @@ const CardDetails = () => {
     const navigation = useNavigation()
     const route = useRoute()
 
+    const [loading, setLoading] = useState(false)
+    const [saving, setSaving] = useState(false)
     const [card, setCard] = useState({})
     const [cardLabelsBackup, setcardLabelsBackup] = useState([])
     const [editMode, setEditMode] = useState(false)
@@ -52,6 +55,7 @@ const CardDetails = () => {
 
         // Getting card details from server
         console.log('Getting card details from server')
+        setLoading(true)
         axios.get(server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}`, {
             headers: {
                 'Content-Type': 'application/json',
@@ -68,6 +72,7 @@ const CardDetails = () => {
             }
             setCard(newCard)
             setcardLabelsBackup(newCard.labels)
+            setLoading(false)
         })
     }, [])
 
@@ -85,6 +90,7 @@ const CardDetails = () => {
 
     // Saves card and its labels
     const saveCard = () => {
+        setSaving(true)
         // Adds new labels
         card.labels.forEach(label => {
             if (cardLabelsBackup.every(backupLabel => backupLabel.id !== label.id)) {
@@ -141,6 +147,7 @@ const CardDetails = () => {
                 }))
                 navigation.goBack()
             }
+            setSaving(false)
         })
         .catch((error) => {
             console.log(error)
@@ -157,6 +164,7 @@ const CardDetails = () => {
                     text2: error.message,
                 })
             }
+            setSaving(false)
         })
     }
 
@@ -166,6 +174,9 @@ const CardDetails = () => {
             style={[theme.container, {paddingBottom: 40, flex: 1}]}
             contentContainerStyle={{flexGrow: 1}}
         >
+            { (loading || saving) &&
+                <Spinner title={loading ? i18n.t('loading') : i18n.t('saving')} />
+            }
             <View style={theme.inputField}>
                 <Text h1 h1Style={theme.title}>
                     {i18n.t('title')}
@@ -223,7 +234,7 @@ const CardDetails = () => {
                 </View>
             }
             { (card.labels?.length > 0 || editMode) &&
-                <View style={{zIndex: 10000}}>
+                <View style={{zIndex: 1000}}>
                     <Text h1 h1Style={theme.title}>
                         {i18n.t('labels')}
                     </Text>
