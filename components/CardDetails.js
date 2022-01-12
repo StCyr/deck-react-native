@@ -27,7 +27,6 @@ const CardDetails = () => {
     const navigation = useNavigation()
     const route = useRoute()
 
-    const [loading, setLoading] = useState(false)
     const [saving, setSaving] = useState(false)
     const [card, setCard] = useState({})
     const [cardLabelsBackup, setcardLabelsBackup] = useState([])
@@ -53,27 +52,11 @@ const CardDetails = () => {
 
         })
 
-        // Getting card details from server
-        console.log('Getting card details from server')
-        setLoading(true)
-        axios.get(server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': token.value
-            }
-        })
-        .then((resp) => {
-            // TODO check for error
-            const newCard = resp.data
-            // Formats card's duedate properly for DateTimePicker
-            if (newCard.duedate) {
-                newCard.duedate = new Date(newCard.duedate)
-                setShowDatePicker(true)
-            }
-            setCard(newCard)
-            setcardLabelsBackup(newCard.labels)
-            setLoading(false)
-        })
+        // Gets card from store
+        const cardFromStore = boards.value[route.params.boardId].stacks.find(oneStack => oneStack.id === route.params.stackId).cards[route.params.cardId]
+        setCard(cardFromStore)
+        setcardLabelsBackup(cardFromStore.labels)
+
     }, [])
 
     // Handler to let the LabelList child update the card's labels
@@ -174,8 +157,8 @@ const CardDetails = () => {
             style={[theme.container, {paddingBottom: 40, flex: 1}]}
             contentContainerStyle={{flexGrow: 1}}
         >
-            { (loading || saving) &&
-                <Spinner title={loading ? i18n.t('loading') : i18n.t('saving')} />
+            { saving &&
+                <Spinner title={i18n.t('saving')} />
             }
             <View style={theme.inputField}>
                 <Text h1 h1Style={theme.title}>

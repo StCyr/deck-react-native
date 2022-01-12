@@ -7,7 +7,6 @@ const Spinner = ({title}) => {
 
     const theme = useSelector(state => state.theme)
 
-    console.log('title', title)
     return (
         <View style={theme.spinnerContainer}>
             {title &&
