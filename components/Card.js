@@ -224,13 +224,13 @@ const Card = ({card, navigation, route, stackId}) => {
                     }
                     <LabelList
                         editable={false}
-                        cardLabels={card.labels}
+                        cardLabels={card.labels ?? []}
                         size='small' />
                     <View>
                         <View>
                         </View>
                         <View style={theme.cardLabelContainer}>
-                            {card.assignedUsers.map(user =>
+                            {card.assignedUsers?.map(user =>
                                 <Avatar
                                     size={32}
                                     rounded
