@@ -105,7 +105,7 @@ class BoardDetails extends React.Component {
                 <DraxProvider>
                     <View style={{flex:1}}>
                     <DraxScrollView
-                        contentContainerStyle={{flexGrow: 1}}
+                        style={{height:'100%'}}
                         refreshControl={
                             <RefreshControl
                                 refreshing={this.state.refreshing}
