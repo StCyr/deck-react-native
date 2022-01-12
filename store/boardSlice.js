@@ -15,6 +15,9 @@ export const boardSlice = createSlice({
 		addLabel: (state, action) => {
 			state.value[action.payload.boardId].labels.push(action.payload.label)
 		},
+		addUser: (state, action) => {
+			state.value[action.payload.boardId].users.push(action.payload.user)
+		},
 		addStack: (state, action) => {
 			// Stores cards as an object indexed by cards' id rather than in an array
 			const cards = action.payload.stack.cards
@@ -63,6 +66,6 @@ export const boardSlice = createSlice({
 	}
 })
 
-export const { addBoard, addCard, addLabel, addStack, deleteAllBoards, deleteBoard, deleteCard, deleteStack, moveCard, renameBoard } = boardSlice.actions
+export const { addBoard, addCard, addLabel, addStack, addUser, deleteAllBoards, deleteBoard, deleteCard, deleteStack, moveCard, renameBoard } = boardSlice.actions
 
 export default boardSlice.reducer

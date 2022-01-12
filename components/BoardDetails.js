@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { addCard, addLabel, addStack, deleteStack, moveCard } from '../store/boardSlice';
+import { addCard, addLabel, addStack, addUser, deleteStack, moveCard } from '../store/boardSlice';
 import { setServer } from '../store/serverSlice';
 import { setToken } from '../store/tokenSlice';
 import AppMenu from './AppMenu';
@@ -377,15 +377,22 @@ class BoardDetails extends React.Component {
                 console.log('Error', resp)
             } else {
                 console.log('board details retrieved from server')
-
                 // Add labels to board in store
+                console.log('Adding labels info to the board in store')
                 resp.data.labels.forEach(label => {
                     this.props.addLabel({
                         boardId: this.props.route.params.boardId,
                         label
                     })
                 })
-
+                // Add users to board in store
+                console.log('Adding users info to the board in store')
+                resp.data.users.forEach(user => {
+                    this.props.addUser({
+                        boardId: this.props.route.params.boardId,
+                        user
+                    })
+                })
             }
         }).catch((error) => {
             Toast.show({
@@ -543,6 +550,7 @@ const mapDispatchToProps = dispatch => (
         addCard,
         addLabel,
         addStack,
+        addUser,
         deleteStack,
         moveCard,
         setServer,
