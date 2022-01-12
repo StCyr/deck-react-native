@@ -36,7 +36,7 @@ class AllBoards extends React.Component {
 	async componentDidMount() {
 
 		this.props.navigation.setOptions({
-			headerTitle: 'All Boards',
+			headerTitle: i18n.t('allBoards'),
 			headerRight: () => (<AppMenu navigation={this.props.navigation} setServer={this.props.setServer} setToken={this.props.setToken} />)
 		}, [this.props.navigation, this.props.setServer, this.props.setToken])
 
@@ -60,7 +60,8 @@ class AllBoards extends React.Component {
 					refreshControl={
 						<RefreshControl
 							refreshing={this.state.refreshing}
-							onRefresh={this.loadBoards} />
+							onRefresh={this.loadBoards}
+							size='large' />
 					} >
 						{typeof Object.values(this.props.boards.value) !== 'undefined' && Object.values(this.props.boards.value).map((board) => 
 							<Board

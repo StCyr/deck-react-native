@@ -1,7 +1,21 @@
-import axios from 'axios';
+//===============================================================================================================================================
+//
+// AppMenu: The three-dots menu in the upper-right corner of every screens
+//
+//  This file is part of "Nextcloud Deck".
+//
+// "Nextcloud Deck" is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+//
+// "Nextcloud Deck" is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warrant
+// of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along with "Nextcloud Deck". If not, see <https://www.gnu.org/licenses/>. 
+//
+//===============================================================================================================================================
+
 import React from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { useDispatch, useSelector } from 'react-redux'
 import { deleteAllBoards } from '../store/boardSlice';
 import { setServer } from '../store/serverSlice';
 import { setToken } from '../store/tokenSlice';
@@ -10,77 +24,60 @@ import Menu, { MenuItem } from 'react-native-material-menu';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {i18n} from '../i18n/i18n.js';
 import Icon from './Icon.js';
+import axios from 'axios';
 
-class AppMenu extends React.Component {
+const AppMenu = () => {
 
-    constructor(props) {
-        super(props)
-        this.menu = React.createRef();
-    }
+    const server = useSelector(state => state.server)
+    const token = useSelector(state => state.token)
+    const theme = useSelector(state => state.theme)
+    const dispatch = useDispatch()
 
-    render() {
-        return (
-            <View style={{marginRight: 15}}>
-                <Menu
-                    ref={this.menu}
-                    button={
-                        <Pressable
-                            onPress={() => {
-                                this.menu.current.show();
-                            }}
-                        >
-                            <Icon name='more' style={this.props.theme.icon} />
-                        </Pressable>
-                    }
-                >
-                    <MenuItem 
+    const menu = React.createRef();
+
+    return (
+        <View style={{marginRight: 15}}>
+            <Menu
+                ref={menu}
+                button={
+                    <Pressable
                         onPress={() => {
-                            axios.delete(this.props.server.value + '/ocs/v2.php/core/apppassword', {
-                                headers: {
-                                    'OCS-APIREQUEST': true,
-                                    'Authorization': this.props.token.value
-                                }                    
-                            }).then(() => {
-                                console.log('User logged out from server')
-                                AsyncStorage.clear()
-                                this.props.setToken(null)
-                                this.props.setServer(null)
-                                this.props.deleteAllBoards()
-                            })
-                            .catch(() => {
-                                console.log('Error occured while logging user out from server. Trying to clear session here anyway')
-                                AsyncStorage.clear()
-                                this.props.setToken(null)
-                                this.props.setServer(null)
-                                this.props.deleteAllBoards()
-                            })
+                            menu.current.show();
                         }}
                     >
-                         {i18n.t('logout')}
-                   </MenuItem>
-                </Menu>
-            </View>
-        )
-    }
+                        <Icon name='more' style={theme.icon} />
+                    </Pressable>
+                }
+            >
+                <MenuItem
+                    onPress={() => {
+                        axios.delete(server.value + '/ocs/v2.php/core/apppassword', {
+                            headers: {
+                                'OCS-APIREQUEST': true,
+                                'Authorization': token.value
+                            }
+                        }).then(() => {
+                            console.log('User logged out from server')
+                            AsyncStorage.clear()
+                            dispatch(setToken(null))
+                            dispatch(setServer(null))
+                            dispatch(deleteAllBoards())
+                        })
+                        .catch(() => {
+                            console.log('Error occured while logging user out from server. Trying to clear session here anyway')
+                            AsyncStorage.clear()
+                            dispatch(setToken(null))
+                            dispatch(setServer(null))
+                            dispatch(deleteAllBoards())
+                        })
+                    }}
+                >
+                     {i18n.t('logout')}
+               </MenuItem>
+            </Menu>
+        </View>
+    )
 
 }
 
-// Connect to store
-const mapStateToProps = state => ({
-    server: state.server,
-    theme: state.theme,
-    token: state.token
-})
-
-const mapDispatchToProps = dispatch => (
-    bindActionCreators( {
-        deleteAllBoards,
-        setServer,
-        setToken
-    }, dispatch)
-)
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(AppMenu)
+export default AppMenu
