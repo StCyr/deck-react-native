@@ -3,10 +3,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { addCard } from '../store/boardSlice'
 import AppMenu from './AppMenu'
+import AssigneeList from './AssigneeList'
 import LabelList from './LabelList'
 import Spinner from './Spinner'
 import { Pressable, ScrollView, TextInput, View } from 'react-native'
-import { Avatar, Text } from 'react-native-elements'
+import { Text } from 'react-native-elements'
 import { HeaderBackButton } from '@react-navigation/elements'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import BouncyCheckbox from "react-native-bouncy-checkbox"
@@ -68,6 +69,18 @@ const CardDetails = () => {
         setCard({
             ...card,
             labels
+        })
+    }
+
+    // Handler to let the AssigneeList child update the card's assigned users
+    const udpateCardAsigneesHandler = (values) => {
+        const boardUsers = boards.value[route.params.boardId].users
+        const assignedUsers = boardUsers.filter(user => {
+            return values.indexOf(user.uid) !== -1
+        }).map(user => { return {participant: user} })
+        setCard({
+            ...card,
+            assignedUsers
         })
     }
 
@@ -228,21 +241,17 @@ const CardDetails = () => {
                         udpateCardLabelsHandler = {udpateCardLabelsHandler} />
                 </View>
             }
-            { card.assignedUsers?.length > 0 &&
+            { (card.assignedUsers?.length > 0 || editMode) &&
                 <View>
                     <Text h1 h1Style={theme.title}>
                         {i18n.t('assignees')}
                     </Text>
-                    <View style={theme.cardLabelContainer} >
-                        {card.assignedUsers.map(user =>
-                            <Avatar
-                            size={40}
-                                rounded
-                                source={{uri: server.value + '/index.php/avatar/' + user.participant.uid + '/40?v=2'}}
-                                title={user.participant.displayname}
-                                key={user.id} />
-                        )}
-                    </View>
+                    <AssigneeList
+                        editable = {editMode}
+                        boardUsers = {boards.value[route.params.boardId].users}
+                        cardAssignees = {card.assignedUsers ?? []}
+                        udpateCardAsigneesHandler = {udpateCardAsigneesHandler} />
+
                 </View>
             }
             <View keyboardShouldPersistTaps="handled" style={{...theme.inputField, flexGrow: 1}}>
