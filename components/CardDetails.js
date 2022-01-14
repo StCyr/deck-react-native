@@ -230,7 +230,7 @@ const CardDetails = () => {
                 </View>
             }
             { (card.labels?.length > 0 || editMode) &&
-                <View style={{zIndex: 1000}}>
+                <View style={{zIndex: 2000}}>
                     <Text h1 h1Style={theme.title}>
                         {i18n.t('labels')}
                     </Text>
@@ -242,7 +242,7 @@ const CardDetails = () => {
                 </View>
             }
             { (card.assignedUsers?.length > 0 || editMode) &&
-                <View>
+                <View style={{zIndex: 1000}}>
                     <Text h1 h1Style={theme.title}>
                         {i18n.t('assignees')}
                     </Text>
