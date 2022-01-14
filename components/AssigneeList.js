@@ -51,7 +51,7 @@ const AssigneeList = ({editable, boardUsers, cardAssignees, size='normal', udpat
     // Computes the list of selectable users for the DropDownPicker
     const items = boardUsers?.map(user => {
         return {
-            icon: () => <Image source={{uri: server.value + '/index.php/avatar/' + user.uid + '/32?v=2'}} />,
+            icon: () => <Image source={{uri: server.value + '/index.php/avatar/' + user.uid + '/32?v=2'}} style={{width:32, height:32, borderRadius:16}}/>,
             label: user.displayname,
             value: user.uid
         }
