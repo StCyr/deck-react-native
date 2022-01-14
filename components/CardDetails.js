@@ -30,12 +30,14 @@ const CardDetails = () => {
 
     const [saving, setSaving] = useState(false)
     const [card, setCard] = useState({})
+    const [cardAssigneesBackup, setcardAssigneesBackup] = useState([])
     const [cardLabelsBackup, setcardLabelsBackup] = useState([])
     const [editMode, setEditMode] = useState(false)
     const [showDatePicker, setShowDatePicker] = useState(false)
 
     // ComponentDidMount
     useEffect(() => {
+
         // Setup page header
         navigation.setOptions({
             headerTitle: i18n.t('cardDetails'),
@@ -56,7 +58,10 @@ const CardDetails = () => {
         // Gets card from store
         const cardFromStore = boards.value[route.params.boardId].stacks.find(oneStack => oneStack.id === route.params.stackId).cards[route.params.cardId]
         setCard(cardFromStore)
+
+        // Remembers current card labels and assignees in case we change them 
         setcardLabelsBackup(cardFromStore.labels)
+        setcardAssigneesBackup(cardFromStore.assignedUsers)
 
     }, [])
 
@@ -108,6 +113,36 @@ const CardDetails = () => {
                 console.log('Removing label', backupLabel.id)
                 axios.put(server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}/removeLabel`,
                     {labelId: backupLabel.id},
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': token.value
+                        }
+                    }
+                )
+            }
+        })
+        // Adds new assignees
+        card.assignedUsers.forEach(user => {
+            if (cardAssigneesBackup.every(backupUser => backupUser.participant.uid !== user.participant.uid)) {
+                console.log('Adding assignee', user.participant.uid)
+                axios.put(server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}/assignUser`,
+                    {userId: user.participant.uid},
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': token.value
+                        }
+                    }
+                )
+            }
+        })
+        // Removes labels
+        cardAssigneesBackup.forEach(backupUser => {
+            if (card.assignedUsers.every(user => user.participant.uid !== backupUser.participant.uid)) {
+                console.log('Removing assignee', backupUser.participant.uid)
+                axios.put(server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}/unassignUser`,
+                    {userId: backupUser.participant.uid},
                     {
                         headers: {
                             'Content-Type': 'application/json',
