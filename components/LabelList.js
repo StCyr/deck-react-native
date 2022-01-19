@@ -28,7 +28,7 @@ DropDownPicker.setMode("BADGE");
 const LabelList = ({editable, boardLabels, cardLabels, size='normal', udpateCardLabelsHandler}) => {
 
     const [open, setOpen] = useState(false);
-    const [value, setValue] = useState(cardLabels.map(item => item.id));
+    const [value, setValue] = useState(cardLabels?.map(item => item.id));
 
     const theme = useSelector(state => state.theme)
 
@@ -99,7 +99,7 @@ const LabelList = ({editable, boardLabels, cardLabels, size='normal', udpateCard
         }
         return (
             <View style={theme.cardLabelContainer} >
-                {cardLabels.map(label => (
+                {cardLabels?.map(label => (
                     <View
                         key={label.id}
                         style={[viewStyle, { backgroundColor: '#' + label.color}]} >

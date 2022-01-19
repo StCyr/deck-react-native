@@ -280,11 +280,11 @@ class BoardDetails extends React.Component {
                 console.log('Error', resp)
             } else {
                 console.log('Card created')
-                // card to stack in store
+                // Saves card to stack in store
                 this.props.addCard({
                     boardId: this.props.route.params.boardId,
                     stackId: this.state.index,
-                    card: resp.data,
+                    card: {...resp.data, labels: []},
                 })
                 // Reset newCardName and hide newCardName button
                 this.setState({addingCard: false})
