@@ -534,8 +534,6 @@ class BoardDetails extends React.Component {
                 console.log('Error', resp)
             } else {
                 console.log('card moved')
-                // Refresh board
-                return this.loadBoard()
             }
         })
         .catch((error) => {
