@@ -61,11 +61,15 @@ export const boardSlice = createSlice({
 			delete state.value[action.payload.boardId].stacks.find(oneStack => oneStack.id === action.payload.oldStackId).cards[action.payload.cardId]
 		},
 		renameBoard: (state, action) => {
-		state.value[action.payload.boardId].title = action.payload.boardTitle
+			state.value[action.payload.boardId].title = action.payload.boardTitle
+		},
+		renameStack: (state, action) => {
+			console.log(action.payload)
+			state.value[action.payload.boardId].stacks.find(oneStack => oneStack.id === action.payload.stackId).title = action.payload.stackTitle
 		}
 	}
 })
 
-export const { addBoard, addCard, addLabel, addStack, addUser, deleteAllBoards, deleteBoard, deleteCard, deleteStack, moveCard, renameBoard } = boardSlice.actions
+export const { addBoard, addCard, addLabel, addStack, addUser, deleteAllBoards, deleteBoard, deleteCard, deleteStack, moveCard, renameBoard, renameStack } = boardSlice.actions
 
 export default boardSlice.reducer

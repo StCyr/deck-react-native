@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { addCard, addLabel, addStack, addUser, deleteStack, moveCard } from '../store/boardSlice';
+import { addCard, addLabel, addStack, addUser, deleteStack, moveCard, renameStack } from '../store/boardSlice';
 import { setServer } from '../store/serverSlice';
 import { setToken } from '../store/tokenSlice';
 import AppMenu from './AppMenu';
@@ -25,8 +25,9 @@ class BoardDetails extends React.Component {
             addingStack: false,
             index: null,   // the index of the stack currently shown
             newCardName: '',
-            newStackName: '',
+            newStackName: undefined,
             refreshing: false,
+            renamingStack: false,
             cardPressed: -1, // array of cards pressed
         }
         this.createCard = this.createCard.bind(this)
@@ -74,7 +75,7 @@ class BoardDetails extends React.Component {
     }
 
     render() {
-        const stacks = this.props.boards.value[this.props.route.params.boardId].stacks;
+        const stacks = this.props.boards.value[this.props.route.params.boardId].stacks
         if (stacks.length === 0 && !this.state.refreshing) {
             // Board has no stack
             return (
@@ -100,7 +101,7 @@ class BoardDetails extends React.Component {
                 </View>
             )
         } else {
-            const currentStack = stacks.find(oneStack => oneStack.id === this.state.index);
+            const currentStack = stacks.find(oneStack => oneStack.id === this.state.index)
             return (
                 <DraxProvider>
                     <View style={{flex:1}}>
@@ -162,7 +163,7 @@ class BoardDetails extends React.Component {
                                                         if (buttonIndex === 0) {
                                                             // cancel action
                                                         } else if (buttonIndex === 1) {
-                                                            // TODO Rename stack
+                                                            this.setState({renamingStack: true})
                                                         } else if (buttonIndex === 2) {
                                                             this.setState({addingStack: true})
                                                         } else if (buttonIndex === 3) {
@@ -195,7 +196,7 @@ class BoardDetails extends React.Component {
                         }
                     </DraxScrollView>
                     </View>
-                    {(!this.state.addingStack && !this.state.addingCard) &&
+                    {(!(this.state.addingStack || this.state.addingCard || this.state.renamingStack)) &&
                         <View style={[this.props.theme.container, {marginBottom: this.insets.bottom}]}>
                             <Pressable
                                 style={this.props.theme.button}
@@ -230,22 +231,30 @@ class BoardDetails extends React.Component {
                             </View>
                         </View>
                     }
-                    {this.state.addingStack &&
+                    {(this.state.addingStack || this.state.renamingStack) &&
                         <View style={[this.props.theme.container, {marginBottom: this.insets.bottom}]}>
                             <View style={this.props.theme.inputButton} >
                                 <TextInput style={[this.props.theme.inputText, {flexGrow: 1}]}
+                                    defaultValue={currentStack.title}
                                     value={this.state.newStackName}
                                     autoFocus={true}
                                     maxLength={100}
                                     onBlur={() => {
                                         this.setState({addingStack: false})
+                                        this.setState({renamingStack: false})
                                         this.setState({ newStackName: '' })
                                     }}
                                     onChangeText={newStackName => {
                                         this.setState({ newStackName })
                                     }}
-                                    onSubmitEditing={() => this.createStack(this.state.newStackName)}
-                                    placeholder={i18n.t('newStackHint')}
+                                    onSubmitEditing={() => {
+                                        if (this.state.addingStack) {
+                                            this.createStack(this.state.newStackName)
+                                        } else {
+                                            this.renameStack(this.state.index, this.state.newStackName)
+                                        }
+                                    }}
+                                    placeholder={this.state.renamingStack ? null : i18n.t('newStackHint')}
                                     returnKeyType='send'
                                 />
                             </View>
@@ -299,6 +308,52 @@ class BoardDetails extends React.Component {
                 text2: error.message,
             })
             console.log(error)
+        })
+    }
+
+    renameStack(stackId, stackName) {
+        console.log(`Renaming stack ${stackId} to ${stackName}`)
+        const stacks = this.props.boards.value[this.props.route.params.boardId].stacks
+        const currentStack = stacks.find(oneStack => oneStack.id === this.state.index)
+        axios.put(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks/${stackId}`,
+            {
+                title: stackName,
+                order: currentStack.order
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': this.props.token.value
+                },
+            })
+        .then((resp) => {
+            if (resp.status !== 200) {
+                 Toast.show({
+                    type: 'error',
+                    text1: i18n.t('error'),
+                    text2: resp,
+                })
+               console.log('Error', resp)
+            } else {
+                console.log('Stack renamed')
+                // Rename stack in store
+                this.props.renameStack({
+                    boardId: this.props.route.params.boardId,
+                    stackId: this.state.index,
+                    stackTitle: stackName
+                })
+                // Reset newStackName and hide newStackName button
+                this.setState({renamingStack: false})
+                this.setState({ newStackName: '' })
+            }
+        })
+        .catch((error) => {
+            Toast.show({
+                type: 'error',
+                text1: i18n.t('error'),
+                text2: error.message,
+            })
+           console.log(error)
         })
     }
 
@@ -553,6 +608,7 @@ const mapDispatchToProps = dispatch => (
         addUser,
         deleteStack,
         moveCard,
+        renameStack,
         setServer,
         setToken,
     }, dispatch)
