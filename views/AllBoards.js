@@ -10,8 +10,8 @@ import { initialWindowMetrics } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
 import {i18n} from '../i18n/i18n.js';
 import axios from 'axios';
-import AppMenu from './AppMenu';
-import Board from './Board';
+import AppMenu from '../components/AppMenu';
+import Board from '../components/Board';
 
 // Component that display the user's boards
 class AllBoards extends React.Component {

@@ -7,11 +7,11 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Toast from 'react-native-toast-message'
 import * as Font from 'expo-font';
 import AppLoading from 'expo-app-loading';
-import Login from './components/Login';
-import Home from './components/Home';
-import AllBoards from './components/AllBoards';
-import BoardDetails from './components/BoardDetails';
-import CardDetails from './components/CardDetails';
+import Login from './views/Login';
+import Home from './views/Home';
+import AllBoards from './views/AllBoards';
+import BoardDetails from './views/BoardDetails';
+import CardDetails from './views/CardDetails';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux'
 import { setServer } from './store/serverSlice';
