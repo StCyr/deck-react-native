@@ -359,10 +359,18 @@ class BoardDetails extends React.Component {
 
     createStack(stackName) {
         console.log('Creating stack', stackName)
+        // Finds stack with highest order (should probably be a selector but I haven't figure out yet how to do it)
+        var lastStack = { order: 0 }
+		this.props.boards.value[this.props.route.params.boardId].stacks.forEach(stack => {
+			if (stack.order >= lastStack.order) {
+				lastStack = stack
+			}
+		})
+        // Creates stack
         axios.post(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks`,
             {
                 title: stackName,
-                order: 10 // TODO depends on other stacks in the board
+                order: lastStack.order + 1 // Puts stack after latest one
             },
             {
                 headers: {
