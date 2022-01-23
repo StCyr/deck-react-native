@@ -235,14 +235,14 @@ class BoardDetails extends React.Component {
                         <View style={[this.props.theme.container, {marginBottom: this.insets.bottom}]}>
                             <View style={this.props.theme.inputButton} >
                                 <TextInput style={[this.props.theme.inputText, {flexGrow: 1}]}
-                                    defaultValue={currentStack.title}
+                                    defaultValue={this.state.renamingStack ? currentStack.title :  undefined}
                                     value={this.state.newStackName}
                                     autoFocus={true}
                                     maxLength={100}
                                     onBlur={() => {
                                         this.setState({addingStack: false})
                                         this.setState({renamingStack: false})
-                                        this.setState({ newStackName: '' })
+                                        this.setState({ newStackName: undefined })
                                     }}
                                     onChangeText={newStackName => {
                                         this.setState({ newStackName })
@@ -254,7 +254,7 @@ class BoardDetails extends React.Component {
                                             this.renameStack(this.state.index, this.state.newStackName)
                                         }
                                     }}
-                                    placeholder={this.state.renamingStack ? null : i18n.t('newStackHint')}
+                                    placeholder={this.state.renamingStack ? undefined : i18n.t('newStackHint')}
                                     returnKeyType='send'
                                 />
                             </View>
