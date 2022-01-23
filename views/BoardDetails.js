@@ -23,12 +23,12 @@ class BoardDetails extends React.Component {
         this.state = {
             addingCard: false,
             addingStack: false,
+            cardPressed: -1, // array of cards pressed
             index: null,   // the index of the stack currently shown
             newCardName: '',
             newStackName: undefined,
             refreshing: false,
-            renamingStack: false,
-            cardPressed: -1, // array of cards pressed
+            stackToRename: undefined,
         }
         this.createCard = this.createCard.bind(this)
         this.createStack = this.createStack.bind(this)
@@ -163,7 +163,7 @@ class BoardDetails extends React.Component {
                                                         if (buttonIndex === 0) {
                                                             // cancel action
                                                         } else if (buttonIndex === 1) {
-                                                            this.setState({renamingStack: true})
+                                                            this.setState({stackToRename: stack})
                                                         } else if (buttonIndex === 2) {
                                                             this.setState({addingStack: true})
                                                         } else if (buttonIndex === 3) {
@@ -196,7 +196,7 @@ class BoardDetails extends React.Component {
                         }
                     </DraxScrollView>
                     </View>
-                    {(!(this.state.addingStack || this.state.addingCard || this.state.renamingStack)) &&
+                    {(!(this.state.addingStack || this.state.addingCard || this.state.stackToRename)) &&
                         <View style={[this.props.theme.container, {marginBottom: this.insets.bottom}]}>
                             <Pressable
                                 style={this.props.theme.button}
@@ -231,17 +231,17 @@ class BoardDetails extends React.Component {
                             </View>
                         </View>
                     }
-                    {(this.state.addingStack || this.state.renamingStack) &&
+                    {(this.state.addingStack || this.state.stackToRename) &&
                         <View style={[this.props.theme.container, {marginBottom: this.insets.bottom}]}>
                             <View style={this.props.theme.inputButton} >
                                 <TextInput style={[this.props.theme.inputText, {flexGrow: 1}]}
-                                    defaultValue={this.state.renamingStack ? currentStack.title :  undefined}
+                                    defaultValue={this.state.stackToRename ? this.state.stackToRename.title :  undefined}
                                     value={this.state.newStackName}
                                     autoFocus={true}
                                     maxLength={100}
                                     onBlur={() => {
                                         this.setState({addingStack: false})
-                                        this.setState({renamingStack: false})
+                                        this.setState({stackToRename: undefined})
                                         this.setState({ newStackName: undefined })
                                     }}
                                     onChangeText={newStackName => {
@@ -254,7 +254,7 @@ class BoardDetails extends React.Component {
                                             this.renameStack(this.state.index, this.state.newStackName)
                                         }
                                     }}
-                                    placeholder={this.state.renamingStack ? undefined : i18n.t('newStackHint')}
+                                    placeholder={this.state.stackToRename ? undefined : i18n.t('newStackHint')}
                                     returnKeyType='send'
                                 />
                             </View>
