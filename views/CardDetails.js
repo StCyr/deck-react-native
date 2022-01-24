@@ -57,6 +57,14 @@ const CardDetails = () => {
 
         // Gets card from store
         const cardFromStore = boards.value[route.params.boardId].stacks.find(oneStack => oneStack.id === route.params.stackId).cards[route.params.cardId]
+
+        // Formats duedate properly for DateTimePicker and makes sure the component will show it in edit mode
+        if (cardFromStore.duedate !== null) {
+            cardFromStore.duedate = new Date(cardFromStore.duedate)
+            setShowDatePicker(true)
+        }
+
+        // Saves card in local state
         setCard(cardFromStore)
 
         // Remembers current card labels and assignees in case we change them 
@@ -171,10 +179,14 @@ const CardDetails = () => {
                 console.log('Error', resp)
             } else {
                 console.log('Card saved')
+                var cardToBeSaved = {...card}
+                if (card.duedate !== null) {
+                    cardToBeSaved = {...card, duedate: card.duedate.toString()}
+                }
                 dispatch(addCard({
                     boardId: route.params.boardId,
                     stackId: route.params.stackId,
-                    card: {...card, duedate: card.duedate?.toString()},
+                    card: cardToBeSaved,
                 }))
                 navigation.goBack()
             }
@@ -229,11 +241,12 @@ const CardDetails = () => {
                             // Sets or delete the card's duedate property
                             const copyOfCard = {...card}
                             if (!isChecked) {
-                                delete copyOfCard['duedate']
+                                copyOfCard['duedate'] = null
                             } else {
                                 copyOfCard['duedate'] = new Date()
                             }
                             // Updates card
+                            console.log('new card', copyOfCard)
                             setCard(copyOfCard)
                         }}
                     />
@@ -242,7 +255,7 @@ const CardDetails = () => {
                     </Text>
                 </View>
             }
-            { showDatePicker &&
+            { (showDatePicker || (!editMode && card.duedate !== null)) &&
                 <View style={theme.inputField}>
                     <Text h1 h1Style={theme.title}>
                         {i18n.t('dueDate')}
@@ -250,7 +263,7 @@ const CardDetails = () => {
                     { editMode ?
                         <DateTimePicker
                             disabled={!editMode}
-                            value={card.duedate ?? new Date()}
+                            value={card.duedate === null ? new Date() : new Date(card.duedate)}
                             mode="date"
                             display="default"
                             onChange={(event, newDuedate) => {
@@ -259,7 +272,7 @@ const CardDetails = () => {
                         />
                     :
                         <Text style={theme.inputReadMode}>
-                           {card.duedate?.toLocaleDateString(Localization.locale, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                           {new Date(card.duedate).toLocaleDateString(Localization.locale, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                         </Text>
                     }
                 </View>
