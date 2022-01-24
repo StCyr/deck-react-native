@@ -222,14 +222,23 @@ const Card = ({card, navigation, route, stackId}) => {
                             {card.title}
                         </Text>
                     }
-                    <LabelList
-                        editable={false}
-                        cardLabels={card.labels ?? []}
-                        size='small' />
-                    <AssigneeList
-                        editable = {editMode}
-                        cardAssignees = {card.assignedUsers ?? []}
-                        size='small'/>
+                    <View style={{flex:1, flexDirection:'row', justifyContent: 'space-between'}}>
+                        <View>
+                            <LabelList
+                                editable={false}
+                                cardLabels={card.labels ?? []}
+                                size='small' />
+                            <AssigneeList
+                                editable = {editMode}
+                                cardAssignees = {card.assignedUsers ?? []}
+                                size='small'/>
+                        </View>
+                        { card.duedate &&
+                            <View style={{flex: 1, justifyContent: 'flex-end', alignItems: 'flex-end'}}>
+                                <Text>{new Date(card.duedate).toLocaleDateString()}</Text>
+                            </View>
+                        }
+                    </View>
                 </View>
             </DraxView>
         </Pressable>
