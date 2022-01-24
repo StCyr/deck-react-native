@@ -73,6 +73,7 @@ const AssigneeList = ({editable, boardUsers, cardAssignees, size='normal', udpat
             <View style={theme.cardLabelContainer} >
             {cardAssignees.map(user => 
                 <Avatar
+                    containerStyle={{marginRight: 2}}
                     size={size === 'small' ? 32 : 40}
                     rounded
                     source={{uri: getUserUri(user)}}
