@@ -58,6 +58,7 @@ const Card = ({card, navigation, route, stackId}) => {
         // Deletes card from server
         axios.delete(server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${stackId}/cards/${card.id}`,
             {
+                timeout: 8000,
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': token.value
@@ -118,6 +119,7 @@ const Card = ({card, navigation, route, stackId}) => {
                 }
             },
             {
+                timeout: 8000,
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': token.value

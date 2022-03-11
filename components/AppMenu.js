@@ -52,6 +52,7 @@ const AppMenu = () => {
                 <MenuItem
                     onPress={() => {
                         axios.delete(server.value + '/ocs/v2.php/core/apppassword', {
+                            timeout: 8000,
                             headers: {
                                 'OCS-APIREQUEST': true,
                                 'Authorization': token.value

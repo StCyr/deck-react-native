@@ -102,6 +102,7 @@ class Board extends React.Component {
                 title: this.props.board.title
             },
             {
+                timeout: 8000,
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': this.props.token.value
@@ -135,6 +136,7 @@ class Board extends React.Component {
         this.props.deleteBoard({boardId: this.props.board.id})
         axios.delete(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.board.id}`,
             {
+                timeout: 8000,
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': this.props.token.value
@@ -177,6 +179,7 @@ class Board extends React.Component {
                 title: this.state.newBoardName
             },
             {
+                timeout: 8000,
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': this.props.token.value

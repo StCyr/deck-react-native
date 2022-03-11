@@ -107,6 +107,7 @@ const CardDetails = () => {
                 axios.put(server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}/assignLabel`,
                     {labelId: label.id},
                     {
+                        timeout: 8000,
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': token.value
@@ -122,6 +123,7 @@ const CardDetails = () => {
                 axios.put(server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}/removeLabel`,
                     {labelId: backupLabel.id},
                     {
+                        timeout: 8000,
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': token.value
@@ -137,6 +139,7 @@ const CardDetails = () => {
                 axios.put(server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}/assignUser`,
                     {userId: user.participant.uid},
                     {
+                        timeout: 8000,
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': token.value
@@ -152,6 +155,7 @@ const CardDetails = () => {
                 axios.put(server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}/unassignUser`,
                     {userId: backupUser.participant.uid},
                     {
+                        timeout: 8000,
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': token.value
@@ -164,6 +168,7 @@ const CardDetails = () => {
         axios.put(server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}`,
             card,
             {
+                timeout: 8000,
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': token.value

@@ -274,6 +274,7 @@ class BoardDetails extends React.Component {
                 title: cardName,
             },
             {
+                timeout: 8000,
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': this.props.token.value
@@ -321,6 +322,7 @@ class BoardDetails extends React.Component {
                 order: currentStack.order
             },
             {
+                timeout: 8000,
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': this.props.token.value
@@ -373,6 +375,7 @@ class BoardDetails extends React.Component {
                 order: lastStack.order + 1 // Puts stack after latest one
             },
             {
+                timeout: 8000,
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': this.props.token.value
@@ -426,6 +429,7 @@ class BoardDetails extends React.Component {
         // TODO: Merge both axios requests
         console.log('Retrieving board details from server')
         await axios.get(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}`, {
+            timeout: 8000,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': this.props.token.value
@@ -469,6 +473,7 @@ class BoardDetails extends React.Component {
         // Retrieves board stacks
         console.log('Retrieving board stacks from server')
         await axios.get(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks`, {
+            timeout: 8000,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': this.props.token.value
@@ -527,7 +532,9 @@ class BoardDetails extends React.Component {
                 order: 0,
                 stackId,
             },
-            { headers: {
+            { 
+                timeout: 8000,
+                headers: {
                 'Content-Type': 'application/json',
                 'Authorization': this.props.token.value
             }
@@ -565,6 +572,7 @@ class BoardDetails extends React.Component {
         console.log(`deleting stack ${stackId}`)
         axios.delete(this.props.server.value + `/index.php/apps/deck/api/v1.0/boards/${this.props.route.params.boardId}/stacks/${stackId}`,
             {
+                timeout: 8000,
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': this.props.token.value

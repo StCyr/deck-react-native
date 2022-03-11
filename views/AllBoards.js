@@ -114,6 +114,7 @@ class AllBoards extends React.Component {
 				color:  (Math.floor(Math.random() * 2 ** 24)).toString(16).padStart(0, 6)
 			},
 			{
+				timeout: 8000,
 				headers: {
 					'Content-Type': 'application/json',
 					'Authorization': this.props.token.value
@@ -151,6 +152,7 @@ class AllBoards extends React.Component {
 		})
     
 		await axios.get(this.props.server.value + '/index.php/apps/deck/api/v1.0/boards', {
+			timeout: 8000,
 			headers: {
 				'Content-Type': 'application/json',
 				'Authorization': this.props.token.value,
