@@ -134,7 +134,7 @@ const CardDetails = () => {
         })
         // Adds new assignees
         card.assignedUsers.forEach(user => {
-            if (cardAssigneesBackup.every(backupUser => backupUser.participant.uid !== user.participant.uid)) {
+            if (cardAssigneesBackup?.every(backupUser => backupUser.participant.uid !== user.participant.uid)) {
                 console.log('Adding assignee', user.participant.uid)
                 axios.put(server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}/assignUser`,
                     {userId: user.participant.uid},
@@ -149,7 +149,7 @@ const CardDetails = () => {
             }
         })
         // Removes labels
-        cardAssigneesBackup.forEach(backupUser => {
+        cardAssigneesBackup?.forEach(backupUser => {
             if (card.assignedUsers.every(user => user.participant.uid !== backupUser.participant.uid)) {
                 console.log('Removing assignee', backupUser.participant.uid)
                 axios.put(server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}/unassignUser`,
