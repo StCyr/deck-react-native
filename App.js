@@ -1,5 +1,5 @@
 import React from 'react';
-import env from './environment'; // For debugging
+import Constants from 'expo-constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { KeyboardAvoidingView, Appearance } from 'react-native';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
@@ -78,7 +78,7 @@ class App extends React.Component {
 		})
 
 		// Retrieve token from storage if available
-		if (!env.expoDebug) {
+		if (Constants.manifest2.extra.expoClient.extra.debug === 'false') {
 			AsyncStorage.getItem('NCtoken').then(token => {
 				if (token !== null) {
 					console.log('token retrieved from asyncStorage', token)
@@ -92,11 +92,11 @@ class App extends React.Component {
 				}
 			})
 		} else {
-			// Expo doesn't support registering URL protocol handler so we hardcode 
-			// authentication parameters in environment.js file
+			// Expo doesn't support registering URL protocol handler so we use hardcoded
+			// authentication parameters
 			console.log('expo debug mode: setting token and server from hardcoded value')
-			this.props.setToken(env.token)
-			this.props.setServer(env.server)
+			this.props.setToken(Constants.manifest2.extra.expoClient.extra.token)
+			this.props.setServer(Constants.manifest2.extra.expoClient.extra.server)
 		}
 
 	}

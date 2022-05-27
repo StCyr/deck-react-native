@@ -16,21 +16,18 @@ Test the app and report as much bugs as you can at (preferably) https://framagit
 Development using expo:
 
 1. Clone the repository: `git clone https://framagit.org/StCyr/deck-react-native` or `https://github.com/StCyr/deck-react-native`
-2. In your deck-reactive-native repo, create a file called `environment.js` 
-3. From your clone directory start expo: `expo start`
-4. Open your app using `Expo Go` on your Android/iOS device
-5. Start hacking around
-6. Submit MR's and PR's
-
-Regular authentication doesn't work with Expo (expo doesn't support registering custom URL handlers). That's why, we create an `environment.js` file with the following content:
-
-```js
-export default {
-    expoDebug: true,
-    server: 'https://<your nextcloud server>',
-    token: 'Basic <your base64-encoded authentication credentials in the form 'user:password'',
-};
-```
+2. cd into your clone directory
+3. Create the following environment variables:
+  3a. DECK_SERVER_URL: The URL of your development server (eg: 'https://nextcloud-dev.bollu.be/nc22')
+  3b. DECK_ADMIN_TOKEN: 'Basic <base64-encoded authentication credentials to your development server in the form 'user:password'>'
+  3c. DECK_DEBUG: Set to 'true' to run in development mode and use the server specified by the environment variable DECK_SERVER_URL
+4. Setup your build environment:
+  4a. Register your device: `eas device:create`
+  4b. Build the app: `eas build --profile development --platform ios`
+5. Start expo: `expo start --dev-client`
+6. Open your app using `Expo Go` on your Android/iOS device
+7. Start hacking around
+8. Submit MR's and PR's
 
 ## Financial support
 

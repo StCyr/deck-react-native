@@ -7,14 +7,22 @@
       "developmentClient": true,
       "distribution": "internal"
     },
+    "simdev": {
+      "extends": "development",
+      "ios": {
+        "simulator": true
+      }
+    },
     "preview": {
       "distribution": "internal"
     },
-    "production": {
+    "simpreview": {
+      "extends": "preview",
       "ios": {
-        "simulator": false
+        "simulator": true
       }
-    }
+    },
+    "production": {}    
   },
   "submit": {
     "production": {}
