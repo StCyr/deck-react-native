@@ -78,26 +78,18 @@ class App extends React.Component {
 		})
 
 		// Retrieve token from storage if available
-		if (Constants.manifest2.extra.expoClient.extra.debug === 'false') {
-			AsyncStorage.getItem('NCtoken').then(token => {
-				if (token !== null) {
-					console.log('token retrieved from asyncStorage', token)
-					this.props.setToken('Basic ' + token)
-					AsyncStorage.getItem('NCserver').then(server => {
-						if (server !== null) {
-							console.log('server retrieved from asyncStorage', server)
-							this.props.setServer(server)
-						}
-					})
-				}
-			})
-		} else {
-			// Expo doesn't support registering URL protocol handler so we use hardcoded
-			// authentication parameters
-			console.log('expo debug mode: setting token and server from hardcoded value')
-			this.props.setToken(Constants.manifest2.extra.expoClient.extra.token)
-			this.props.setServer(Constants.manifest2.extra.expoClient.extra.server)
-		}
+		AsyncStorage.getItem('NCtoken').then(token => {
+			if (token !== null) {
+				console.log('token retrieved from asyncStorage', token)
+				this.props.setToken('Basic ' + token)
+				AsyncStorage.getItem('NCserver').then(server => {
+					if (server !== null) {
+						console.log('server retrieved from asyncStorage', server)
+						this.props.setServer(server)
+					}
+				})
+			}
+		})
 
 	}
 
