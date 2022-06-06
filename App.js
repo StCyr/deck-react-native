@@ -1,12 +1,11 @@
 import React from 'react';
-import Constants from 'expo-constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { KeyboardAvoidingView, Appearance } from 'react-native';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Toast from 'react-native-toast-message'
 import * as Font from 'expo-font';
-import AppLoading from 'expo-app-loading';
+import * as SplashScreen from 'expo-splash-screen';
 import Login from './views/Login';
 import Home from './views/Home';
 import AllBoards from './views/AllBoards';
@@ -24,6 +23,12 @@ import * as ScreenOrientation from 'expo-screen-orientation';
 
 // Create Stack navigator
 const Stack = createStackNavigator()
+
+// Prevent native splash screen from autohiding before App component declaration
+
+SplashScreen.preventAutoHideAsync()
+	.then(result => console.log(`SplashScreen.preventAutoHideAsync() succeeded: ${result}`))
+	.catch(console.warn);
 
 // Application
 class App extends React.Component {
@@ -91,6 +96,8 @@ class App extends React.Component {
 			}
 		})
 
+		SplashScreen.hideAsync()
+
 	}
 
 	// Function to retrieve the device's token and save it after user logged in
@@ -137,7 +144,7 @@ class App extends React.Component {
 				)
 			}
 		} else {
-			return <AppLoading />
+			return null
 		}
 	}
 
