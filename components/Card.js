@@ -231,7 +231,7 @@ const Card = ({card, navigation, route, stackId}) => {
                                 cardLabels={card.labels ?? []}
                                 size='small' />
                             <AssigneeList
-                                editable = {editMode}
+                                editable={false}
                                 cardAssignees = {card.assignedUsers ?? []}
                                 size='small'/>
                         </View>
