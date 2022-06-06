@@ -17,15 +17,10 @@ Development using expo:
 
 * Clone the repository: `git clone https://framagit.org/StCyr/deck-react-native` or `https://github.com/StCyr/deck-react-native`
 * cd into your clone directory
-* Create the following environment variables:
-  * DECK_SERVER_URL: The URL of your development server (eg: 'https://nextcloud-dev.bollu.be/nc22')
-  * DECK_ADMIN_TOKEN: 'Basic <base64-encoded authentication credentials to your development server in the form 'user:password'>'
-  * DECK_DEBUG: Set to 'true' to run in development mode and use the server specified by the environment variable DECK_SERVER_URL
 * Setup your build environment:
   * Register your device: `eas device:create`
   * Build the app: `eas build --profile development --platform ios`
-* Start expo: `expo start --dev-client`
-* Open your app using `Expo Go` on your Android/iOS device
+* Start expo: `expo start`
 * Start hacking around
 * Submit MR's and PR's
 
