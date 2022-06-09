@@ -13,6 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import BouncyCheckbox from "react-native-bouncy-checkbox"
 import DateTimePicker from '@react-native-community/datetimepicker'
 import axios from 'axios'
+import {Collapse,CollapseHeader, CollapseBody} from 'accordion-collapse-react-native'
 import * as Localization from 'expo-localization'
 import Toast from 'react-native-toast-message'
 import {i18n} from '../i18n/i18n.js'
@@ -94,6 +95,53 @@ const CardDetails = () => {
         setCard({
             ...card,
             assignedUsers
+        })
+    }
+
+    // Fetches card's comments
+    const fetchCommentsIfNeeded = () => {
+        if (card.comments) {
+            return
+        }
+        console.log('fetching comments from server')
+        axios.get(server.value + `/ocs/v2.php/apps/deck/api/v1.0/cards/${route.params.cardId}/comments`, {
+			timeout: 8000,
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': token.value,
+                'OCS-APIRequest': true
+			}
+		}).then((resp) => {
+            if (resp.status !== 200) {
+                Toast.show({
+                    type: 'error',
+                    text1: i18n.t('error'),
+                    text2: resp,
+                })
+                console.log('Error', resp)
+            } else {
+                // Adds comments to card
+                console.log('card comments retrieved from server', resp.data.ocs.data)
+                let comments = resp.data.ocs.data.map(comment => {
+                        return {
+                            'id': comment.id,
+                            'author': comment.actorDisplayName,
+                            'creationDate': new Date(comment.creationDateTime).toLocaleDateString(Localization.locale, { year: 'numeric', month: 'long', day: 'numeric' }),
+                            'name': comment.message
+                        }                        
+                })
+                setCard({
+                    ...card,
+                    ...{'comments': comments}
+                })
+            }
+        }).catch((error) => {
+            Toast.show({
+                type: 'error',
+                text1: i18n.t('error'),
+                text2: error.message,
+            })
+            console.log(error)
         })
     }
 
@@ -217,110 +265,139 @@ const CardDetails = () => {
     }
 
     return (
-        <ScrollView
-            keyboardShouldPersistTaps="handled"
-            style={[theme.container, {paddingBottom: 40, flex: 1}]}
-            contentContainerStyle={{flexGrow: 1}}
-        >
-            { saving &&
-                <Spinner title={i18n.t('saving')} />
-            }
-            <View style={theme.inputField}>
-                <Text h1 h1Style={theme.title}>
-                    {i18n.t('title')}
-                </Text>
-                <TextInput style={editMode ? theme.input : theme.inputReadMode}
-                    editable={editMode}
-                    value={card.title}
-                    onChangeText={title => { setCard({...card, title}) }}
-                    placeholder='title'
-                />
-            </View>
-            { editMode &&
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <BouncyCheckbox
-                        disableText={true}
-                        isChecked={showDatePicker}
-                        onPress={(isChecked) => {
-                            setShowDatePicker(isChecked)
-                            // Sets or delete the card's duedate property
-                            const copyOfCard = {...card}
-                            if (!isChecked) {
-                                copyOfCard['duedate'] = null
-                            } else {
-                                copyOfCard['duedate'] = new Date()
-                            }
-                            // Updates card
-                            console.log('new card', copyOfCard)
-                            setCard(copyOfCard)
-                        }}
-                    />
-                    <Text style={theme.textCheckbox}>
-                        {i18n.t('setDueDate')}
-                    </Text>
-                </View>
-            }
-            { (showDatePicker || (!editMode && card.duedate !== null)) &&
+        <View style={{height: "100%", paddingBottom: 40, paddingHorizontal: 5}}>
+            <ScrollView
+                keyboardShouldPersistTaps="handled"
+            >
+                { saving &&
+                    <Spinner title={i18n.t('saving')} />
+                }
                 <View style={theme.inputField}>
                     <Text h1 h1Style={theme.title}>
-                        {i18n.t('dueDate')}
+                        {i18n.t('title')}
                     </Text>
-                    { editMode ?
-                        <DateTimePicker
-                            disabled={!editMode}
-                            value={card.duedate === null ? new Date() : new Date(card.duedate)}
-                            mode="date"
-                            display="default"
-                            onChange={(event, newDuedate) => {
-                                setCard({...card, duedate: newDuedate})
+                    <TextInput style={editMode ? theme.input : theme.inputReadMode}
+                        editable={editMode}
+                        value={card.title}
+                        onChangeText={title => { setCard({...card, title}) }}
+                        placeholder='title'
+                    />
+                </View>
+                { editMode &&
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <BouncyCheckbox
+                            disableText={true}
+                            isChecked={showDatePicker}
+                            onPress={(isChecked) => {
+                                setShowDatePicker(isChecked)
+                                // Sets or delete the card's duedate property
+                                const copyOfCard = {...card}
+                                if (!isChecked) {
+                                    copyOfCard['duedate'] = null
+                                } else {
+                                    copyOfCard['duedate'] = new Date()
+                                }
+                                // Updates card
+                                console.log('new card', copyOfCard)
+                                setCard(copyOfCard)
                             }}
                         />
-                    :
-                        <Text style={theme.inputReadMode}>
-                           {new Date(card.duedate).toLocaleDateString(Localization.locale, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                        <Text style={theme.textCheckbox}>
+                            {i18n.t('setDueDate')}
                         </Text>
-                    }
-                </View>
-            }
-            { (card.labels?.length > 0 || editMode) &&
-                <View style={{zIndex: 2000}}>
+                    </View>
+                }
+                { (showDatePicker || (!editMode && card.duedate !== null)) &&
+                    <View style={theme.inputField}>
+                        <Text h1 h1Style={theme.title}>
+                            {i18n.t('dueDate')}
+                        </Text>
+                        { editMode ?
+                            <DateTimePicker
+                                disabled={!editMode}
+                                value={card.duedate === null ? new Date() : new Date(card.duedate)}
+                                mode="date"
+                                display="default"
+                                onChange={(event, newDuedate) => {
+                                    setCard({...card, duedate: newDuedate})
+                                }}
+                            />
+                        :
+                            <Text style={theme.inputReadMode}>
+                                   {new Date(card.duedate).toLocaleDateString(Localization.locale, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                            </Text>
+                        }
+                    </View>
+                }
+                { (card.labels?.length > 0 || editMode) &&
+                    <View style={{zIndex: 2000}}>
+                        <Text h1 h1Style={theme.title}>
+                            {i18n.t('labels')}
+                        </Text>
+                        <LabelList
+                            editable = {editMode}
+                            boardLabels = {boards.value[route.params.boardId].labels}
+                            cardLabels = {card.labels}
+                            udpateCardLabelsHandler = {udpateCardLabelsHandler} />
+                    </View>
+                }
+                { (card.assignedUsers?.length > 0 || editMode) &&
+                    <View style={{zIndex: 1000}}>
+                        <Text h1 h1Style={theme.title}>
+                            {i18n.t('assignees')}
+                        </Text>
+                        <AssigneeList
+                            editable = {editMode}
+                            boardUsers = {boards.value[route.params.boardId].users}
+                            cardAssignees = {card.assignedUsers ?? []}
+                            udpateCardAsigneesHandler = {udpateCardAsigneesHandler} />
+                    </View>
+                }
+                <View keyboardShouldPersistTaps="handled" style={{...theme.inputField, flexGrow: 1}}>
                     <Text h1 h1Style={theme.title}>
-                        {i18n.t('labels')}
+                        {i18n.t('description')}
                     </Text>
-                    <LabelList
-                        editable = {editMode}
-                        boardLabels = {boards.value[route.params.boardId].labels}
-                        cardLabels = {card.labels}
-                        udpateCardLabelsHandler = {udpateCardLabelsHandler} />
+                    <TextInput style={editMode ? [theme.input, theme.descriptionInput] : [theme.inputReadMode, theme.descriptionInput]}
+                        editable={editMode}
+                        multiline={true}
+                        value={card.description}
+                        onChangeText={description => {
+                            setCard({...card, description})
+                        }}
+                        placeholder='description (optional)'
+                    />
                 </View>
-            }
-            { (card.assignedUsers?.length > 0 || editMode) &&
-                <View style={{zIndex: 1000}}>
+            </ScrollView>
+            <Collapse
+                disabled={card.commentsCount === 0}
+                onToggle={fetchCommentsIfNeeded}
+            >
+                <CollapseHeader>
+                  <View>
                     <Text h1 h1Style={theme.title}>
-                        {i18n.t('assignees')}
+                        {'Comments (' + card.commentsCount + ')'}
                     </Text>
-                    <AssigneeList
-                        editable = {editMode}
-                        boardUsers = {boards.value[route.params.boardId].users}
-                        cardAssignees = {card.assignedUsers ?? []}
-                        udpateCardAsigneesHandler = {udpateCardAsigneesHandler} />
-
                 </View>
-            }
-            <View keyboardShouldPersistTaps="handled" style={{...theme.inputField, flexGrow: 1}}>
-                <Text h1 h1Style={theme.title}>
-                    {i18n.t('description')}
-                </Text>
-                <TextInput style={editMode ? [theme.input, theme.descriptionInput] : [theme.inputReadMode, theme.descriptionInput]}
-                    editable={editMode}
-                    multiline={true}
-                    value={card.description}
-                    onChangeText={description => {
-                        setCard({...card, description})
-                    }}
-                    placeholder='description (optional)'
-                />
-            </View>
+                </CollapseHeader>
+                <CollapseBody>
+                    {card.comments ? card.comments.map(comment => (
+                        <View key={comment.id} style={theme.comment}>
+                            <View style={theme.commentHeader}>
+                                <Text style={theme.commentAuthor}>
+                                    {comment.author}
+                                </Text>
+                                <Text style={theme.commentCreationDate}>
+                                    {comment.creationDate}
+                                </Text>
+                            </View>
+                            <Text>
+                                {comment.name}
+                            </Text>
+                        </View>
+                    )
+                  ) :  null}
+                </CollapseBody>
+            </Collapse>
             { editMode === false ?
                 <Pressable
                     style={theme.button}
@@ -339,8 +416,8 @@ const CardDetails = () => {
                     </Text>
                 </Pressable>
             }
-        </ScrollView>
-    )
+        </View>
+)
 }
 
 export default CardDetails

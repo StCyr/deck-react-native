@@ -13,6 +13,7 @@
     "@react-navigation/native": "^6.0.0",
     "@react-navigation/stack": "^6.0.0",
     "@reduxjs/toolkit": "^1.5.1",
+    "accordion-collapse-react-native": "^1.1.1",
     "axios": "^0.25.0",
     "base-64": "^1.0.0",
     "expo": "^45.0.0",

@@ -153,6 +153,21 @@ const baseStyles = (theme) => {
       flex: 1,
       fontSize: fonts.xl
     },
+    comment: {
+      marginBottom: padding.s
+    },
+    commentAuthor: {
+      fontSize: fonts.m
+    },
+    commentCreationDate: {      
+      fontSize: fonts.xs,
+      marginLeft: padding.s
+    },
+    commentHeader: {
+      alignItems: 'baseline',
+      flexDirection: 'row',
+      marginBottom: padding.xs
+    },
     stackBar: {
       flex: 1,
       flexDirection: 'row',
