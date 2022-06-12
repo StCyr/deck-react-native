@@ -121,12 +121,12 @@ const CardDetails = () => {
                 console.log('Error', resp)
             } else {
                 // Adds comments to card
-                console.log('card comments retrieved from server', resp.data.ocs.data)
+                console.log('card comments retrieved from server')
                 let comments = resp.data.ocs.data.map(comment => {
                         return {
                             'id': comment.id,
                             'author': comment.actorDisplayName,
-                            'creationDate': new Date(comment.creationDateTime).toLocaleDateString(Localization.locale, { year: 'numeric', month: 'long', day: 'numeric' }),
+                            'creationDate': new Date(comment.creationDateTime).toLocaleDateString(Localization.locale, { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }),
                             'name': comment.message
                         }                        
                 })
