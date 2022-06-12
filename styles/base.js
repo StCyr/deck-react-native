@@ -68,22 +68,9 @@ const containerStyles = {
 const baseStyles = (theme) => {
   const colors = getColors(theme)
   return {
-    container: {
-      ...containerStyles
-    },
     boardDetailsContainer: {
       ...containerStyles,
       paddingTop: 0,
-    },
-    title: {
-      color: colors.text,
-      fontSize: fonts.xl,
-      fontWeight: '600',
-      marginTop: padding.m,
-      marginBottom: padding.s,
-    },
-    icon: {
-      color: colors.text,
     },
     button: {
       width: '100%',
@@ -92,14 +79,14 @@ const baseStyles = (theme) => {
       marginVertical: padding.s,
       backgroundColor: colors.bgInteract,
     },
+    buttonDestruct: {
+      backgroundColor: colors.bgDestruct,
+    },
     buttonTitle: {
       textAlign: 'center',
       fontSize: fonts.l,
       fontWeight: '600',
       color: colors.textInteract,
-    },
-    buttonDestruct: {
-      backgroundColor: colors.bgDestruct,
     },
     buttonTitleDestruct: {
       color: colors.textDestruct,
@@ -126,6 +113,11 @@ const baseStyles = (theme) => {
       paddingLeft: padding.s,
       paddingRight: padding.s,
     },
+    cardDetailsLabelText: {
+      fontSize: fonts.m,
+      justifyContent: 'center',
+      textAlign: 'center',
+    },
     cardLabel: {
       borderRadius: padding.s,
       marginRight: padding.xxs,
@@ -137,11 +129,6 @@ const baseStyles = (theme) => {
       flex: 1,
       flexDirection: 'row',
       marginTop: padding.xs,
-    },
-    cardDetailsLabelText: {
-      fontSize: fonts.m,
-      justifyContent: 'center',
-      textAlign: 'center',
     },
     cardLabelText: {
       fontSize: fonts.xs,
@@ -167,6 +154,63 @@ const baseStyles = (theme) => {
       alignItems: 'baseline',
       flexDirection: 'row',
       marginBottom: padding.xs
+    },
+    container: {
+      ...containerStyles
+    },
+    descriptionInput: {
+      minHeight: 120,
+    },
+    icon: {
+      color: colors.text,
+    },
+    input: {
+      color: colors.text,
+      width: '100%',
+      flexDirection: 'row',
+      backgroundColor: colors.bg,
+      borderColor: colors.border,
+      fontSize: fonts.m,
+      borderWidth: 1,
+      borderRadius: padding.s,
+      marginVertical: padding.s,
+      padding: padding.m,
+    },
+    inputReadMode: {
+      color: colors.text,
+      width: '100%',
+      flexDirection: 'row',
+      fontSize: fonts.m,
+    },
+    inputButton: {
+      display: 'flex',
+      flexDirection: 'row',
+      width: '100%',
+      borderRadius: padding.m,
+      padding: padding.m,
+      marginVertical: padding.s,
+      backgroundColor: colors.bgInteract,
+    },
+    inputText: {
+      textAlign: 'center',
+      fontSize: fonts.m,
+      color: colors.textInteract,
+    },
+    inputField: {
+      marginVertical: padding.s,
+    },
+    spinnerContainer: {
+      position: 'absolute',
+      justifyContent: 'center',
+      width: '100%',
+      height: '100%',
+      zIndex: 10000
+    },
+    spinnerText: {
+      textAlign: 'center',
+      fontSize: fonts.xl,
+      color: '#666666',
+      marginBottom: 5
     },
     stackBar: {
       flex: 1,
@@ -206,64 +250,17 @@ const baseStyles = (theme) => {
       textAlign: 'center',
       fontSize: fonts.l,
     },
-    descriptionInput: {
-      minHeight: 120,
-    },
     textCheckbox: {
       color: colors.text,
       marginLeft: 5,
     },
-    input: {
+    title: {
       color: colors.text,
-      width: '100%',
-      flexDirection: 'row',
-      backgroundColor: colors.bg,
-      borderColor: colors.border,
-      fontSize: fonts.m,
-      borderWidth: 1,
-      borderRadius: padding.s,
-      marginVertical: padding.s,
-      padding: padding.m,
-    },
-    inputReadMode: {
-      color: colors.text,
-      width: '100%',
-      flexDirection: 'row',
-      fontSize: fonts.m,
-    },
-    inputButton: {
-      display: 'flex',
-      flexDirection: 'row',
-      width: '100%',
-      borderRadius: padding.m,
-      padding: padding.m,
-      marginVertical: padding.s,
-      backgroundColor: colors.bgInteract,
-    },
-    inputText: {
-      textAlign: 'center',
-      fontSize: fonts.m,
-      color: colors.textInteract,
-    },
-    inputField: {
-      marginVertical: padding.s,
-    },
-    inputLabel: {
-      fontWeight: 'bold'
-    },
-    spinnerContainer: {
-      position: 'absolute',
-      justifyContent: 'center',
-      width: '100%',
-      height: '100%',
-      zIndex: 10000
-    },
-    spinnerText: {
-      textAlign: 'center',
       fontSize: fonts.xl,
-      color: '#666666',
-      marginBottom: 5
-    }
+      fontWeight: '600',
+      marginTop: padding.m,
+      marginBottom: padding.s,
+    },
   }
 }
 
