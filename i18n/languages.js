@@ -1,4 +1,5 @@
 export const en = {
+    addComment: 'Add comment',
     addStack: 'Add stack',
     all: 'All',
     allBoards: 'All Boards',
@@ -8,6 +9,7 @@ export const en = {
     back: 'Back',
     cancel: 'Cancel',
     cardDetails: 'Card details',
+    comment: 'Comment',
     comments: 'Comments',
     create : 'Create',
     createBoard: 'Create board',
@@ -40,6 +42,7 @@ export const en = {
 }
 
 export const fr = {
+    addComment: 'Ajout de commentaire',
     addStack: 'Ajouter une liste',
     all: 'Tous',
     allBoards: 'Tous les tableaux',
@@ -49,6 +52,7 @@ export const fr = {
     back: 'Retour',
     cancel: 'Annuler',
     cardDetails: 'Détail de la carte',
+    comment: 'Commentaire',
     comments: 'Commentaires',
     create : 'Créer',
     createBoard: 'Créer un tableau',

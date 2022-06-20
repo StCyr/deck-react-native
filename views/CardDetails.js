@@ -6,7 +6,7 @@ import AppMenu from '../components/AppMenu'
 import AssigneeList from '../components/AssigneeList'
 import LabelList from '../components/LabelList'
 import Spinner from '../components/Spinner'
-import { Pressable, ScrollView, TextInput, View } from 'react-native'
+import { Modal, Pressable, ScrollView, TextInput, View } from 'react-native'
 import { Text } from 'react-native-elements'
 import { HeaderBackButton } from '@react-navigation/elements'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -35,6 +35,8 @@ const CardDetails = () => {
     const [cardLabelsBackup, setcardLabelsBackup] = useState([])
     const [editMode, setEditMode] = useState(false)
     const [showDatePicker, setShowDatePicker] = useState(false)
+    const [showAddCommentModal, setShowAddCommentModal] = useState(false)
+    const [newComment, setNewComment] = useState("")
 
     // ComponentDidMount
     useEffect(() => {
@@ -65,7 +67,6 @@ const CardDetails = () => {
             setShowDatePicker(true)
         }
 
-        console.log(cardFromStore)
         // Saves card in local state
         setCard(cardFromStore)
 
@@ -121,7 +122,7 @@ const CardDetails = () => {
                 console.log('Error', resp)
             } else {
                 // Adds attachments to card
-                console.log('card attachments retrieved from server', resp.data)
+                console.log('card attachments retrieved from server')
                 let attachments = resp.data.map(attachment => {
                     return {
                         'id': attachment.id,
@@ -144,8 +145,7 @@ const CardDetails = () => {
             console.log(error)
         })
     }
-
-        
+      
     // Fetches card's comments
     const fetchCommentsIfNeeded = () => {
         if (card.comments) {
@@ -191,6 +191,71 @@ const CardDetails = () => {
             })
             console.log(error)
         })
+    }
+
+    // Func
+    const addComment = () => {
+        console.log('saving comment')
+        axios.post(server.value + `/ocs/v2.php/apps/deck/api/v1.0/cards/${route.params.cardId}/comments`,
+        {
+            message: newComment
+        },
+        {
+            timeout: 8000,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token.value,
+                'OCS-APIRequest': true
+            }
+        }).then((resp) => {
+            if (resp.status !== 200) {
+                Toast.show({
+                    type: 'error',
+                    text1: i18n.t('error'),
+                    text2: resp,
+                })
+                console.log('Error', resp)
+            } else {
+                console.log('comment saved')
+                
+                // Saves card
+                // TODO: Make sure we have fetched the existing card comments before (otherwise we'll erase them in the frontend)
+                // TODO: Update frontend properly (it doesn't rerender after setCard)
+                let cardWithNewComment = {
+                    ...card,
+                    ...{
+                        'commentsCount': card.commentsCount + 1,
+                        'comments': [
+                            ...card.comments,
+                            ...[{
+                                'id': resp.data.ocs.data.id,
+                                'author': resp.data.ocs.data.actorDisplayName,
+                                'creationDate': new Date(resp.data.ocs.data.creationDateTime).toLocaleDateString(Localization.locale, { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }),
+                                'name': resp.data.ocs.data.message
+                            }]
+                        ]
+                    }
+                }
+                dispatch(addCard({
+                    boardId: route.params.boardId,
+                    stackId: route.params.stackId,
+                    card: cardWithNewComment
+                }))
+                setCard(cardWithNewComment)
+
+                // Resets state and hides modal
+                setShowAddCommentModal(false)
+                setNewComment('')
+            }
+        }).catch((error) => {
+            Toast.show({
+                type: 'error',
+                text1: i18n.t('error'),
+                text2: error.message,
+            })
+            console.log(error)
+        })
+
     }
 
     // Saves card and its labels
@@ -314,6 +379,32 @@ const CardDetails = () => {
 
     return (
         <View style={{height: "100%", paddingBottom: 40, paddingHorizontal: 5}}>
+            <Modal
+                animationType="fade"
+                visible={showAddCommentModal}
+                presentationStyle="formSheet"
+                onRequestClose={() => {
+                    setShowAddCommentModal(false);
+                  }}>
+                <View style={theme.container}>
+                    <Text h1 h1Style={theme.title}>{i18n.t('addComment')}</Text>
+                    <TextInput style={theme.input}
+                        editable={true}
+                        multiline={true}
+                        value={newComment}
+                        onChangeText={comment => { setNewComment(comment) }}
+                        placeholder={i18n.t('comment')}
+                    />
+                    <Pressable style={theme.button}
+                        onPress={() => {
+                            addComment()
+                        }} >
+                        <Text style={theme.buttonTitle}>
+                            {i18n.t('save')}
+                        </Text>
+                    </Pressable>
+                </View>
+            </Modal>
             <ScrollView
                 keyboardShouldPersistTaps="handled"
             >
@@ -346,7 +437,6 @@ const CardDetails = () => {
                                     copyOfCard['duedate'] = new Date()
                                 }
                                 // Updates card
-                                console.log('new card', copyOfCard)
                                 setCard(copyOfCard)
                             }}
                         />
@@ -449,6 +539,7 @@ const CardDetails = () => {
             <Collapse
                 disabled={card.commentsCount === 0}
                 onToggle={fetchCommentsIfNeeded}
+                handleLongPress={() => setShowAddCommentModal(true)}
             >
                 <CollapseHeader>
                   <View>
