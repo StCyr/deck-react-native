@@ -65,6 +65,7 @@ const CardDetails = () => {
             setShowDatePicker(true)
         }
 
+        console.log(cardFromStore)
         // Saves card in local state
         setCard(cardFromStore)
 
@@ -98,6 +99,53 @@ const CardDetails = () => {
         })
     }
 
+     // Fetches card's attachments
+     const fetchAttachmentsIfNeeded = () => {
+         if (card.attachments) {
+            return
+        }
+        console.log('fetching attachments from server')
+        axios.get(server.value + `/index.php/apps/deck/api/v1.1/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}/attachments`, {
+            timeout: 8000,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token.value
+            }
+        }).then((resp) => {
+            if (resp.status !== 200) {
+                Toast.show({
+                    type: 'error',
+                    text1: i18n.t('error'),
+                    text2: resp,
+                })
+                console.log('Error', resp)
+            } else {
+                // Adds attachments to card
+                console.log('card attachments retrieved from server', resp.data)
+                let attachments = resp.data.map(attachment => {
+                    return {
+                        'id': attachment.id,
+                        'author': attachment.createdBy,
+                        'creationDate': new Date(attachment.createdAt).toLocaleDateString(Localization.locale, { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }),
+                        'name': attachment.data
+                    }                        
+                    })
+                setCard({
+                    ...card,
+                    ...{'attachments': attachments}
+                })
+            }
+        }).catch((error) => {
+            Toast.show({
+                type: 'error',
+                text1: i18n.t('error'),
+                text2: error.message,
+            })
+            console.log(error)
+        })
+    }
+
+        
     // Fetches card's comments
     const fetchCommentsIfNeeded = () => {
         if (card.comments) {
@@ -123,12 +171,12 @@ const CardDetails = () => {
                 // Adds comments to card
                 console.log('card comments retrieved from server')
                 let comments = resp.data.ocs.data.map(comment => {
-                        return {
-                            'id': comment.id,
-                            'author': comment.actorDisplayName,
-                            'creationDate': new Date(comment.creationDateTime).toLocaleDateString(Localization.locale, { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }),
-                            'name': comment.message
-                        }                        
+                    return {
+                        'id': comment.id,
+                        'author': comment.actorDisplayName,
+                        'creationDate': new Date(comment.creationDateTime).toLocaleDateString(Localization.locale, { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }),
+                        'name': comment.message
+                    }                        
                 })
                 setCard({
                     ...card,
@@ -368,6 +416,36 @@ const CardDetails = () => {
                     />
                 </View>
             </ScrollView>
+            <Collapse
+                disabled={card.attachmentCount === 0}
+                onToggle={fetchAttachmentsIfNeeded}
+            >
+                <CollapseHeader>
+                  <View>
+                    <Text h1 h1Style={theme.title}>
+                        {'Attachments (' + card.attachmentCount + ')'}
+                    </Text>
+                </View>
+                </CollapseHeader>
+                <CollapseBody>
+                    {card.attachments ? card.attachments.map(attachment => (
+                        <View key={attachment.id} style={theme.comment}>
+                            <View style={theme.commentHeader}>
+                                <Text style={theme.commentAuthor}>
+                                    {attachment.author}
+                                </Text>
+                                <Text style={theme.commentCreationDate}>
+                                    {attachment.creationDate}
+                                </Text>
+                            </View>
+                            <Text>
+                                {attachment.name}
+                            </Text>
+                        </View>
+                    )
+                  ) :  null}
+                </CollapseBody>
+            </Collapse>
             <Collapse
                 disabled={card.commentsCount === 0}
                 onToggle={fetchCommentsIfNeeded}
