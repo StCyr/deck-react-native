@@ -412,7 +412,7 @@ const CardDetails = () => {
                         onChangeText={description => {
                             setCard({...card, description})
                         }}
-                        placeholder='description (optional)'
+                        placeholder={i18n.t('descriptionOptional')}
                     />
                 </View>
             </ScrollView>
@@ -423,7 +423,7 @@ const CardDetails = () => {
                 <CollapseHeader>
                   <View>
                     <Text h1 h1Style={theme.title}>
-                        {'Attachments (' + card.attachmentCount + ')'}
+                        {i18n.t('attachments') + ' (' + card.attachmentCount + ')'}
                     </Text>
                 </View>
                 </CollapseHeader>
@@ -453,7 +453,7 @@ const CardDetails = () => {
                 <CollapseHeader>
                   <View>
                     <Text h1 h1Style={theme.title}>
-                        {'Comments (' + card.commentsCount + ')'}
+                        {i18n.t('comments') + ' (' + card.commentsCount + ')'}
                     </Text>
                 </View>
                 </CollapseHeader>
