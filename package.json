@@ -16,6 +16,7 @@
     "accordion-collapse-react-native": "^1.1.1",
     "axios": "^0.25.0",
     "base-64": "^1.0.0",
+    "dayjs": "^1.11.3",
     "expo": "^45.0.0",
     "expo-app-loading": "~2.0.0",
     "expo-dev-client": "~0.9.6",

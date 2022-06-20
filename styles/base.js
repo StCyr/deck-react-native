@@ -161,6 +161,16 @@ const baseStyles = (theme) => {
     descriptionInput: {
       minHeight: 120,
     },
+    dueDate: {
+      flex: 1,
+      justifyContent: 'flex-end',
+      alignItems: 'flex-end',
+      paddingTop: 5,
+    },
+    dueDateText: {
+      fontWeight: 'bold',
+      fontSize: fonts.xs
+    },
     icon: {
       color: colors.text,
     },

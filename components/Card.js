@@ -9,6 +9,10 @@ import LabelList from './LabelList'
 import { i18n } from '../i18n/i18n.js'
 import axios from 'axios'
 
+const dayjs = require('dayjs')
+var relativeTime = require('dayjs/plugin/relativeTime')
+dayjs.extend(relativeTime)
+
 // A component representing a card in a stack list
 const Card = ({card, navigation, route, stackId}) => {
 
@@ -236,8 +240,13 @@ const Card = ({card, navigation, route, stackId}) => {
                                 size='small'/>
                         </View>
                         { card.duedate &&
-                            <View style={{flex: 1, justifyContent: 'flex-end', alignItems: 'flex-end'}}>
-                                <Text>{new Date(card.duedate).toLocaleDateString()}</Text>
+                            <View style={theme.dueDate}>
+                                <Text style={ dayjs(card.duedate).diff(dayjs(), 'day') < 2 ? [theme.dueDateText, {color: 'red'}]
+                                    : dayjs(card.duedate).diff(dayjs(), 'month') < 1 ? [theme.dueDateText, {color: 'orange'}]
+                                    : [theme.dueDateText, {color: 'green'}]
+                                    } >
+                                    {dayjs().to(dayjs(card.duedate))}
+                                </Text>
                             </View>
                         }
                     </View>
