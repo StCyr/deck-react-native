@@ -65,11 +65,20 @@ class App extends React.Component {
 
 		this.loadFonts()
 
-		// get initial theme
-		this.setState({ colorScheme: Appearance.getColorScheme()})
-		this.props.setTheme(Appearance.getColorScheme());
+		// Sets theme
+		AsyncStorage.getItem('colorScheme').then(savedColorScheme => {
 
-		// register theme change subscription
+			console.log('colorScheme', savedColorScheme)
+			let colorScheme = Appearance.getColorScheme()
+			if (savedColorScheme !== null && savedColorScheme !== 'OS') {
+				colorScheme = savedColorScheme
+			}
+
+			this.setState({ colorScheme: colorScheme})
+			this.props.setTheme(colorScheme);
+		})
+
+		// Registers theme change subscription
 		this._schemeSubscription = Appearance.addChangeListener(({ colorScheme }) => {
 			this.setState({ colorScheme })
 			this.props.setTheme(colorScheme);

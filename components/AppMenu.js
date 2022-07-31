@@ -14,23 +14,25 @@
 //
 //===============================================================================================================================================
 
-import React from 'react';
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteAllBoards } from '../store/boardSlice';
-import { setServer } from '../store/serverSlice';
-import { setToken } from '../store/tokenSlice';
-import { Pressable, View } from 'react-native';
-import Menu, { MenuItem } from 'react-native-material-menu';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {i18n} from '../i18n/i18n.js';
-import Icon from './Icon.js';
-import axios from 'axios';
+import { setColorScheme } from '../store/colorSchemeSlice'
+import { deleteAllBoards } from '../store/boardSlice'
+import { setServer } from '../store/serverSlice'
+import { setToken } from '../store/tokenSlice'
+import { Pressable, View } from 'react-native'
+import Menu, { MenuItem } from 'react-native-material-menu'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import {i18n} from '../i18n/i18n.js'
+import Icon from './Icon.js'
+import axios from 'axios'
 
 const AppMenu = () => {
 
     const server = useSelector(state => state.server)
     const token = useSelector(state => state.token)
     const theme = useSelector(state => state.theme)
+    const colorScheme = useSelector(state => state.colorScheme) ?? 'OS'
     const dispatch = useDispatch()
 
     const menu = React.createRef();
@@ -49,6 +51,26 @@ const AppMenu = () => {
                     </Pressable>
                 }
             >
+                <MenuItem
+                    onPress={() => {
+			let newColorScheme
+			switch(colorScheme) {
+				case 'OS':
+					newColorScheme = 'light'
+					break
+				case 'light':
+					newColorScheme = 'dark'
+					break
+				case 'dark':
+					newColorScheme = 'OS'
+					break
+			}
+			dispatch(setColorScheme(newColorScheme))
+			AsyncStorage.setItem('colorScheme', newColorScheme)
+                    }}
+                >
+	    {i18n.t('theme') + ': ' + colorScheme} 
+               </MenuItem>
                 <MenuItem
                     onPress={() => {
                         axios.delete(server.value + '/ocs/v2.php/core/apppassword', {

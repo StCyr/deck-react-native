@@ -559,7 +559,7 @@ const CardDetails = () => {
                                     {comment.creationDate}
                                 </Text>
                             </View>
-                            <Text>
+                            <Text style={theme.comment}>
                                 {comment.name}
                             </Text>
                         </View>

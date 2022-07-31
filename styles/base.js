@@ -141,12 +141,15 @@ const baseStyles = (theme) => {
       fontSize: fonts.xl
     },
     comment: {
+      color: colors.text,
       marginBottom: padding.s
     },
     commentAuthor: {
+      color: colors.text,
       fontSize: fonts.m
     },
     commentCreationDate: {      
+      color: colors.text,
       fontSize: fonts.xs,
       marginLeft: padding.s
     },

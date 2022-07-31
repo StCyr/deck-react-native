@@ -37,6 +37,7 @@ export const en = {
     setDueDate : 'Set due date',
     setUrl : 'Please enter the URL of your Nextcloud server',
     signIn : 'Sign In',
+    theme : 'Theme',
     title : 'Title',
     unauthorizedToEditCard : 'You are not authorized to edit this card'
 }
@@ -80,6 +81,7 @@ export const fr = {
     setDueDate : 'Définir une échéance',
     setUrl : 'Veuillez entrer l\'URL de votre serveur Nextcloud',
     signIn: 'S\'identifier',
+    theme : 'Theme',
     title : 'Titre',
     unauthorizedToEditCard : 'Vous n\'êtes pas autorisé à modifier cette carte'
 }
