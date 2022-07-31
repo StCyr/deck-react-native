@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import createStyles from '../styles/base'
 
 export const colorSchemeSlice = createSlice({
   name: 'colorScheme',

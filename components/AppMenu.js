@@ -69,8 +69,8 @@ const AppMenu = () => {
 			AsyncStorage.setItem('colorScheme', newColorScheme)
                     }}
                 >
-	    {i18n.t('theme') + ': ' + colorScheme} 
-               </MenuItem>
+			{i18n.t('theme') + ': ' + colorScheme} 
+		</MenuItem>
                 <MenuItem
                     onPress={() => {
                         axios.delete(server.value + '/ocs/v2.php/core/apppassword', {
