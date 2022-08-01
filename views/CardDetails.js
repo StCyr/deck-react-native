@@ -12,6 +12,7 @@ import { HeaderBackButton } from '@react-navigation/elements'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import BouncyCheckbox from "react-native-bouncy-checkbox"
 import DateTimePicker from '@react-native-community/datetimepicker'
+import Markdown from 'react-native-markdown-package'
 import axios from 'axios'
 import {Collapse,CollapseHeader, CollapseBody} from 'accordion-collapse-react-native'
 import * as Localization from 'expo-localization'
@@ -495,15 +496,24 @@ const CardDetails = () => {
                     <Text h1 h1Style={theme.title}>
                         {i18n.t('description')}
                     </Text>
-                    <TextInput style={editMode ? [theme.input, theme.descriptionInput] : [theme.inputReadMode, theme.descriptionInput]}
-                        editable={editMode}
-                        multiline={true}
-                        value={card.description}
-                        onChangeText={description => {
-                            setCard({...card, description})
-                        }}
-                        placeholder={i18n.t('descriptionOptional')}
-                    />
+					{
+						editMode ?
+    	                <TextInput style={[theme.input, theme.descriptionInput]}
+        	                editable={true}
+            	            multiline={true}
+                	        value={card.description}
+                    	    onChangeText={description => {
+                        	    setCard({...card, description})
+	                        }}
+    	                    placeholder={i18n.t('descriptionOptional')}
+        	            />
+						:
+						<Markdown
+							styles={[theme.inputReadMode, theme.descriptionInput]}
+						>
+							{card.description}
+						</Markdown>
+					}
                 </View>
             </ScrollView>
             <Collapse

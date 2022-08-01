@@ -36,6 +36,7 @@
     "react-native-dropdown-picker": "^5.3.0",
     "react-native-elements": "^3.4.2",
     "react-native-gesture-handler": "~2.2.1",
+    "react-native-markdown-package": "^1.8.2",
     "react-native-material-menu": "^1.2.0",
     "react-native-pager-view": "5.4.15",
     "react-native-reanimated": "~2.8.0",

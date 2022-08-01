@@ -903,12 +903,6 @@
     "node-forge" "^1.2.1"
     "nullthrows" "^1.1.1"
 
-"@expo/code-signing-certificates@0.0.1":
-  "version" "0.0.1"
-  dependencies:
-    "node-forge" "^1.2.1"
-    "nullthrows" "^1.1.1"
-
 "@expo/config-plugins@^4.0.14", "@expo/config-plugins@~4.1.4", "@expo/config-plugins@4.1.5":
   "version" "4.1.5"
   dependencies:
@@ -1014,7 +1008,7 @@
     "json5" "^1.0.1"
     "write-file-atomic" "^2.3.0"
 
-"@expo/metro-config@~0.3.16", "@expo/metro-config@~0.3.7", "@expo/metro-config@0.3.18":
+"@expo/metro-config@~0.3.16", "@expo/metro-config@0.3.18":
   "version" "0.3.18"
   dependencies:
     "@expo/config" "6.0.24"
@@ -1473,7 +1467,7 @@
     "hoist-non-react-statics" "^3.3.0"
     "redux" "^4.0.0"
 
-"@types/react@*":
+"@types/react@*", "@types/react@>=16.0.0":
   "version" "18.0.12"
   dependencies:
     "@types/prop-types" "*"
@@ -2698,9 +2692,6 @@
   dependencies:
     "ua-parser-js" "^0.7.19"
 
-"expo-eas-client@~0.2.0":
-  "version" "0.2.1"
-
 "expo-error-recovery@~3.1.0":
   "version" "3.1.0"
 
@@ -2767,9 +2758,6 @@
 
 "expo-status-bar@~1.3.0":
   "version" "1.3.0"
-
-"expo-structured-headers@~2.2.0":
-  "version" "2.2.1"
 
 "expo-system-ui@~1.2.0":
   "version" "1.2.0"
@@ -4703,7 +4691,7 @@
     "kleur" "^3.0.3"
     "sisteransi" "^1.0.5"
 
-"prop-types@*", "prop-types@^15.6.0", "prop-types@^15.7.2", "prop-types@^15.8.1":
+"prop-types@*", "prop-types@^15.5.10", "prop-types@^15.6.0", "prop-types@^15.7.2", "prop-types@^15.8.1":
   "version" "15.8.1"
   dependencies:
     "loose-envify" "^1.4.0"
@@ -4835,6 +4823,22 @@
 
 "react-native-gradle-plugin@^0.0.6":
   "version" "0.0.6"
+
+"react-native-lightbox@^0.7.0":
+  "integrity" "sha512-HS3T4WlCd0Gb3us2d6Jse5m6KjNhngnKm35Wapq30WtQa9s+/VMmtuktbGPGaWtswcDyOj6qByeJBw9W80iPCA=="
+  "resolved" "https://registry.npmjs.org/react-native-lightbox/-/react-native-lightbox-0.7.0.tgz"
+  "version" "0.7.0"
+  dependencies:
+    "prop-types" "^15.5.10"
+
+"react-native-markdown-package@^1.8.2":
+  "integrity" "sha512-F3z/p0XfY6Nu9NlXQx1pYcPdz7Y37NRcAKTN+yb9nwRi8BW75mdc3uaBrM13PDVUlL0hbfTL7FuoAdSbsyB5vg=="
+  "resolved" "https://registry.npmjs.org/react-native-markdown-package/-/react-native-markdown-package-1.8.2.tgz"
+  "version" "1.8.2"
+  dependencies:
+    "lodash" "^4.17.15"
+    "react-native-lightbox" "^0.7.0"
+    "simple-markdown" "^0.7.1"
 
 "react-native-material-menu@^1.2.0":
   "version" "1.2.0"
@@ -5326,6 +5330,13 @@
 
 "signal-exit@^3.0.0", "signal-exit@^3.0.2":
   "version" "3.0.7"
+
+"simple-markdown@^0.7.1":
+  "integrity" "sha512-uGXIc13NGpqfPeFJIt/7SHHxd6HekEJYtsdoCM06mEBPL9fQH/pSD7LRM6PZ7CKchpSvxKL4tvwMamqAaNDAyg=="
+  "resolved" "https://registry.npmjs.org/simple-markdown/-/simple-markdown-0.7.3.tgz"
+  "version" "0.7.3"
+  dependencies:
+    "@types/react" ">=16.0.0"
 
 "simple-plist@^1.1.0":
   "version" "1.3.1"
