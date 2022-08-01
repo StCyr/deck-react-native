@@ -20,9 +20,10 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "be.bollu.deck-react-native",
-      "buildNumber": "42"
+		"supportsTablet": true,
+		"bundleIdentifier": "be.bollu.deck-react-native",
+		"buildNumber": "43",
+		"usesIcloudStorage": true
     },
     "android": {
       "adaptiveIcon": {
@@ -30,7 +31,7 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "be.bollu.deck-react-native",
-      "versionCode": 42,
+      "versionCode": 43,
       "permissions": []
     },
     "web": {

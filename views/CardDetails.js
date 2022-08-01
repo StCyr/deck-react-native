@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { addCard } from '../store/boardSlice'
@@ -12,6 +12,7 @@ import { HeaderBackButton } from '@react-navigation/elements'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import BouncyCheckbox from "react-native-bouncy-checkbox"
 import DateTimePicker from '@react-native-community/datetimepicker'
+import * as DocumentPicker from 'expo-document-picker';
 import Markdown from 'react-native-markdown-package'
 import axios from 'axios'
 import {Collapse,CollapseHeader, CollapseBody} from 'accordion-collapse-react-native'
@@ -195,6 +196,14 @@ const CardDetails = () => {
     }
 
     // Func
+    const addAttachment = useCallback(async () => {
+		try {
+			const resp = await DocumentPicker.getDocumentAsync()
+		} catch(err) {
+			console.log(err)
+		}
+	},[])
+
     const addComment = () => {
         console.log('saving comment')
         axios.post(server.value + `/ocs/v2.php/apps/deck/api/v1.0/cards/${route.params.cardId}/comments`,
@@ -222,21 +231,30 @@ const CardDetails = () => {
                 // Saves card
                 // TODO: Make sure we have fetched the existing card comments before (otherwise we'll erase them in the frontend)
                 // TODO: Update frontend properly (it doesn't rerender after setCard)
-                let cardWithNewComment = {
-                    ...card,
-                    ...{
-                        'commentsCount': card.commentsCount + 1,
-                        'comments': [
-                            ...card.comments,
-                            ...[{
-                                'id': resp.data.ocs.data.id,
-                                'author': resp.data.ocs.data.actorDisplayName,
-                                'creationDate': new Date(resp.data.ocs.data.creationDateTime).toLocaleDateString(Localization.locale, { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }),
-                                'name': resp.data.ocs.data.message
-                            }]
-                        ]
-                    }
-                }
+				let cardWithNewComment
+				let comment = {
+					'id': resp.data.ocs.data.id,
+					'author': resp.data.ocs.data.actorDisplayName,
+					'creationDate': new Date(resp.data.ocs.data.creationDateTime).toLocaleDateString(Localization.locale, { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }),
+					'name': resp.data.ocs.data.message
+				}
+				if (card.commentsCount) {
+					cardWithNewComment = {
+						...card,
+						...{
+							'commentsCount': card.commentsCount + 1,
+							'comments': [
+								...card.comments,
+								...[comment]
+							]
+						}
+					}
+				} else {
+					cardWithNewComment = {
+						'commentsCount': 1,
+						'comments': [comment]
+					}
+				}
                 dispatch(addCard({
                     boardId: route.params.boardId,
                     stackId: route.params.stackId,
@@ -517,8 +535,8 @@ const CardDetails = () => {
                 </View>
             </ScrollView>
             <Collapse
-                disabled={card.attachmentCount === 0}
                 onToggle={fetchAttachmentsIfNeeded}
+                handleLongPress={() => addAttachment()}
             >
                 <CollapseHeader>
                   <View>
@@ -547,7 +565,6 @@ const CardDetails = () => {
                 </CollapseBody>
             </Collapse>
             <Collapse
-                disabled={card.commentsCount === 0}
                 onToggle={fetchCommentsIfNeeded}
                 handleLongPress={() => setShowAddCommentModal(true)}
             >
