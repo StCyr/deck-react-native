@@ -498,15 +498,15 @@ const CardDetails = () => {
                     </Text>
 					{
 						editMode ?
-    	                <TextInput style={[theme.input, theme.descriptionInput]}
-        	                editable={true}
-            	            multiline={true}
-                	        value={card.description}
-                    	    onChangeText={description => {
-                        	    setCard({...card, description})
-	                        }}
-    	                    placeholder={i18n.t('descriptionOptional')}
-        	            />
+							<TextInput style={[theme.input, theme.descriptionInput]}
+								editable={true}
+								multiline={true}
+								value={card.description}
+									onChangeText={description => {
+									setCard({...card, description})
+								}}
+								placeholder={i18n.t('descriptionOptional')}
+							/>
 						:
 						<Markdown
 							styles={[theme.inputReadMode, theme.descriptionInput]}
