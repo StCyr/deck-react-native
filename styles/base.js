@@ -72,6 +72,12 @@ const baseStyles = (theme) => {
       ...containerStyles,
       paddingTop: 0,
     },
+	boardMenu: {
+		flex: 1,
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'flex-end',
+	},
     button: {
       width: '100%',
       borderRadius: padding.m,

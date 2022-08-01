@@ -1,17 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { addCard, addLabel, addStack, addUser, deleteStack, moveCard, renameStack } from '../store/boardSlice';
 import { setServer } from '../store/serverSlice';
 import { setToken } from '../store/tokenSlice';
 import AppMenu from '../components/AppMenu';
 import Card from '../components/Card';
+import Icon from '../components/Icon.js'
 import { ActionSheetIOS, Pressable, RefreshControl, Text, TextInput, View } from 'react-native';
 import { DraxProvider, DraxScrollView, DraxView } from 'react-native-drax';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { initialWindowMetrics } from 'react-native-safe-area-context';
 import { HeaderBackButton } from '@react-navigation/elements';
+import Menu, { MenuItem } from 'react-native-material-menu'
 import Toast from 'react-native-toast-message';
 import { i18n } from '../i18n/i18n.js';
 
@@ -75,6 +77,7 @@ class BoardDetails extends React.Component {
     }
 
     render() {
+		const menu = React.createRef();
         const stacks = this.props.boards.value[this.props.route.params.boardId].stacks
         if (stacks.length === 0 && !this.state.refreshing) {
             // Board has no stack
@@ -179,6 +182,39 @@ class BoardDetails extends React.Component {
                                         </Pressable>
                                     </DraxView>
                                 ))}
+								<View style={[this.props.theme.boardMenu]}>
+									<Menu
+										ref={menu}
+										button={
+											<Pressable
+												onPress={() => {
+													menu.current.show();
+												}}
+											>
+												<Icon name='more' style={this.props.theme.icon} />
+											</Pressable>
+										}
+									>
+										<MenuItem
+											onPress={() => {
+											}}
+										>
+											{i18n.t('manageBoardLabels')}
+										 </MenuItem>
+										<MenuItem
+											onPress={() => {
+											}}
+										>
+											{i18n.t('manageBoardMembers')}
+										 </MenuItem>
+										<MenuItem
+											onPress={() => {
+											}}
+										>
+											{i18n.t('search')}
+										 </MenuItem>
+									</Menu>
+								</View>
                             </DraxScrollView>
                         </View>
                         {currentStack?.cards &&
