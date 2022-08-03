@@ -30,7 +30,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "be.bollu.deck-react-native",
+      "package": "be.bollu.deck_react_native",
       "versionCode": 43,
       "permissions": []
     },
