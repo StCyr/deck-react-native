@@ -13,6 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import BouncyCheckbox from "react-native-bouncy-checkbox"
 import DateTimePicker from '@react-native-community/datetimepicker'
 import * as DocumentPicker from 'expo-document-picker';
+import * as FileSystem from 'expo-file-system'
 import Markdown from 'react-native-markdown-package'
 import axios from 'axios'
 import {Collapse,CollapseHeader, CollapseBody} from 'accordion-collapse-react-native'
@@ -131,8 +132,8 @@ const CardDetails = () => {
                         'author': attachment.createdBy,
                         'creationDate': new Date(attachment.createdAt).toLocaleDateString(Localization.locale, { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }),
                         'name': attachment.data
-                    }                        
-                    })
+                    }
+                })
                 setCard({
                     ...card,
                     ...{'attachments': attachments}
@@ -198,9 +199,58 @@ const CardDetails = () => {
     // Func
     const addAttachment = useCallback(async () => {
 		try {
-			const resp = await DocumentPicker.getDocumentAsync()
-		} catch(err) {
-			console.log(err)
+			// Selects document
+			DocumentPicker.getDocumentAsync({copyToCacheDirectory: false})
+			.then(resp => {
+				if (resp.type === 'success') {
+
+					// Uploads attachment
+					console.log('Uploading attachment')
+					const { name, size, uri } = resp
+                    FileSystem.uploadAsync(
+                        server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}/attachments`,
+                        uri,
+                        {
+                            fieldName: 'file',
+						    httpMethod: 'POST',
+                            uploadType: FileSystem.FileSystemUploadType.MULTIPART,
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': token.value
+                            },
+                            parameters: {
+                                type: 'file'
+                            }
+                        },
+				    )
+					.then(() => {
+						console.log('Attachment uploaded')
+					})
+					.catch((error) => {
+                        Toast.show({
+                            type: 'error',
+                            text1: i18n.t('error'),
+                            text2: error.message,
+                        })
+						console.log(error)
+					})
+				}
+			})
+            .catch((error) => {
+                Toast.show({
+                    type: 'error',
+                    text1: i18n.t('error'),
+                    text2: error.message,
+                })
+                console.log(error)
+            })
+        } catch(error) {
+            Toast.show({
+                type: 'error',
+                text1: i18n.t('error'),
+                text2: error.message,
+            })
+			console.log(error)
 		}
 	},[])
 
