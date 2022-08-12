@@ -71,6 +71,7 @@ const CardDetails = () => {
         }
 
         // Saves card in local state
+        console.log('Card retrieved from store. Updating frontend')
         setCard(cardFromStore)
 
         // Remembers current card labels and assignees in case we change them 
@@ -104,12 +105,12 @@ const CardDetails = () => {
     }
 
      // Fetches card's attachments
-     const fetchAttachmentsIfNeeded = () => {
+     const fetchAttachmentsIfNeeded = async () => {
          if (card.attachments) {
-            return
+            return card
         }
         console.log('fetching attachments from server')
-        axios.get(server.value + `/index.php/apps/deck/api/v1.1/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}/attachments`, {
+        let newCard = axios.get(server.value + `/index.php/apps/deck/api/v1.1/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}/attachments`, {
             timeout: 8000,
             headers: {
                 'Content-Type': 'application/json',
@@ -125,7 +126,7 @@ const CardDetails = () => {
                 console.log('Error', resp)
             } else {
                 // Adds attachments to card
-                console.log('card attachments retrieved from server')
+                let cardWithAttachments
                 let attachments = resp.data.map(attachment => {
                     return {
                         'id': attachment.id,
@@ -134,10 +135,13 @@ const CardDetails = () => {
                         'name': attachment.data
                     }
                 })
-                setCard({
+                cardWithAttachments = {
                     ...card,
                     ...{'attachments': attachments}
-                })
+                }
+                setCard(cardWithAttachments)
+                console.log('attachments fetched from server')
+                return cardWithAttachments
             }
         }).catch((error) => {
             Toast.show({
@@ -147,10 +151,11 @@ const CardDetails = () => {
             })
             console.log(error)
         })
+        return newCard
     }
       
     // Fetches card's comments
-    const fetchCommentsIfNeeded = () => {
+    const fetchCommentsIfNeeded = async () => {
         if (card.comments) {
             return
         }
@@ -197,7 +202,7 @@ const CardDetails = () => {
     }
 
     // Func
-    const addAttachment = useCallback(async () => {
+    const addAttachment = async () => {
 		try {
 			// Selects document
 			DocumentPicker.getDocumentAsync({copyToCacheDirectory: false})
@@ -223,8 +228,41 @@ const CardDetails = () => {
                             }
                         },
 				    )
-					.then(() => {
+					.then(async (resp) => {
 						console.log('Attachment uploaded')
+
+                        // Makes sure we have the existing card attachments, if any
+                        let tempCard = card
+                        if (tempCard.attachmentCount && tempCard.attachments === null) {
+                            tempCard = await fetchAttachmentsIfNeeded()
+                        }
+
+                        // Saves card in store and updates frontend
+                        let cardWithNewAttachment
+                        if (tempCard.attachmentCount) {
+                            cardWithNewAttachment = {
+                                ...tempCard,
+                                ...{
+                                    'attachmentCount': tempCard.attachmentCount + 1,
+                                    'attachments': [
+                                        ...tempCard.attachments,
+                                        ...[JSON.parse(resp.body)]
+                                    ]
+                                }
+                            }
+                        } else {
+                            cardWithNewAttachment = {
+                                'attachmentCount': 1,
+                                'attachments': [JSON.parse(resp.body)]
+                            }
+                        }
+                        dispatch(addCard({
+                            boardId: route.params.boardId,
+                            stackId: route.params.stackId,
+                            card: cardWithNewAttachment
+                        }))
+                        setCard(cardWithNewAttachment)
+                        console.log('Card updated in store')
 					})
 					.catch((error) => {
                         Toast.show({
@@ -252,7 +290,7 @@ const CardDetails = () => {
             })
 			console.log(error)
 		}
-	},[])
+	}
 
     const addComment = () => {
         console.log('saving comment')
