@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigation, useRoute } from '@react-navigation/native'
+import { useRoute } from '@react-navigation/native'
 import { addCard } from '../store/boardSlice'
 import { View } from 'react-native'
 import { Text } from 'react-native-elements'
@@ -20,11 +20,7 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
     const boards = useSelector(state => state.boards)
     const dispatch = useDispatch()
 
-    const navigation = useNavigation()
     const route = useRoute()
-
-    const [saving, setSaving] = useState(false)
-    const [editMode, setEditMode] = useState(false)
 
     // ComponentDidMount
     useEffect(() => {
