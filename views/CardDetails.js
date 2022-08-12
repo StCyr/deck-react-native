@@ -252,8 +252,11 @@ const CardDetails = () => {
                             }
                         } else {
                             cardWithNewAttachment = {
-                                'attachmentCount': 1,
-                                'attachments': [JSON.parse(resp.body)]
+                                ...tempCard,
+                                ...{
+                                    'attachmentCount': 1,
+                                    'attachments': [JSON.parse(resp.body)]
+                                }
                             }
                         }
                         dispatch(addCard({
@@ -339,8 +342,11 @@ const CardDetails = () => {
 					}
 				} else {
 					cardWithNewComment = {
-						'commentsCount': 1,
-						'comments': [comment]
+                        ...card,
+                        ... {
+						    'commentsCount': 1,
+						    'comments': [comment]
+                        }
 					}
 				}
                 dispatch(addCard({
