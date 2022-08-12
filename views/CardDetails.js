@@ -240,13 +240,19 @@ const CardDetails = () => {
                         // Saves card in store and updates frontend
                         let cardWithNewAttachment
                         if (tempCard.attachmentCount) {
+                            let attachment = JSON.parse(resp.body)
                             cardWithNewAttachment = {
                                 ...tempCard,
                                 ...{
                                     'attachmentCount': tempCard.attachmentCount + 1,
                                     'attachments': [
                                         ...tempCard.attachments,
-                                        ...[JSON.parse(resp.body)]
+                                        ...[{
+                                            author: attachment.createdBy,
+                                            creationDate: new Date(attachment.createdAt).toLocaleDateString(Localization.locale, { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }),
+                                            id: attachment.id,
+                                            name: attachment.data
+                                        }]
                                     ]
                                 }
                             }
@@ -255,7 +261,12 @@ const CardDetails = () => {
                                 ...tempCard,
                                 ...{
                                     'attachmentCount': 1,
-                                    'attachments': [JSON.parse(resp.body)]
+                                    'attachments': [{
+                                        author: attachment.createdBy,
+                                        creationDate: new Date(attachment.createdAt).toLocaleDateString(Localization.locale, { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }),
+                                        id: attachment.id,
+                                        name: attachment.data
+                                    }]
                                 }
                             }
                         }
@@ -265,7 +276,7 @@ const CardDetails = () => {
                             card: cardWithNewAttachment
                         }))
                         setCard(cardWithNewAttachment)
-                        console.log('Card updated in store')
+                        console.log('Card updated in store', cardWithNewAttachment)
 					})
 					.catch((error) => {
                         Toast.show({
@@ -355,6 +366,7 @@ const CardDetails = () => {
                     card: cardWithNewComment
                 }))
                 setCard(cardWithNewComment)
+                console.log('Card updated in store')
 
                 // Resets state and hides modal
                 setShowAddCommentModal(false)
