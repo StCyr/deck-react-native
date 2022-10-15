@@ -12,6 +12,7 @@ import * as Localization from 'expo-localization'
 import Toast from 'react-native-toast-message'
 import {i18n} from '../i18n/i18n.js'
 
+// The attachments div that's displayed in the CardDetails view
 const AttachmentPanel = ({card, updateCard, showSpinner}) => {
 
     const theme = useSelector(state => state.theme)
@@ -117,8 +118,8 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
 
                         // Saves card in store and updates frontend
                         let cardWithNewAttachment
+                        let attachment = JSON.parse(resp.body)
                         if (tempCard.attachmentCount) {
-                            let attachment = JSON.parse(resp.body)
                             cardWithNewAttachment = {
                                 ...tempCard,
                                 ...{
