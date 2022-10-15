@@ -12,14 +12,14 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-	"plugins": [
-		[
-			"expo-document-picker",
-				{
-					"iCloudContainerEnvironment": "Production"
-				}
-		]
-	],
+    "plugins": [
+      [
+        "expo-document-picker",
+        {
+          "iCloudContainerEnvironment": "Production"
+        }
+      ]
+    ],
     "updates": {
       "fallbackToCacheTimeout": 0,
       "url": "https://u.expo.dev/4004f171-004b-4987-bdc0-8ab0fe8ceed9"
@@ -28,10 +28,10 @@
       "**/*"
     ],
     "ios": {
-		"supportsTablet": true,
-		"bundleIdentifier": "be.bollu.deck-react-native",
-		"buildNumber": "43",
-		"usesIcloudStorage": true
+      "supportsTablet": true,
+      "bundleIdentifier": "be.bollu.deck-react-native",
+      "buildNumber": "43",
+      "usesIcloudStorage": true
     },
     "android": {
       "adaptiveIcon": {
@@ -47,6 +47,11 @@
     },
     "runtimeVersion": {
       "policy": "sdkVersion"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "4004f171-004b-4987-bdc0-8ab0fe8ceed9"
+      }
     }
   }
 }
