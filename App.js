@@ -27,7 +27,6 @@ const Stack = createStackNavigator()
 // Prevent native splash screen from autohiding before App component declaration
 
 SplashScreen.preventAutoHideAsync()
-	.then(result => console.log(`SplashScreen.preventAutoHideAsync() succeeded: ${result}`))
 	.catch(console.warn);
 
 // Application
@@ -68,7 +67,6 @@ class App extends React.Component {
 		// Sets theme
 		AsyncStorage.getItem('colorScheme').then(savedColorScheme => {
 
-			console.log('colorScheme', savedColorScheme)
 			let colorScheme = Appearance.getColorScheme()
 			if (savedColorScheme !== null && savedColorScheme !== 'OS') {
 				colorScheme = savedColorScheme
