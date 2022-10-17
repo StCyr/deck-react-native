@@ -13,10 +13,20 @@ export const boardSlice = createSlice({
 			state.value[action.payload.boardId].stacks.find(oneStack => oneStack.id === action.payload.stackId).cards[action.payload.card.id] = action.payload.card
 		},
 		addLabel: (state, action) => {
-			state.value[action.payload.boardId].labels.push(action.payload.label)
+			// Removes the label if it's already there
+			let labels = state.value[action.payload.boardId].labels.filter(label => label.id !== action.payload.label.id)
+			// Adds the label
+			labels.push(action.payload.label)
+			// Saves the new labels array
+			state.value[action.payload.boardId].labels = labels
 		},
 		addUser: (state, action) => {
-			state.value[action.payload.boardId].users.push(action.payload.user)
+			// Removes the user if it's already there
+			let users = state.value[action.payload.boardId].users.filter(user => user.uid !== action.payload.user.uid)
+			// Adds the user
+			users.push(action.payload.user)
+			// Saves the new labels array
+			state.value[action.payload.boardId].users = users
 		},
 		addStack: (state, action) => {
 			// Stores cards as an object indexed by cards' id rather than in an array
