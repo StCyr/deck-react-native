@@ -200,19 +200,19 @@ class BoardDetails extends React.Component {
 											}}
 										>
 											{i18n.t('manageBoardLabels')}
-										 </MenuItem>
+										</MenuItem>
 										<MenuItem
 											onPress={() => {
 											}}
 										>
 											{i18n.t('manageBoardMembers')}
-										 </MenuItem>
+										</MenuItem>
 										<MenuItem
 											onPress={() => {
 											}}
 										>
 											{i18n.t('search')}
-										 </MenuItem>
+										</MenuItem>
 									</Menu>
 								</View>
                             </DraxScrollView>

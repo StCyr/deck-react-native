@@ -18,7 +18,6 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
     const theme = useSelector(state => state.theme)
     const server = useSelector(state => state.server)
     const token = useSelector(state => state.token)
-    const boards = useSelector(state => state.boards)
     const dispatch = useDispatch()
 
     const route = useRoute()
@@ -90,27 +89,26 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
 					// Uploads attachment
                     showSpinner(true)
 					console.log('Uploading attachment')
-					const { name, size, uri } = resp
                     FileSystem.uploadAsync(
                         server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}/attachments`,
-                        uri,
+                        resp.uri,
                         {
                             fieldName: 'file',
-						    httpMethod: 'POST',
+							httpMethod: 'POST',
                             uploadType: FileSystem.FileSystemUploadType.MULTIPART,
                             headers: {
                                 'Content-Type': 'application/json',
-                                'Authorization': token.value
-                            },
+								'Authorization': token.value
+							},
                             parameters: {
                                 type: 'file'
                             }
                         },
-				    )
+					)
 					.then(async (resp) => {
 						console.log('Attachment uploaded')
 
-                        // Makes sure we have the existing card attachments, if any
+						// Makes sure we have the existing card attachments, if any
                         let tempCard = card
                         if (tempCard.attachmentCount && tempCard.attachments === null) {
                             tempCard = await fetchAttachmentsIfNeeded()

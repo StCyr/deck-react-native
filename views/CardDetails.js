@@ -201,8 +201,8 @@ const CardDetails = () => {
 					cardWithNewComment = {
                         ...card,
                         ... {
-						    'commentsCount': 1,
-						    'comments': [comment]
+							'commentsCount': 1,
+							'comments': [comment]
                         }
 					}
 				}
