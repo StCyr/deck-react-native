@@ -2,10 +2,11 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useRoute } from '@react-navigation/native'
 import { addCard } from '../store/boardSlice'
-import { View } from 'react-native'
+import { Pressable, View } from 'react-native'
 import { Text } from 'react-native-elements'
-import * as DocumentPicker from 'expo-document-picker';
+import * as DocumentPicker from 'expo-document-picker'
 import * as FileSystem from 'expo-file-system'
+import FileViewer from 'react-native-file-viewer'
 import axios from 'axios'
 import {Collapse,CollapseHeader, CollapseBody} from 'accordion-collapse-react-native'
 import * as Localization from 'expo-localization'
@@ -184,6 +185,42 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
 		}
 	}
 
+    // Opens an attachment
+    const openAttachment = async (attachment) => {
+        try {
+            // Download file if not already done
+            const fileInfo = await FileSystem.getInfoAsync(FileSystem.cacheDirectory + "attachment.name")
+            let uri
+            if (!fileInfo.exists) {
+                console.log('Downloading attachment')
+                resp = await FileSystem.downloadAsync(
+                    server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}/attachments/${attachment.id}`,
+                    FileSystem.cacheDirectory + attachment.name,
+                    {
+                        headers: {
+                            'Authorization': token.value
+                        },
+                    },
+                )
+                console.log(resp)
+                uri = await FileSystem.getContentUriAsync(resp.uri)
+
+            } else {
+                console.log('File already in cache')
+                uri = await FileSystem.getContentUriAsync(fileInfo.uri)
+            }
+            console.log('opening file', uri)
+            FileViewer.open(uri)
+        } catch {
+            Toast.show({
+                type: 'error',
+                text1: i18n.t('error'),
+                text2: error.message,
+            })
+			console.log(error)
+        }
+    }
+
     return (
         <Collapse
             onToggle={fetchAttachmentsIfNeeded}
@@ -198,19 +235,21 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
             </CollapseHeader>
             <CollapseBody>
                 {card.attachments ? card.attachments.map(attachment => (
-                    <View key={attachment.id} style={theme.comment}>
-                        <View style={theme.commentHeader}>
-                            <Text style={theme.commentAuthor}>
-                                {attachment.author}
-                            </Text>
-                            <Text style={theme.commentCreationDate}>
-                                {attachment.creationDate}
+                    <Pressable key={attachment.id} onLongPress={() => openAttachment(attachment)}>
+                        <View style={theme.comment}>                        
+                            <View style={theme.commentHeader}>
+                                <Text style={theme.commentAuthor}>
+                                    {attachment.author}
+                                </Text>
+                                <Text style={theme.commentCreationDate}>
+                                    {attachment.creationDate}
+                                </Text>
+                            </View>                            
+                            <Text>
+                                {attachment.name}
                             </Text>
                         </View>
-                        <Text>
-                            {attachment.name}
-                        </Text>
-                    </View>
+                    </Pressable>
                 )
               ) :  null}
             </CollapseBody>
