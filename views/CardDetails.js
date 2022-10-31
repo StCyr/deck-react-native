@@ -18,6 +18,7 @@ import axios from 'axios'
 import {Collapse,CollapseHeader, CollapseBody} from 'accordion-collapse-react-native'
 import * as Localization from 'expo-localization'
 import Toast from 'react-native-toast-message'
+import Icon from '../components/Icon.js'
 import {i18n} from '../i18n/i18n.js'
 
 // The detailed view of a card, showing all card's information
@@ -493,29 +494,41 @@ const CardDetails = () => {
             />
             <Collapse
                 onToggle={fetchCommentsIfNeeded}
-                handleLongPress={() => setShowAddCommentModal(true)}
             >
                 <CollapseHeader>
-                  <View>
-                    <Text h1 h1Style={theme.title}>
-                        {i18n.t('comments') + ' (' + card.commentsCount + ')'}
-                    </Text>
-                </View>
+                    <View style={theme.itemWithIconsMenu}>
+                        <Text h1 h1Style={theme.title}>
+                            {i18n.t('comments') + ' (' + card.commentsCount + ')'}
+                        </Text>
+                        <Pressable onPress={() => setShowAddCommentModal(true)}>
+                            <Icon name='plus-circle' style={theme.iconGrey} />
+                        </Pressable>
+                    </View>
                 </CollapseHeader>
                 <CollapseBody>
                     {card.comments ? card.comments.map(comment => (
-                        <View key={comment.id} style={theme.comment}>
-                            <View style={theme.commentHeader}>
-                                <Text style={theme.commentAuthor}>
-                                    {comment.author}
-                                </Text>
-                                <Text style={theme.commentCreationDate}>
-                                    {comment.creationDate}
+                        <View key={comment.id} style={theme.itemWithIconsMenu}>
+                            <View style={theme.comment}>
+                                <View style={theme.commentHeader}>
+                                    <Text style={theme.commentAuthor}>
+                                        {comment.author}
+                                    </Text>
+                                    <Text style={theme.commentCreationDate}>
+                                        {comment.creationDate}
+                                    </Text>
+                                </View>
+                                <Text style={theme.comment}>
+                                    {comment.name}
                                 </Text>
                             </View>
-                            <Text style={theme.comment}>
-                                {comment.name}
-                            </Text>
+                            <View style={theme.iconsMenu}>
+                                <Pressable onPress={() => editComment(comment)}>
+                                    <Icon name='pencil' style={{...theme.iconGrey, ...{paddingRight: 5}}} />
+                                </Pressable>
+                                <Pressable onPress={() => deleteComment(comment)}>
+                                    <Icon name='trash' style={theme.iconGrey} />
+                                </Pressable>
+                            </View>
                         </View>
                     )
                   ) :  null}
