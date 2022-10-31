@@ -194,7 +194,7 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
             let uri
             if (!fileInfo.exists) {
                 console.log('Downloading attachment')
-                resp = await FileSystem.downloadAsync(
+                const resp = await FileSystem.downloadAsync(
                     server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}/attachments/${attachment.id}`,
                     FileSystem.cacheDirectory + attachment.name,
                     {
@@ -212,7 +212,7 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
             }
             console.log('opening file', uri)
             FileViewer.open(uri)
-        } catch {
+        } catch(error) {
             Toast.show({
                 type: 'error',
                 text1: i18n.t('error'),

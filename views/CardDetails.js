@@ -230,6 +230,16 @@ const CardDetails = () => {
 
     }
 
+    // Edits a comment
+    const editComment = () => {
+
+    }
+
+    // Deletes a comment
+    const deleteComment = () => {
+
+    }
+
     // Saves card and its labels
     const saveCard = () => {
         setBusy(true)
