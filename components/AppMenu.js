@@ -47,7 +47,7 @@ const AppMenu = () => {
                             menu.current.show();
                         }}
                     >
-                        <Icon name='more' style={theme.icon} />
+                        <Icon name='cog-alt' style={theme.icon} />
                     </Pressable>
                 }
             >

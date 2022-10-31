@@ -88,7 +88,7 @@ class Board extends React.Component {
                         onSubmitEditing={() => this.renameBoard()}
                         returnKeyType='done' />
                 }
-                <Icon name='go' style={this.props.theme.icon} />
+                <Icon name='right-open' style={this.props.theme.icon} />
             </Pressable> 
         )
     }

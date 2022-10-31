@@ -191,7 +191,7 @@ class BoardDetails extends React.Component {
 													menu.current.show();
 												}}
 											>
-												<Icon name='more' style={this.props.theme.icon} />
+												<Icon name='ellipsis-vert' style={this.props.theme.icon} />
 											</Pressable>
 										}
 									>

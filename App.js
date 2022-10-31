@@ -25,7 +25,6 @@ import * as ScreenOrientation from 'expo-screen-orientation';
 const Stack = createStackNavigator()
 
 // Prevent native splash screen from autohiding before App component declaration
-
 SplashScreen.preventAutoHideAsync()
 	.catch(console.warn);
 

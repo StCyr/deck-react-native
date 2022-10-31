@@ -1,5 +1,5 @@
 {
-  "name": "deck",
+  "name": "",
   "css_prefix_text": "icon-",
   "css_use_suffix": false,
   "hinting": true,
@@ -7,32 +7,40 @@
   "ascent": 850,
   "glyphs": [
     {
-      "uid": "69b3a58dded831e86e060e381561fc90",
-      "css": "more",
-      "code": 59393,
-      "src": "custom_icons",
-      "selected": true,
-      "svg": {
-        "path": "M500 708.3C546 708.3 583.3 745.7 583.3 791.7 583.3 837.7 546 875 500 875 454 875 416.7 837.7 416.7 791.7 416.7 745.7 454 708.3 500 708.3ZM500 416.7C546 416.7 583.3 454 583.3 500 583.3 546 546 583.3 500 583.3 454 583.3 416.7 546 416.7 500 416.7 454 454 416.7 500 416.7ZM500 125C546 125 583.3 162.3 583.3 208.3 583.3 254.3 546 291.7 500 291.7 454 291.7 416.7 254.3 416.7 208.3 416.7 162.3 454 125 500 125Z",
-        "width": 1000
-      },
-      "search": [
-        "more"
-      ]
+      "uid": "59ba4f90d2ca2a843f4f930b03270362",
+      "css": "plus-circle",
+      "code": 59392,
+      "src": "iconic"
     },
     {
-      "uid": "5acd8f8696bb4acb1d9e167696b2dba6",
-      "css": "go",
-      "code": 59392,
-      "src": "custom_icons",
-      "selected": true,
-      "svg": {
-        "path": "M336.9 291.7L545.2 500 336.9 708.3 395.8 767.3 663.1 500 395.8 232.7 336.9 291.7Z",
-        "width": 1000
-      },
-      "search": [
-        "go"
-      ]
+      "uid": "bbfb51903f40597f0b70fd75bc7b5cac",
+      "css": "trash",
+      "code": 61944,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "fbb01025c73ffb726bf28b98619df36d",
+      "css": "eye",
+      "code": 59393,
+      "src": "iconic"
+    },
+    {
+      "uid": "750058837a91edae64b03d60fc7e81a7",
+      "css": "ellipsis-vert",
+      "code": 61762,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "37910a1398001a5ccb541cb2a253a2c7",
+      "css": "right-open",
+      "code": 61446,
+      "src": "mfglabs"
+    },
+    {
+      "uid": "98687378abd1faf8f6af97c254eb6cd6",
+      "css": "cog-alt",
+      "code": 59394,
+      "src": "fontawesome"
     }
   ]
 }
