@@ -11,6 +11,7 @@ import axios from 'axios'
 import {Collapse,CollapseHeader, CollapseBody} from 'accordion-collapse-react-native'
 import * as Localization from 'expo-localization'
 import Toast from 'react-native-toast-message'
+import Icon from './Icon.js'
 import {i18n} from '../i18n/i18n.js'
 
 // The attachments div that's displayed in the CardDetails view
@@ -224,18 +225,20 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
     return (
         <Collapse
             onToggle={fetchAttachmentsIfNeeded}
-            handleLongPress={() => addAttachment()}
         >
             <CollapseHeader>
-              <View>
+              <View style={theme.itemWithIconsMenu}>
                 <Text h1 h1Style={theme.title}>
                     {i18n.t('attachments') + ' (' + card.attachmentCount + ')'}
                 </Text>
+                <Pressable onPress={() => addAttachment()}>
+                    <Icon name='plus-circle' style={theme.icon} />
+                </Pressable>
             </View>
             </CollapseHeader>
             <CollapseBody>
                 {card.attachments ? card.attachments.map(attachment => (
-                    <Pressable key={attachment.id} onLongPress={() => openAttachment(attachment)}>
+                    <View key={attachment.id} style={theme.itemWithIconsMenu}>
                         <View style={theme.comment}>                        
                             <View style={theme.commentHeader}>
                                 <Text style={theme.commentAuthor}>
@@ -249,7 +252,15 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
                                 {attachment.name}
                             </Text>
                         </View>
-                    </Pressable>
+                        <View style={theme.iconsMenu}>
+                            <Pressable onPress={() => openAttachment(attachment)}>
+                                <Icon name='eye' style={{...theme.icon, ...{paddingRight: 5}}} />
+                            </Pressable>
+                            <Pressable>
+                                <Icon name='trash' style={theme.icon} />
+                            </Pressable>
+                        </View>
+                    </View>
                 )
               ) :  null}
             </CollapseBody>

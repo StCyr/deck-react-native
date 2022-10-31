@@ -183,6 +183,11 @@ const baseStyles = (theme) => {
     icon: {
       color: colors.text,
     },
+    iconsMenu: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'baseline',
+    },
     input: {
       color: colors.text,
       width: '100%',
@@ -217,6 +222,12 @@ const baseStyles = (theme) => {
     },
     inputField: {
       marginVertical: padding.s,
+    },
+    itemWithIconsMenu: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'baseline',
+      justifyContent: 'space-between'
     },
     spinnerContainer: {
       position: 'absolute',
