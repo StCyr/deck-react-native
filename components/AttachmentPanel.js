@@ -108,9 +108,9 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
                         },
 					)
 					.then(async (resp) => {
-						console.log('Attachment uploaded')
+                        console.log('Attachment uploaded')
 
-						// Makes sure we have the existing card attachments, if any
+                        // Makes sure we have the existing card attachments, if any
                         let tempCard = card
                         if (tempCard.attachmentCount && tempCard.attachments === null) {
                             tempCard = await fetchAttachmentsIfNeeded()
@@ -232,32 +232,32 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
                     {i18n.t('attachments') + ' (' + card.attachmentCount + ')'}
                 </Text>
                 <Pressable onPress={() => addAttachment()}>
-                    <Icon name='plus-circle' style={theme.icon} />
+                    <Icon name='plus-circle' style={theme.iconGrey} />
                 </Pressable>
             </View>
             </CollapseHeader>
             <CollapseBody>
                 {card.attachments ? card.attachments.map(attachment => (
                     <View key={attachment.id} style={theme.itemWithIconsMenu}>
-                        <View style={theme.comment}>                        
-                            <View style={theme.commentHeader}>
-                                <Text style={theme.commentAuthor}>
+                        <View style={theme.attachment}>
+                            <View style={theme.attachmentHeader}>
+                                <Text style={theme.attachmentAuthor}>
                                     {attachment.author}
                                 </Text>
-                                <Text style={theme.commentCreationDate}>
+                                <Text style={theme.attachmentCreationDate}>
                                     {attachment.creationDate}
                                 </Text>
                             </View>                            
-                            <Text>
+                            <Text style={theme.attachmentName}>
                                 {attachment.name}
                             </Text>
                         </View>
                         <View style={theme.iconsMenu}>
                             <Pressable onPress={() => openAttachment(attachment)}>
-                                <Icon name='eye' style={{...theme.icon, ...{paddingRight: 5}}} />
+                                <Icon name='eye' style={{...theme.iconGrey, ...{paddingRight: 5}}} />
                             </Pressable>
                             <Pressable>
-                                <Icon name='trash' style={theme.icon} />
+                                <Icon name='trash' style={theme.iconGrey} />
                             </Pressable>
                         </View>
                     </View>

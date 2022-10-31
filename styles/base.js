@@ -11,6 +11,7 @@ export const getColors = (theme) => {
     light: {
       bg: '#fff',
       bgDefault: '#f2f2f2',
+      lightText: '#505050',
       text: '#000',
       border: '#E5E5E5',
       // blueish
@@ -23,6 +24,7 @@ export const getColors = (theme) => {
     dark: {
       bg: '#181818',
       bgDefault: '#222',
+      lightText: '#505050',
       text: '#d8d8d8',
       border: '#2a2a2a',
       // blueish
@@ -68,6 +70,28 @@ const containerStyles = {
 const baseStyles = (theme) => {
   const colors = getColors(theme)
   return {
+    attachment: {
+      color: colors.text,
+      marginBottom: padding.s
+    },
+    attachmentAuthor: {
+      color: colors.text,
+      fontSize: fonts.m
+    },
+    attachmentCreationDate: {
+      color: colors.text,
+      fontSize: fonts.xs,
+      marginLeft: padding.s
+    },
+    attachmentHeader: {
+      alignItems: 'baseline',
+      flexDirection: 'row',
+      marginBottom: padding.xs
+    },
+    attachmentName: {
+      color: colors.text,
+      marginBottom: padding.s
+    },
     boardDetailsContainer: {
       ...containerStyles,
       paddingTop: 0,
@@ -183,10 +207,12 @@ const baseStyles = (theme) => {
     icon: {
       color: colors.text,
     },
+    iconGrey: {
+      color: colors.lightText
+    },
     iconsMenu: {
       display: 'flex',
       flexDirection: 'row',
-      alignItems: 'baseline',
     },
     input: {
       color: colors.text,
