@@ -190,12 +190,12 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
     const openAttachment = async (attachment) => {
         try {
             // Downloads file if not already done
-            const fileInfo = await FileSystem.getInfoAsync(FileSystem.cacheDirectory + "attachment.name")
+            const fileInfo = await FileSystem.getInfoAsync(FileSystem.cacheDirectory + attachment.name)
             let uri
             if (!fileInfo.exists) {
                 console.log('Downloading attachment')
                 const resp = await FileSystem.downloadAsync(
-                    server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}/attachments/${attachment.id}`,
+                    server.value + `/index.php/apps/deck/api/v1.1/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}/attachments/file/${attachment.id}`,
                     FileSystem.cacheDirectory + attachment.name,
                     {
                         headers: {
@@ -203,7 +203,6 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
                         },
                     },
                 )
-                console.log(resp)
                 uri = await FileSystem.getContentUriAsync(resp.uri)
 
             } else {
