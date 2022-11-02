@@ -1,4 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native'
+import { colors } from 'react-native-elements'
 
 // ----------- Basics ----------- //
 export const dimensions = {
@@ -188,7 +189,8 @@ const baseStyles = (theme) => {
       marginBottom: padding.xs
     },
     container: {
-      ...containerStyles
+      ...containerStyles,
+      ...{ backgroundColor: colors.bg }
     },
     descriptionInput: {
       minHeight: 120,

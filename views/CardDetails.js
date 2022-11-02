@@ -5,9 +5,10 @@ import { addCard } from '../store/boardSlice'
 import AppMenu from '../components/AppMenu'
 import AssigneeList from '../components/AssigneeList'
 import AttachmentPanel from '../components/AttachmentPanel'
+import CommentPanel from '../components/CommentPanel'
 import LabelList from '../components/LabelList'
 import Spinner from '../components/Spinner'
-import { Modal, Pressable, ScrollView, TextInput, View } from 'react-native'
+import { Pressable, ScrollView, TextInput, View } from 'react-native'
 import { Text } from 'react-native-elements'
 import { HeaderBackButton } from '@react-navigation/elements'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -15,10 +16,8 @@ import BouncyCheckbox from "react-native-bouncy-checkbox"
 import DateTimePicker from '@react-native-community/datetimepicker'
 import Markdown from 'react-native-markdown-package'
 import axios from 'axios'
-import {Collapse,CollapseHeader, CollapseBody} from 'accordion-collapse-react-native'
 import * as Localization from 'expo-localization'
 import Toast from 'react-native-toast-message'
-import Icon from '../components/Icon.js'
 import {i18n} from '../i18n/i18n.js'
 
 // The detailed view of a card, showing all card's information
@@ -39,8 +38,6 @@ const CardDetails = () => {
     const [cardLabelsBackup, setcardLabelsBackup] = useState([])
     const [editMode, setEditMode] = useState(false)
     const [showDatePicker, setShowDatePicker] = useState(false)
-    const [showAddCommentModal, setShowAddCommentModal] = useState(false)
-    const [newComment, setNewComment] = useState("")
 
     // ComponentDidMount
     useEffect(() => {
@@ -104,140 +101,6 @@ const CardDetails = () => {
             ...card,
             assignedUsers
         })
-    }
-
-    // Fetches card's comments
-    const fetchCommentsIfNeeded = async () => {
-        if (card.comments) {
-            return
-        }
-        console.log('fetching comments from server')
-        axios.get(server.value + `/ocs/v2.php/apps/deck/api/v1.0/cards/${route.params.cardId}/comments`, {
-			timeout: 8000,
-			headers: {
-				'Content-Type': 'application/json',
-				'Authorization': token.value,
-                'OCS-APIRequest': true
-			}
-		}).then((resp) => {
-            if (resp.status !== 200) {
-                Toast.show({
-                    type: 'error',
-                    text1: i18n.t('error'),
-                    text2: resp,
-                })
-                console.log('Error', resp)
-            } else {
-                // Adds comments to card
-                console.log('card comments retrieved from server')
-                let comments = resp.data.ocs.data.map(comment => {
-                    return {
-                        'id': comment.id,
-                        'author': comment.actorDisplayName,
-                        'creationDate': new Date(comment.creationDateTime).toLocaleDateString(Localization.locale, { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }),
-                        'name': comment.message
-                    }                        
-                })
-                setCard({
-                    ...card,
-                    ...{'comments': comments}
-                })
-            }
-        }).catch((error) => {
-            Toast.show({
-                type: 'error',
-                text1: i18n.t('error'),
-                text2: error.message,
-            })
-            console.log(error)
-        })
-    }
-
-    const addComment = () => {
-        console.log('saving comment')
-        axios.post(server.value + `/ocs/v2.php/apps/deck/api/v1.0/cards/${route.params.cardId}/comments`,
-        {
-            message: newComment
-        },
-        {
-            timeout: 8000,
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': token.value,
-                'OCS-APIRequest': true
-            }
-        }).then((resp) => {
-            if (resp.status !== 200) {
-                Toast.show({
-                    type: 'error',
-                    text1: i18n.t('error'),
-                    text2: resp,
-                })
-                console.log('Error', resp)
-            } else {
-                console.log('comment saved')
-                
-                // Saves card
-                // TODO: Make sure we have fetched the existing card comments before (otherwise we'll erase them in the frontend)
-                // TODO: Update frontend properly (it doesn't rerender after setCard)
-				let cardWithNewComment
-				let comment = {
-					'id': resp.data.ocs.data.id,
-					'author': resp.data.ocs.data.actorDisplayName,
-					'creationDate': new Date(resp.data.ocs.data.creationDateTime).toLocaleDateString(Localization.locale, { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }),
-					'name': resp.data.ocs.data.message
-				}
-				if (card.commentsCount) {
-					cardWithNewComment = {
-						...card,
-						...{
-							'commentsCount': card.commentsCount + 1,
-							'comments': [
-								...card.comments,
-								...[comment]
-							]
-						}
-					}
-				} else {
-					cardWithNewComment = {
-                        ...card,
-                        ... {
-							'commentsCount': 1,
-							'comments': [comment]
-                        }
-					}
-				}
-                dispatch(addCard({
-                    boardId: route.params.boardId,
-                    stackId: route.params.stackId,
-                    card: cardWithNewComment
-                }))
-                setCard(cardWithNewComment)
-                console.log('Card updated in store')
-
-                // Resets state and hides modal
-                setShowAddCommentModal(false)
-                setNewComment('')
-            }
-        }).catch((error) => {
-            Toast.show({
-                type: 'error',
-                text1: i18n.t('error'),
-                text2: error.message,
-            })
-            console.log(error)
-        })
-
-    }
-
-    // Edits a comment
-    const editComment = () => {
-
-    }
-
-    // Deletes a comment
-    const deleteComment = () => {
-
     }
 
     // Saves card and its labels
@@ -361,32 +224,6 @@ const CardDetails = () => {
 
     return (
         <View style={{height: "100%", paddingBottom: 40, paddingHorizontal: 5}}>
-            <Modal
-                animationType="fade"
-                visible={showAddCommentModal}
-                presentationStyle="formSheet"
-                onRequestClose={() => {
-                    setShowAddCommentModal(false);
-                  }}>
-                <View style={theme.container}>
-                    <Text h1 h1Style={theme.title}>{i18n.t('addComment')}</Text>
-                    <TextInput style={theme.input}
-                        editable={true}
-                        multiline={true}
-                        value={newComment}
-                        onChangeText={comment => { setNewComment(comment) }}
-                        placeholder={i18n.t('comment')}
-                    />
-                    <Pressable style={theme.button}
-                        onPress={() => {
-                            addComment()
-                        }} >
-                        <Text style={theme.buttonTitle}>
-                            {i18n.t('save')}
-                        </Text>
-                    </Pressable>
-                </View>
-            </Modal>
             <ScrollView
                 keyboardShouldPersistTaps="handled"
             >
@@ -502,48 +339,11 @@ const CardDetails = () => {
                 updateCard = {setCard}
                 showSpinner = {setBusy}
             />
-            <Collapse
-                onToggle={fetchCommentsIfNeeded}
-            >
-                <CollapseHeader>
-                    <View style={theme.itemWithIconsMenu}>
-                        <Text h1 h1Style={theme.title}>
-                            {i18n.t('comments') + ' (' + card.commentsCount + ')'}
-                        </Text>
-                        <Pressable onPress={() => setShowAddCommentModal(true)}>
-                            <Icon size={32} name='plus-circle' style={theme.iconGrey} />
-                        </Pressable>
-                    </View>
-                </CollapseHeader>
-                <CollapseBody>
-                    {card.comments ? card.comments.map(comment => (
-                        <View key={comment.id} style={theme.itemWithIconsMenu}>
-                            <View style={theme.comment}>
-                                <View style={theme.commentHeader}>
-                                    <Text style={theme.commentAuthor}>
-                                        {comment.author}
-                                    </Text>
-                                    <Text style={theme.commentCreationDate}>
-                                        {comment.creationDate}
-                                    </Text>
-                                </View>
-                                <Text style={theme.comment}>
-                                    {comment.name}
-                                </Text>
-                            </View>
-                            <View style={theme.iconsMenu}>
-                                <Pressable onPress={() => editComment(comment)}>
-                                    <Icon size={32} name='pencil' style={{...theme.iconGrey, ...{paddingRight: 5}}} />
-                                </Pressable>
-                                <Pressable onPress={() => deleteComment(comment)}>
-                                    <Icon size={32} name='trash' style={theme.iconGrey} />
-                                </Pressable>
-                            </View>
-                        </View>
-                    )
-                  ) :  null}
-                </CollapseBody>
-            </Collapse>
+            <CommentPanel
+                card = {card}
+                updateCard = {setCard}
+                showSpinner = {setBusy}
+            />
             { editMode === false ?
                 <Pressable
                     style={theme.button}
