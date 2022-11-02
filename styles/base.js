@@ -1,5 +1,4 @@
 import {StyleSheet, Dimensions} from 'react-native'
-import { colors } from 'react-native-elements'
 
 // ----------- Basics ----------- //
 export const dimensions = {
