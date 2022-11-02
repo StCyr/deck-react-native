@@ -56,7 +56,7 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
                    return {
                        'id': attachment.id,
                         'author': attachment.createdBy,
-                       'creationDate': new Date(attachment.createdAt).toLocaleDateString(Localization.locale, { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }),
+                       'creationDate': new Date(attachment.createdAt * 1000).toLocaleDateString(Localization.locale, { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }),
                        'name': attachment.data
                    }
                })
@@ -128,7 +128,7 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
                                         ...tempCard.attachments,
                                         ...[{
                                             author: attachment.createdBy,
-                                            creationDate: new Date(attachment.createdAt).toLocaleDateString(Localization.locale, { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }),
+                                            creationDate: new Date().toLocaleDateString(Localization.locale, { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }),
                                             id: attachment.id,
                                             name: attachment.data
                                         }]
@@ -142,7 +142,7 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
                                     'attachmentCount': 1,
                                     'attachments': [{
                                         author: attachment.createdBy,
-                                        creationDate: new Date(attachment.createdAt).toLocaleDateString(Localization.locale, { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }),
+                                        creationDate: new Date().toLocaleDateString(Localization.locale, { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }),
                                         id: attachment.id,
                                         name: attachment.data
                                     }]
