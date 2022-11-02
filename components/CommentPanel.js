@@ -21,8 +21,9 @@ const CommentPanel = ({card, updateCard}) => {
 
     const route = useRoute()
 
-    const [showAddCommentModal, setShowAddCommentModal] = useState(false)
-    const [newComment, setNewComment] = useState("")
+    const [showAddCommentModal, setShowAddCommentModal] = useState(false)   // Used to show the add/edit comment modal
+    const [newComment, setNewComment] = useState("")        // Used to store comment entered by the user
+    const [editedComment, setEditedComment] = useState(0)   // Set when we are editing a comment
 
     // ComponentDidMount
     useEffect(() => {
@@ -147,12 +148,61 @@ const CommentPanel = ({card, updateCard}) => {
             })
             console.log(error)
         })
-
     }
 
     // Edits a comment
     const editComment = () => {
+        console.log('updating comment')
+        axios.put(server.value + `/ocs/v2.php/apps/deck/api/v1.0/cards/${route.params.cardId}/comments/${editedComment}`,
+        {
+            message: newComment
+        },
+        {
+            timeout: 8000,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token.value,
+                'OCS-APIRequest': true
+            }
+        }).then((resp) => {
+            if (resp.status !== 200) {
+                Toast.show({
+                    type: 'error',
+                    text1: i18n.t('error'),
+                    text2: resp,
+                })
+                console.log('Error', resp)
+            } else {
+                console.log('comment updated')
+                
+                // Updates card in frontend
+				card.comments.forEach(c => {
+                    if (c.id === editedComment) {
+                        c.name = newComment
+                    }
+                })
+                updateCard(card)
+                // Updates card in store
+                    dispatch(addCard({
+                    boardId: route.params.boardId,
+                    stackId: route.params.stackId,
+                    card
+                }))
+                console.log('Card updated in store')
 
+                // Resets state and hides modal
+                setShowAddCommentModal(false)
+                setEditedComment(0)
+                setNewComment('')
+            }
+        }).catch((error) => {
+            Toast.show({
+                type: 'error',
+                text1: i18n.t('error'),
+                text2: error.message,
+            })
+            console.log(error)
+        })
     }
 
     // Deletes a comment
@@ -216,7 +266,11 @@ const CommentPanel = ({card, updateCard}) => {
                     />
                     <Pressable style={theme.button}
                         onPress={() => {
-                            addComment()
+                            if (editedComment === 0) {
+                                addComment()
+                            } else {
+                                editComment()
+                            }
                         }} >
                         <Text style={theme.buttonTitle}>
                             {i18n.t('save')}
@@ -254,7 +308,13 @@ const CommentPanel = ({card, updateCard}) => {
                             </Text>
                         </View>
                         <View style={theme.iconsMenu}>
-                            <Pressable onPress={() => editComment(comment)}>
+                            <Pressable
+                                onPress={() => {
+                                    setEditedComment(comment.id)
+                                    setNewComment(comment.name)
+                                    setShowAddCommentModal(true)
+                                }}
+                            >
                                 <Icon size={32} name='pencil' style={{...theme.iconGrey, ...{paddingRight: 5}}} />
                             </Pressable>
                             <Pressable onPress={() => deleteComment(comment)}>
