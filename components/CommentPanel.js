@@ -293,7 +293,7 @@ const CommentPanel = ({card, updateCard}) => {
             </CollapseHeader>
             <CollapseBody>
                 {card.comments ? card.comments.map(comment => (
-                    <View key={comment.id} style={theme.itemWithIconsMenu}>
+                    <View key={comment.id} style={{...theme.itemWithIconsMenu, ...{alignItems: 'center'}}}>
                         <View style={theme.comment}>
                             <View style={theme.commentHeader}>
                                 <Text style={theme.commentAuthor}>
