@@ -511,7 +511,7 @@ const CardDetails = () => {
                             {i18n.t('comments') + ' (' + card.commentsCount + ')'}
                         </Text>
                         <Pressable onPress={() => setShowAddCommentModal(true)}>
-                            <Icon name='plus-circle' style={theme.iconGrey} />
+                            <Icon size={32} name='plus-circle' style={theme.iconGrey} />
                         </Pressable>
                     </View>
                 </CollapseHeader>
@@ -533,10 +533,10 @@ const CardDetails = () => {
                             </View>
                             <View style={theme.iconsMenu}>
                                 <Pressable onPress={() => editComment(comment)}>
-                                    <Icon name='pencil' style={{...theme.iconGrey, ...{paddingRight: 5}}} />
+                                    <Icon size={32} name='pencil' style={{...theme.iconGrey, ...{paddingRight: 5}}} />
                                 </Pressable>
                                 <Pressable onPress={() => deleteComment(comment)}>
-                                    <Icon name='trash' style={theme.iconGrey} />
+                                    <Icon size={32} name='trash' style={theme.iconGrey} />
                                 </Pressable>
                             </View>
                         </View>

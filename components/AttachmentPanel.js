@@ -275,13 +275,13 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
                     {i18n.t('attachments') + ' (' + card.attachmentCount + ')'}
                 </Text>
                 <Pressable onPress={() => addAttachment()}>
-                    <Icon name='plus-circle' style={theme.iconGrey} />
+                    <Icon size={32} name='plus-circle' style={theme.iconGrey} />
                 </Pressable>
             </View>
             </CollapseHeader>
             <CollapseBody>
                 {card.attachments ? card.attachments.map(attachment => (
-                    <View key={attachment.id} style={theme.itemWithIconsMenu}>
+                    <View key={attachment.id} style={{...theme.itemWithIconsMenu, ...{alignItems: 'center'}}}>
                         <View style={theme.attachment}>
                             <View style={theme.attachmentHeader}>
                                 <Text style={theme.attachmentAuthor}>
@@ -297,10 +297,10 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
                         </View>
                         <View style={theme.iconsMenu}>
                             <Pressable onPress={() => openAttachment(attachment)}>
-                                <Icon name='eye' style={{...theme.iconGrey, ...{paddingRight: 5}}} />
+                                <Icon size={32} name='eye' style={{...theme.iconGrey, ...{paddingRight: 10}}} />
                             </Pressable>
                             <Pressable onPress={() => deleteAttachement(attachment)}>
-                                <Icon name='trash' style={theme.iconGrey} />
+                                <Icon size={32} name='trash' style={theme.iconGrey} />
                             </Pressable>
                         </View>
                     </View>

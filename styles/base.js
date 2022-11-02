@@ -72,11 +72,11 @@ const baseStyles = (theme) => {
   return {
     attachment: {
       color: colors.text,
-      marginBottom: padding.s
+      marginVertical: padding.s
     },
     attachmentAuthor: {
       color: colors.text,
-      fontSize: fonts.m
+      fontSize: fonts.s
     },
     attachmentCreationDate: {
       color: colors.text,
@@ -90,7 +90,6 @@ const baseStyles = (theme) => {
     },
     attachmentName: {
       color: colors.text,
-      marginBottom: padding.s
     },
     boardDetailsContainer: {
       ...containerStyles,
@@ -211,7 +210,6 @@ const baseStyles = (theme) => {
       color: colors.lightText
     },
     iconsMenu: {
-      display: 'flex',
       flexDirection: 'row',
     },
     input: {
