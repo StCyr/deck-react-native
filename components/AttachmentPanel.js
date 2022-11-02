@@ -189,7 +189,7 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
     // Opens an attachment
     const openAttachment = async (attachment) => {
         try {
-            // Download file if not already done
+            // Downloads file if not already done
             const fileInfo = await FileSystem.getInfoAsync(FileSystem.cacheDirectory + "attachment.name")
             let uri
             if (!fileInfo.exists) {
@@ -210,6 +210,7 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
                 console.log('File already in cache')
                 uri = await FileSystem.getContentUriAsync(fileInfo.uri)
             }
+            // Opens file
             console.log('opening file', uri)
             FileViewer.open(uri)
         } catch(error) {
@@ -220,6 +221,48 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
             })
 			console.log(error)
         }
+    }
+
+    // Deletes an attachment
+    const deleteAttachement = async (attachment) => {
+        console.log(`deleting attachment ${attachment.id}`)
+        axios.delete(server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}/attachments/${attachment.id}`,
+        {
+            timeout: 8000,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token.value,
+            },
+            data: {
+                'type': 'file'
+            }
+        }).then((resp) => {
+            if (resp.status !== 200) {
+                Toast.show({
+                    type: 'error',
+                    text1: i18n.t('error'),
+                    text2: resp,
+                })
+                console.log('Error', resp)
+            } else {
+                // Saves card in store and updates frontend
+                let newCard
+                newCard = {
+                    ...card,
+                    ...{
+                        'attachmentCount': card.attachmentCount -1,
+                        'attachments': card.attachments.filter(a => a.id !== attachment.id)
+                    }
+                }
+                dispatch(addCard({
+                    boardId: route.params.boardId,
+                    stackId: route.params.stackId,
+                    card: newCard
+                }))
+                updateCard(newCard)
+                console.log('attachment deleted')
+            }
+        })
     }
 
     return (
@@ -256,7 +299,7 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
                             <Pressable onPress={() => openAttachment(attachment)}>
                                 <Icon name='eye' style={{...theme.iconGrey, ...{paddingRight: 5}}} />
                             </Pressable>
-                            <Pressable>
+                            <Pressable onPress={() => deleteAttachement(attachment)}>
                                 <Icon name='trash' style={theme.iconGrey} />
                             </Pressable>
                         </View>
