@@ -189,14 +189,16 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
     // Opens an attachment
     const openAttachment = async (attachment) => {
         try {
+            // iOS does not like spaces in file names.
+            const filename = attachment.name.replaceAll(/\s/g,'_')
             // Downloads file if not already done
-            const fileInfo = await FileSystem.getInfoAsync(FileSystem.cacheDirectory + attachment.name)
+            const fileInfo = await FileSystem.getInfoAsync(FileSystem.cacheDirectory + filename)
             let uri
             if (!fileInfo.exists) {
                 console.log('Downloading attachment')
                 const resp = await FileSystem.downloadAsync(
                     server.value + `/index.php/apps/deck/api/v1.1/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}/attachments/file/${attachment.id}`,
-                    FileSystem.cacheDirectory + attachment.name,
+                    FileSystem.cacheDirectory + filename,
                     {
                         headers: {
                             'Authorization': token.value
@@ -281,7 +283,7 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
             <CollapseBody>
                 {card.attachments ? card.attachments.map(attachment => (
                     <View key={attachment.id} style={{...theme.itemWithIconsMenu, ...{alignItems: 'center'}}}>
-                        <View style={theme.attachment}>
+                        <Pressable style={theme.attachment} onPress={() => openAttachment(attachment)}>
                             <View style={theme.attachmentHeader}>
                                 <Text style={theme.attachmentAuthor}>
                                     {attachment.author}
@@ -293,11 +295,8 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
                             <Text style={theme.attachmentName}>
                                 {attachment.name}
                             </Text>
-                        </View>
+                        </Pressable>
                         <View style={theme.iconsMenu}>
-                            <Pressable onPress={() => openAttachment(attachment)}>
-                                <Icon size={32} name='eye' style={{...theme.iconGrey, ...{paddingRight: 10}}} />
-                            </Pressable>
                             <Pressable onPress={() => deleteAttachement(attachment)}>
                                 <Icon size={32} name='trash' style={theme.iconGrey} />
                             </Pressable>
