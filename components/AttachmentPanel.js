@@ -13,6 +13,7 @@ import * as Localization from 'expo-localization'
 import Toast from 'react-native-toast-message'
 import Icon from './Icon.js'
 import {i18n} from '../i18n/i18n.js'
+import {decode as atob} from 'base-64';
 
 // The attachments div that's displayed in the CardDetails view
 const AttachmentPanel = ({card, updateCard, showSpinner}) => {
@@ -20,6 +21,7 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
     const theme = useSelector(state => state.theme)
     const server = useSelector(state => state.server)
     const token = useSelector(state => state.token)
+    const user = atob(token.value.substring(6)).split(':')[0]
     const dispatch = useDispatch()
 
     const route = useRoute()
@@ -54,10 +56,10 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
                let cardWithAttachments
                let attachments = resp.data.map(attachment => {
                    return {
-                       'id': attachment.id,
+                        'id': attachment.id,
                         'author': attachment.createdBy,
-                       'creationDate': new Date(attachment.createdAt * 1000).toLocaleDateString(Localization.locale, { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }),
-                       'name': attachment.data
+                        'creationDate': new Date(attachment.createdAt * 1000).toLocaleDateString(Localization.locale, { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }),
+                        'name': attachment.data
                    }
                })
                cardWithAttachments = {
@@ -297,8 +299,8 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
                             </Text>
                         </Pressable>
                         <View style={theme.iconsMenu}>
-                            <Pressable onPress={() => deleteAttachement(attachment)}>
-                                <Icon size={32} name='trash' style={theme.iconGrey} />
+                            <Pressable onPress={() => deleteAttachement(attachment)} disabled={user!==attachment.author}>
+                                <Icon size={32} name='trash' style={user===attachment.author ? theme.iconEnabled : theme.iconDisabled} />
                             </Pressable>
                         </View>
                     </View>

@@ -11,6 +11,8 @@ export const getColors = (theme) => {
     light: {
       bg: '#fff',
       bgDefault: '#f2f2f2',
+      iconDisabled: '#a0a0a0',
+      iconEnabled: '#505050',
       lightText: '#505050',
       text: '#000',
       border: '#E5E5E5',
@@ -24,6 +26,8 @@ export const getColors = (theme) => {
     dark: {
       bg: '#181818',
       bgDefault: '#222',
+      iconDisabled: '#202020',
+      iconEnabled: '#505050',
       lightText: '#505050',
       text: '#d8d8d8',
       border: '#2a2a2a',
@@ -205,6 +209,12 @@ const baseStyles = (theme) => {
     },
     icon: {
       color: colors.text,
+    },
+    iconDisabled: {
+      color: colors.iconDisabled
+    },
+    iconEnabled: {
+      color: colors.iconEnabled
     },
     iconGrey: {
       color: colors.lightText

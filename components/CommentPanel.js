@@ -10,6 +10,7 @@ import * as Localization from 'expo-localization'
 import Toast from 'react-native-toast-message'
 import Icon from './Icon.js'
 import {i18n} from '../i18n/i18n.js'
+import {decode as atob} from 'base-64';
 
 // The comment div that's displayed in the CardDetails view
 const CommentPanel = ({card, updateCard}) => {
@@ -17,6 +18,7 @@ const CommentPanel = ({card, updateCard}) => {
     const theme = useSelector(state => state.theme)
     const server = useSelector(state => state.server)
     const token = useSelector(state => state.token)
+    const user = atob(token.value.substring(6)).split(':')[0]
     const dispatch = useDispatch()
 
     const route = useRoute()
@@ -57,6 +59,7 @@ const CommentPanel = ({card, updateCard}) => {
                     return {
                         'id': comment.id,
                         'author': comment.actorDisplayName,
+                        'authorId': comment.actorId,
                         'creationDate': new Date(comment.creationDateTime).toLocaleDateString(Localization.locale, { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }),
                         'name': comment.message
                     }                        
@@ -314,11 +317,12 @@ const CommentPanel = ({card, updateCard}) => {
                                     setNewComment(comment.name)
                                     setShowAddCommentModal(true)
                                 }}
+                                disabled={user!==comment.authorId}
                             >
-                                <Icon size={32} name='pencil' style={{...theme.iconGrey, ...{paddingRight: 5}}} />
+                                <Icon size={32} name='pencil' style={user===comment.authorId ? {...theme.iconEnabled, ...{paddingRight: 5}} : {...theme.iconDisabled, ...{paddingRight: 5}}} />
                             </Pressable>
-                            <Pressable onPress={() => deleteComment(comment)}>
-                                <Icon size={32} name='trash' style={theme.iconGrey} />
+                            <Pressable onPress={() => deleteComment(comment)} disabled={user!==comment.authorId}>
+                                <Icon size={32} name='trash' style={user===comment.authorId ? theme.iconEnabled : theme.iconDisabled} />
                             </Pressable>
                         </View>
                     </View>
