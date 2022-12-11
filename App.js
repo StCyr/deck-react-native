@@ -16,6 +16,7 @@ import { bindActionCreators } from 'redux'
 import { setServer } from './store/serverSlice';
 import { setTheme } from './store/themeSlice';
 import { setToken } from './store/tokenSlice';
+import { setColorScheme } from './store/colorSchemeSlice';
 import * as Linking from 'expo-linking'; // For creating an URL handler to retrieve the device token
 import {encode as btoa} from 'base-64'; // btoa isn't supported by android (and maybe also iOS)
 import * as Device from 'expo-device';
@@ -66,19 +67,23 @@ class App extends React.Component {
 		// Sets theme
 		AsyncStorage.getItem('colorScheme').then(savedColorScheme => {
 
-			let colorScheme = Appearance.getColorScheme()
+			let colorScheme
 			if (savedColorScheme !== null && savedColorScheme !== 'OS') {
 				colorScheme = savedColorScheme
+			} else {
+				colorScheme = Appearance.getColorScheme()
 			}
 
 			this.setState({ colorScheme: colorScheme})
-			this.props.setTheme(colorScheme);
+			this.props.setTheme(colorScheme)
+			this.props.setColorScheme(savedColorScheme)
 		})
 
 		// Registers theme change subscription
 		this._schemeSubscription = Appearance.addChangeListener(({ colorScheme }) => {
 			this.setState({ colorScheme })
-			this.props.setTheme(colorScheme);
+			this.props.setTheme(colorScheme)
+			this.props.setColorScheme(colorScheme)
 		});
 
 		// Retrieves last viewed board and stack if available
@@ -158,12 +163,14 @@ class App extends React.Component {
 
 // Connect to store
 const mapStateToProps = state => ({
+	colorScheme: state.colorScheme,
 	server: state.server,
 	theme: state.theme,
 	token: state.token,
 })
 const mapDispatchToProps = dispatch => (
 	bindActionCreators( {
+		setColorScheme,
 		setServer,
 		setToken,
 		setTheme,
