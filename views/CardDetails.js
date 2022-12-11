@@ -327,7 +327,7 @@ const CardDetails = () => {
 							/>
 						:
 						<Markdown
-							styles={[theme.inputReadMode, theme.descriptionInput]}
+							styles={theme.markdown}
 						>
 							{card.description}
 						</Markdown>

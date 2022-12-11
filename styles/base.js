@@ -253,6 +253,13 @@ const baseStyles = (theme) => {
       alignItems: 'baseline',
       justifyContent: 'space-between'
     },
+    markdown: {
+      ...theme.inputReadMode, 
+      ...theme.descriptionInput,
+      text: {
+        color: colors.text
+      }
+    },
     modalContainer: {
       ...containerStyles,
       ...{ 
