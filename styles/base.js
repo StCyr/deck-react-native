@@ -188,8 +188,7 @@ const baseStyles = (theme) => {
       marginBottom: padding.xs
     },
     container: {
-      ...containerStyles,
-      ...{ backgroundColor: colors.bg }
+      containerStyles,
     },
     descriptionInput: {
       minHeight: 120,
