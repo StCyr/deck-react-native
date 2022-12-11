@@ -253,7 +253,7 @@ const CommentPanel = ({card, updateCard}) => {
                 onRequestClose={() => {
                     setShowAddCommentModal(false);
                 }}>
-                <View style={{...theme.container, ...{height: '100%'}}}>
+                <View style={theme.modalContainer}>
                     <Text h1 h1Style={theme.title}>
                         {i18n.t('addComment')}
                     </Text>

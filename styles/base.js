@@ -253,6 +253,13 @@ const baseStyles = (theme) => {
       alignItems: 'baseline',
       justifyContent: 'space-between'
     },
+    modalContainer: {
+      ...containerStyles,
+      ...{ 
+        backgroundColor: colors.bg,
+        height: '100%'
+      }
+    },
     spinnerContainer: {
       position: 'absolute',
       justifyContent: 'center',
