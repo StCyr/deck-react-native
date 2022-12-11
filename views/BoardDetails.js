@@ -16,6 +16,7 @@ import { HeaderBackButton } from '@react-navigation/elements';
 import Menu, { MenuItem } from 'react-native-material-menu'
 import Toast from 'react-native-toast-message';
 import { i18n } from '../i18n/i18n.js';
+import {decode as atob} from 'base-64';
 
 // Component that display a board's cards, grouped by stack
 class BoardDetails extends React.Component {
@@ -43,6 +44,7 @@ class BoardDetails extends React.Component {
             bottom: 0,
             top: 0,
         }
+        this.user = atob(this.props.token.value.substring(6)).split(':')[0] 
     }
 
     async componentDidMount() {
@@ -79,6 +81,8 @@ class BoardDetails extends React.Component {
     render() {
 		const menu = React.createRef();
         const stacks = this.props.boards.value[this.props.route.params.boardId].stacks
+        const ownerUid = this.props.boards.value[this.props.route.params.boardId].owner.uid
+        const canEdit = this.user===ownerUid || this.props.boards.value[this.props.route.params.boardId].acl.find(acl => acl.participant.uid==this.user).permissionEdit
         if (stacks.length === 0 && !this.state.refreshing) {
             // Board has no stack
             return (
@@ -155,25 +159,27 @@ class BoardDetails extends React.Component {
                                                 }))
                                             }}
                                             onLongPress={() => {
-                                                // Context menu
-                                                ActionSheetIOS.showActionSheetWithOptions(
-                                                    {
-                                                        options: [i18n.t("cancel"), i18n.t("renameStack"), i18n.t("addStack"), i18n.t("deleteStack")],
-                                                        destructiveButtonIndex: 3,
-                                                        cancelButtonIndex: 0,
-                                                    },
-                                                    buttonIndex => {
-                                                        if (buttonIndex === 0) {
-                                                            // cancel action
-                                                        } else if (buttonIndex === 1) {
-                                                            this.setState({stackToRename: stack})
-                                                        } else if (buttonIndex === 2) {
-                                                            this.setState({addingStack: true})
-                                                        } else if (buttonIndex === 3) {
-                                                            this.deleteStack(stack.id)
+                                                if (canEdit) {
+                                                    // Context menu
+                                                    ActionSheetIOS.showActionSheetWithOptions(
+                                                        {
+                                                            options: [i18n.t("cancel"), i18n.t("renameStack"), i18n.t("addStack"), i18n.t("deleteStack")],
+                                                            destructiveButtonIndex: 3,
+                                                            cancelButtonIndex: 0,
+                                                        },
+                                                        buttonIndex => {
+                                                            if (buttonIndex === 0) {
+                                                                // cancel action
+                                                            } else if (buttonIndex === 1) {
+                                                                this.setState({stackToRename: stack})
+                                                            } else if (buttonIndex === 2) {
+                                                                this.setState({addingStack: true})
+                                                            } else if (buttonIndex === 3) {
+                                                                this.deleteStack(stack.id)
+                                                            }
                                                         }
-                                                    }
-                                                )                
+                                                    )
+                                                }
                                             }}
                                         >
                                             <Text style={[this.props.theme.stackTabText, this.state.index === stack.id ? this.props.theme.stackTabTextSelected : this.props.theme.stackTabTextNormal]}>
@@ -232,7 +238,7 @@ class BoardDetails extends React.Component {
                         }
                     </DraxScrollView>
                     </View>
-                    {(!(this.state.addingStack || this.state.addingCard || this.state.stackToRename)) &&
+                    {(!(this.state.addingStack || this.state.addingCard || this.state.stackToRename || !canEdit)) &&
                         <View style={[this.props.theme.container, {marginBottom: this.insets.bottom}]}>
                             <Pressable
                                 style={this.props.theme.button}

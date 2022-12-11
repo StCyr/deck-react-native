@@ -19,6 +19,7 @@ import axios from 'axios'
 import * as Localization from 'expo-localization'
 import Toast from 'react-native-toast-message'
 import {i18n} from '../i18n/i18n.js'
+import {decode as atob} from 'base-64';
 
 // The detailed view of a card, showing all card's information
 const CardDetails = () => {
@@ -26,6 +27,7 @@ const CardDetails = () => {
     const theme = useSelector(state => state.theme)
     const server = useSelector(state => state.server)
     const token = useSelector(state => state.token)
+    const user = atob(token.value.substring(6)).split(':')[0]
     const boards = useSelector(state => state.boards)
     const dispatch = useDispatch()
 
@@ -38,6 +40,10 @@ const CardDetails = () => {
     const [cardLabelsBackup, setcardLabelsBackup] = useState([])
     const [editMode, setEditMode] = useState(false)
     const [showDatePicker, setShowDatePicker] = useState(false)
+
+    // Can the user edit the card?
+    const ownerUid = boards.value[route.params.boardId].owner.uid
+    const canEdit = user===ownerUid || boards.value[route.params.boardId].acl.find(acl => acl.participant.uid==user).permissionEdit
 
     // ComponentDidMount
     useEffect(() => {
@@ -344,7 +350,7 @@ const CardDetails = () => {
                 updateCard = {setCard}
                 showSpinner = {setBusy}
             />
-            { editMode === false ?
+            { (editMode === false && canEdit) &&
                 <Pressable
                     style={theme.button}
                     onPress={() => { setEditMode(true) }} >
@@ -352,7 +358,8 @@ const CardDetails = () => {
                         {i18n.t('edit')}
                     </Text>
                 </Pressable>
-            :
+            }
+            { (editMode && canEdit) &&
                 <Pressable style={theme.button}
                     onPress={() => {
                         saveCard()
