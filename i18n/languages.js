@@ -37,6 +37,7 @@ export const en = {
     save : 'Save',
     saving: 'Saving...',
 	search: 'Search',
+    sendByMail: 'Send by email',
     setDueDate : 'Set due date',
     setUrl : 'Please enter the URL of your Nextcloud server',
     signIn : 'Sign In',

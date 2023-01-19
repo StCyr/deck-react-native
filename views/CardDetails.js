@@ -20,6 +20,7 @@ import * as Localization from 'expo-localization'
 import Toast from 'react-native-toast-message'
 import {i18n} from '../i18n/i18n.js'
 import {decode as atob} from 'base-64';
+import { FloatingAction } from "react-native-floating-action";
 
 // The detailed view of a card, showing all card's information
 const CardDetails = () => {
@@ -351,13 +352,32 @@ const CardDetails = () => {
                 showSpinner = {setBusy}
             />
             { (editMode === false && canEdit) &&
-                <Pressable
+                <FloatingAction
                     style={theme.button}
-                    onPress={() => { setEditMode(true) }} >
-                    <Text style={theme.buttonTitle}>
-                        {i18n.t('edit')}
-                    </Text>
-                </Pressable>
+                    actions={
+                        [
+                            {
+                                text: i18n.t('edit'),
+                                name: "edit",
+                                icon: require('../assets/edit.png'),
+                                position: 1
+                            },
+                            {
+                                text: i18n.t('sendByMail'),
+                                name: "send_email",
+                                icon: require('../assets/mail.png'),
+                                position: 2
+                            }
+                        ]
+                    }
+                    onPressItem={(name) => { 
+                        if (name === 'edit') {
+                            setEditMode(true) 
+                        } else {
+                            
+                        }
+                    }} >
+                </FloatingAction>
             }
             { (editMode && canEdit) &&
                 <Pressable style={theme.button}
