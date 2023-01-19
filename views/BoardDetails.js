@@ -224,7 +224,7 @@ class BoardDetails extends React.Component {
                             </DraxScrollView>
                         </View>
                         {currentStack?.cards &&
-                        <View style={this.props.theme.boardDetailsContainer}>
+                        <View style={this.props.theme.container}>
                             {Object.values(currentStack.cards).sort((a,b) => a.order - b.order).map(card => (
                                 <Card
                                     card={card}
