@@ -8,7 +8,8 @@ import AttachmentPanel from '../components/AttachmentPanel'
 import CommentPanel from '../components/CommentPanel'
 import LabelList from '../components/LabelList'
 import Spinner from '../components/Spinner'
-import { Pressable, ScrollView, TextInput, View } from 'react-native'
+import { fetchAttachments, getAttachmentURI } from '../utils'
+import { Alert, Pressable, ScrollView, TextInput, View } from 'react-native'
 import { Text } from 'react-native-elements'
 import { HeaderBackButton } from '@react-navigation/elements'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -21,6 +22,7 @@ import Toast from 'react-native-toast-message'
 import {i18n} from '../i18n/i18n.js'
 import {decode as atob} from 'base-64';
 import { FloatingAction } from "react-native-floating-action";
+import * as MailComposer from 'expo-mail-composer';
 
 // The detailed view of a card, showing all card's information
 const CardDetails = () => {
@@ -229,6 +231,26 @@ const CardDetails = () => {
         })
     }
 
+    const sendEmail = async(attachments) => {
+        var options = {
+            subject: card.title,
+            body: card.description
+        }
+        if (attachments.length > 0) {
+            options = {...options, attachments}
+        }
+
+        MailComposer.composeAsync(options)
+    }
+
+    const sendEmailWithAttachment = async () => {
+        const attachments = await fetchAttachments(route.params.boardId, route.params.stackId, route.params.cardId, server, token.value)
+        const attachmentURIs = await Promise.all(attachments.map(async attachment => {
+            return await getAttachmentURI(attachment,route.params.boardId, route.params.stackId, route.params.cardId, server, token.value)
+        }));
+        sendEmail(attachmentURIs)
+    }
+
     return (
         <View style={{height: "100%", paddingBottom: 40, paddingHorizontal: 5}}>
             <ScrollView
@@ -374,7 +396,20 @@ const CardDetails = () => {
                         if (name === 'edit') {
                             setEditMode(true) 
                         } else {
-                            
+                            Alert.alert(
+                                i18n.t("sendAttachments"),
+                                i18n.t("sendAttachmentsPrompt"), [
+                                    {
+                                        text: "No",
+                                        onPress: () => {sendEmail([])},
+                                        style: "cancel"
+                                    },
+                                    {
+                                        text: "Yes",
+                                        onPress: sendEmailWithAttachment
+                                    }
+                                ]
+                            )
                         }
                     }} >
                 </FloatingAction>

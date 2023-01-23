@@ -14,7 +14,7 @@ import Toast from 'react-native-toast-message'
 import Icon from './Icon.js'
 import {i18n} from '../i18n/i18n.js'
 import {decode as atob} from 'base-64';
-import { fetchAttachments } from '../utils'
+import { fetchAttachments, getAttachmentURI } from '../utils'
 
 // The attachments div that's displayed in the CardDetails view
 const AttachmentPanel = ({card, updateCard, showSpinner}) => {
@@ -37,9 +37,8 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
            return card
         }
         showSpinner(true)
-        let attachments = await fetchAttachments(route.params.boardId, route.params.stackId, route.params.cardId, server, token.value)
-        console.log(attachments)
-        let cardWithAttachments = {
+        const attachments = await fetchAttachments(route.params.boardId, route.params.stackId, route.params.cardId, server, token.value)
+        const cardWithAttachments = {
             ...card,
             ...{'attachments': attachments}
         }
@@ -156,39 +155,9 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
 
     // Opens an attachment
     const openAttachment = async (attachment) => {
-        try {
-            // iOS does not like spaces in file names.
-            const filename = attachment.name.replaceAll(/\s/g,'_')
-            // Downloads file if not already done
-            const fileInfo = await FileSystem.getInfoAsync(FileSystem.cacheDirectory + filename)
-            let uri
-            if (!fileInfo.exists) {
-                console.log('Downloading attachment')
-                const resp = await FileSystem.downloadAsync(
-                    server.value + `/index.php/apps/deck/api/v1.1/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}/attachments/file/${attachment.id}`,
-                    FileSystem.cacheDirectory + filename,
-                    {
-                        headers: {
-                            'Authorization': token.value
-                        },
-                    },
-                )
-                uri = await FileSystem.getContentUriAsync(resp.uri)
-
-            } else {
-                console.log('File already in cache')
-                uri = await FileSystem.getContentUriAsync(fileInfo.uri)
-            }
-            // Opens file
-            console.log('opening file', uri)
+        const uri = await getAttachmentURI(attachment, route.params.boardId, route.params.stackId, route.params.cardId, server, token.value)
+        if (uri !== null) {
             FileViewer.open(uri)
-        } catch(error) {
-            Toast.show({
-                type: 'error',
-                text1: i18n.t('error'),
-                text2: error.message,
-            })
-			console.log(error)
         }
     }
 
