@@ -227,7 +227,7 @@ export const sv = {
     all: 'Alla',
     allBoards: 'Alla tavlor',
     archive: 'Arkiv',
-    assignees: 'Uppdragstagaren',
+    assignees: 'Tilldela till användare',
     attachments: 'Bilagor',
     back: 'Tillbaka',
     cancel: 'Avbryt',
