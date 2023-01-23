@@ -14,6 +14,7 @@ import Toast from 'react-native-toast-message'
 import Icon from './Icon.js'
 import {i18n} from '../i18n/i18n.js'
 import {decode as atob} from 'base-64';
+import { fetchAttachments } from '../utils'
 
 // The attachments div that's displayed in the CardDetails view
 const AttachmentPanel = ({card, updateCard, showSpinner}) => {
@@ -36,50 +37,15 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
            return card
         }
         showSpinner(true)
-        console.log('fetching attachments from server')
-        let newCard = axios.get(server.value + `/index.php/apps/deck/api/v1.1/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}/attachments`, {
-            timeout: 8000,
-           headers: {
-               'Content-Type': 'application/json',
-               'Authorization': token.value
-            }
-        }).then((resp) => {
-           if (resp.status !== 200) {
-               Toast.show({
-                    type: 'error',
-                   text1: i18n.t('error'),
-                   text2: resp,
-               })
-               console.log('Error', resp)
-           } else {
-                // Adds attachments to card
-               let cardWithAttachments
-               let attachments = resp.data.map(attachment => {
-                   return {
-                        'id': attachment.id,
-                        'author': attachment.createdBy,
-                        'creationDate': new Date(attachment.createdAt * 1000).toLocaleDateString(Localization.locale, { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }),
-                        'name': attachment.data
-                   }
-               })
-               cardWithAttachments = {
-                   ...card,
-                    ...{'attachments': attachments}
-                }
-               updateCard(cardWithAttachments)
-               console.log('attachments fetched from server')
-               return cardWithAttachments
-           }
-        }).catch((error) => {
-           Toast.show({
-               type: 'error',
-                text1: i18n.t('error'),
-               text2: error.message,
-           })
-           console.log(error)
-        })
+        let attachments = await fetchAttachments(route.params.boardId, route.params.stackId, route.params.cardId, server, token.value)
+        console.log(attachments)
+        let cardWithAttachments = {
+            ...card,
+            ...{'attachments': attachments}
+        }
+        updateCard(cardWithAttachments)
         showSpinner(false)
-        return newCard
+        return cardWithAttachments
     }
    
     // Adds an attachment to the card
