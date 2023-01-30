@@ -6,6 +6,8 @@ export const en = {
     archive: 'Archive',
     assignees: 'Assignees',
     attachments: 'Attachments',
+    attachmentType: 'Attachment type',
+    attachmentTypePrompt: 'Wich kind of attachment do you want to add?',
     back: 'Back',
     cancel: 'Cancel',
     cardDetails: 'Card details',
@@ -19,15 +21,18 @@ export const en = {
     deleteStack: 'Delete stack',
     description : 'Description',
     descriptionOptional: 'Description (optional)',
+    document: 'Document',
     dueDate : 'Due date',
     edit : 'Edit',
     error: 'Error',
+    image: 'Image',
     labels: 'Labels',
     loading: 'Loading...',
     logout: 'Logout',
 	manageBoardLabels: 'Manage board labels',
 	manageBoardMembers: 'Manage board members',
     moveCard : 'Move card',
+    no: 'No',
     noStack : 'This board has no stack. Start working by first creating a stack.',
     newBoardHint : 'Type the name of a board to create one',
     newCardHint : 'Type here the title of your card',
@@ -45,7 +50,8 @@ export const en = {
     signIn : 'Sign In',
     theme : 'Theme',
     title : 'Title',
-    unauthorizedToEditCard : 'You are not authorized to edit this card'
+    unauthorizedToEditCard : 'You are not authorized to edit this card',
+    yes: 'Yes'
 }
 
 export const fr = {
@@ -56,6 +62,8 @@ export const fr = {
     archive: 'Archiver',
     assignees: 'Assignés',
     attachments: 'Attachements',
+    attachmentType: 'Type d\'attachement',
+    attachmentTypePrompt: 'Quelle sorte d\'attachement voulez-vous ajouter?',
     back: 'Retour',
     cancel: 'Annuler',
     cardDetails: 'Détail de la carte',
@@ -69,15 +77,18 @@ export const fr = {
     deleteStack: 'Supprimer la liste',
     description : 'Description',
     descriptionOptional: 'Description (optionnel)',
+    document: 'Document',
     dueDate : 'Echéance',
     edit : 'Modifier',
     error: 'Erreur',
+    image: 'Image',
     labels: 'Etiquettes',
     loading: 'Chargement...',
     logout: 'Logout',
 	manageBoardLabels: 'Gérer les étiquettes du tableau',
 	manageBoardMembers: 'Gérer les membres du tableau',
     moveCard : 'Déplacer la carte',
+    no: 'Non',
     noStack : 'Ce tableau n\'a pas de liste. Commencez par en créer une.',
     newBoardHint: 'Tapez un nom pour créer un tableau',
     newCardHint: 'Tapez ici le titre de votre carte pour la créer',
@@ -95,7 +106,8 @@ export const fr = {
     signIn: 'S\'identifier',
     theme : 'Theme',
     title : 'Titre',
-    unauthorizedToEditCard : 'Vous n\'êtes pas autorisé à modifier cette carte'
+    unauthorizedToEditCard : 'Vous n\'êtes pas autorisé à modifier cette carte',
+    yes: 'Oui'
 }
 
 export const ru = {

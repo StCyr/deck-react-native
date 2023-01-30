@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useRoute } from '@react-navigation/native'
 import { addCard } from '../store/boardSlice'
-import { Pressable, View } from 'react-native'
+import { Alert, Pressable, View } from 'react-native'
 import { Text } from 'react-native-elements'
 import * as DocumentPicker from 'expo-document-picker'
 import * as FileSystem from 'expo-file-system'
@@ -15,6 +15,7 @@ import Icon from './Icon.js'
 import {i18n} from '../i18n/i18n.js'
 import {decode as atob} from 'base-64';
 import { fetchAttachments, getAttachmentURI } from '../utils'
+import * as ImagePicker from 'expo-image-picker';
 
 // The attachments div that's displayed in the CardDetails view
 const AttachmentPanel = ({card, updateCard, showSpinner}) => {
@@ -48,33 +49,47 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
     }
    
     // Adds an attachment to the card
-    const addAttachment = async () => {
+    const addAttachment = async (attachmentType) => {
 		try {
 			// Selects document
-			DocumentPicker.getDocumentAsync({copyToCacheDirectory: false})
-			.then(resp => {
-				if (resp.type === 'success') {
+            let resp
+			if (attachmentType === 'image') {
+                resp = await ImagePicker.launchImageLibraryAsync({
+                    mediaTypes: ImagePicker.MediaTypeOptions.All,
+                    allowsEditing: true,
+                    aspect: [4, 3],
+                    quality: 1,
+                  });
+            } else {
+                resp = await DocumentPicker.getDocumentAsync({copyToCacheDirectory: false})
+            }
 
-					// Uploads attachment
-                    showSpinner(true)
-					console.log('Uploading attachment')
-                    FileSystem.uploadAsync(
-                        server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}/attachments`,
-                        resp.uri,
-                        {
-                            fieldName: 'file',
-							httpMethod: 'POST',
-                            uploadType: FileSystem.FileSystemUploadType.MULTIPART,
-                            headers: {
-                                'Content-Type': 'application/json',
-								'Authorization': token.value
-							},
-                            parameters: {
-                                type: 'file'
-                            }
-                        },
-					)
-					.then(async (resp) => {
+            const status = resp.type ? resp.type : !resp.canceled ? resp.assets.type : 'cancel'
+
+			if (status !== 'cancel') {
+
+                const uri = resp.uri ? resp.uri : resp.assets.uri
+				// Uploads attachment
+                showSpinner(true)
+				console.log('Uploading attachment')
+                FileSystem.uploadAsync(
+                    server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}/attachments`,
+                    uri,
+                    {
+                        fieldName: 'file',
+						httpMethod: 'POST',
+                        uploadType: FileSystem.FileSystemUploadType.MULTIPART,
+                        headers: {
+                            'Content-Type': 'application/json',
+							'Authorization': token.value
+						},
+                        parameters: {
+                            type: 'file'
+                        }
+                    },
+				)
+				.then(async (resp) => {
+                    if (resp.status === 200) {
                         console.log('Attachment uploaded')
 
                         // Makes sure we have the existing card attachments, if any
@@ -123,35 +138,37 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
                         }))
                         updateCard(cardWithNewAttachment)
                         console.log('Card updated in store')
-					})
-					.catch((error) => {
+                        showSpinner(false)
+                    } else {
                         Toast.show({
                             type: 'error',
                             text1: i18n.t('error'),
-                            text2: error.message,
+                            text2: JSON.parse(resp.body).message,
                         })
-						console.log(error)
-					})
-				}
-                showSpinner(false)
-			})
-            .catch((error) => {
-                Toast.show({
-                    type: 'error',
-                    text1: i18n.t('error'),
-                    text2: error.message,
-                })
-                console.log(error)
-            })
-        } catch(error) {
+                        console.log(JSON.parse(resp.body).message)
+                        showSpinner(false)
+                    }
+				})
+				.catch((error) => {
+                    Toast.show({
+                        type: 'error',
+                        text1: i18n.t('error'),
+                        text2: error.message,
+                    })
+					console.log('error', error)
+                    showSpinner(false)
+				})
+		    }
+        }
+        catch (error) {
             Toast.show({
                 type: 'error',
                 text1: i18n.t('error'),
                 text2: error.message,
             })
-			console.log(error)
-		}
-	}
+            console.log(error)
+        }
+}
 
     // Opens an attachment
     const openAttachment = async (attachment) => {
@@ -212,7 +229,21 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
                 <Text h1 h1Style={theme.title}>
                     {i18n.t('attachments') + ' (' + card.attachmentCount + ')'}
                 </Text>
-                <Pressable onPress={() => addAttachment()}>
+                <Pressable onPress={ () => {
+                    Alert.alert(
+                        i18n.t("attachmentType"),
+                        i18n.t("attachmentTypePrompt"), [
+                            {
+                                text: i18n.t("image"),
+                                onPress: () => {addAttachment('image')},
+                            },
+                            {
+                                text: i18n.t("document"),
+                                onPress: () => {addAttachment('document')}
+                            }
+                        ]
+                    )
+                }}>
                     <Icon size={32} name='plus-circle' style={theme.iconGrey} />
                 </Pressable>
             </View>

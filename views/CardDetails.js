@@ -400,12 +400,12 @@ const CardDetails = () => {
                                 i18n.t("sendAttachments"),
                                 i18n.t("sendAttachmentsPrompt"), [
                                     {
-                                        text: "No",
+                                        text: i18n.t("no"),
                                         onPress: () => {sendEmail([])},
                                         style: "cancel"
                                     },
                                     {
-                                        text: "Yes",
+                                        text: i18n.t("yes"),
                                         onPress: sendEmailWithAttachment
                                     }
                                 ]

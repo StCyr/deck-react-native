@@ -4210,6 +4210,7 @@ __metadata:
     expo-device: ~5.0.0
     expo-document-picker: ~11.0.1
     expo-file-system: ~15.1.1
+    expo-image-picker: ~14.0.2
     expo-linking: ~3.3.0
     expo-localization: ~14.0.0
     expo-mail-composer: ~12.0.0
@@ -5019,6 +5020,26 @@ __metadata:
   peerDependencies:
     expo: "*"
   checksum: 9a04b1fac7834641ddf001a365ddbbfac11b7a2377686e3765fba4b415189e107d7f494488a590458d724ce792ae98b7b9ab5bf25b99e0f84b60c4c0a97f263f
+  languageName: node
+  linkType: hard
+
+"expo-image-loader@npm:~4.0.0":
+  version: 4.0.0
+  resolution: "expo-image-loader@npm:4.0.0"
+  peerDependencies:
+    expo: "*"
+  checksum: 21b0a77bd9fd3b434db70e16e21f8531db668c30bd539bb230a52d47f7536b3baf8742db7fd70b41e2165330d92881ef31b8eb1c69b5088fa5d36e57464ca0e4
+  languageName: node
+  linkType: hard
+
+"expo-image-picker@npm:~14.0.2":
+  version: 14.0.3
+  resolution: "expo-image-picker@npm:14.0.3"
+  dependencies:
+    expo-image-loader: ~4.0.0
+  peerDependencies:
+    expo: "*"
+  checksum: 98d3658a9b3f20634676af9d8f1526d56696c0e46a2fb24fba25b92981077d0505ca962a6e843bf67a1868f1ee0bbc2b16c503851393458379234f767cc711e1
   languageName: node
   linkType: hard
 
