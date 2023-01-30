@@ -53,13 +53,23 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
 		try {
 			// Selects document
             let resp
-			if (attachmentType === 'image') {
+			if (attachmentType === 'photo') {
                 resp = await ImagePicker.launchImageLibraryAsync({
                     mediaTypes: ImagePicker.MediaTypeOptions.All,
                     allowsEditing: true,
                     aspect: [4, 3],
                     quality: 1,
                   });
+            } else if (attachmentType === 'camera') {
+                const result = await ImagePicker.requestCameraPermissionsAsync();
+                if (result.granted) {
+                    resp = await ImagePicker.launchCameraAsync({
+                        mediaTypes: ImagePicker.MediaTypeOptions.All,
+                        allowsEditing: true,
+                        aspect: [4, 3],
+                        quality: 1,
+                    });
+                }
             } else {
                 resp = await DocumentPicker.getDocumentAsync({copyToCacheDirectory: false})
             }
@@ -231,15 +241,23 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
                 </Text>
                 <Pressable onPress={ () => {
                     Alert.alert(
-                        i18n.t("attachmentType"),
-                        i18n.t("attachmentTypePrompt"), [
+                        i18n.t("attachmentSource"),
+                        i18n.t("attachmentSourcePrompt"), [
                             {
-                                text: i18n.t("image"),
-                                onPress: () => {addAttachment('image')},
+                                text: i18n.t("photoGallery"),
+                                onPress: () => {addAttachment('photo')},
+                            },
+                            {
+                                text: i18n.t("camera"),
+                                onPress: () => {addAttachment('camera')},
                             },
                             {
                                 text: i18n.t("document"),
                                 onPress: () => {addAttachment('document')}
+                            },
+                            {
+                                text: i18n.t("cancel"),
+                                style: 'cancel'
                             }
                         ]
                     )
