@@ -80,3 +80,38 @@ export async function getAttachmentURI(attachment, boardId, stackId, cardId, ser
     }
 
 }
+
+// Gets user details from the server
+export async function getUserDetails(userId, server, token) {
+    return axios.get(server.value + `/ocs/v1.php/cloud/users/${userId}`,
+        {
+            headers: {
+                'Authorization': token,
+                'OCS-APIRequest': true,
+            },
+        }
+    ).then( resp => {
+        return resp.data.ocs.data
+    })
+}
+
+// Tells if a user has edit rights on a board
+export async function canUserEditBoard(user, board) {
+
+    // Owner may edit their board obviously
+    if (user === board.owner.uid) return true
+
+    // If user is listed in the board's acl explicitly, then return his edit permissions
+    const userPermissions = board.acl.find(acl => acl.participant.uid==user)?.permissionEdit
+    if (userPermissions !== undefined) return userPermissions
+
+    // If user is member of several groups listed in the board's acl, every gropups must have edit rights
+    const userGroupPermissions = board.acl.every( acl => {
+        if (user.groups.includes(acl.participant.uid)) {
+            return acl.permissionEdit
+        }
+        return true
+    })
+    return userGroupPermissions
+
+}

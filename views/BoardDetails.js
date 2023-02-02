@@ -7,6 +7,7 @@ import { setToken } from '../store/tokenSlice';
 import AppMenu from '../components/AppMenu';
 import Card from '../components/Card';
 import Icon from '../components/Icon.js'
+import { canUserEditBoard, getUserDetails } from '../utils';
 import { ActionSheetIOS, Pressable, RefreshControl, Text, TextInput, View } from 'react-native';
 import { DraxProvider, DraxScrollView, DraxView } from 'react-native-drax';
 import axios from 'axios';
@@ -44,7 +45,8 @@ class BoardDetails extends React.Component {
             bottom: 0,
             top: 0,
         }
-        this.user = atob(this.props.token.value.substring(6)).split(':')[0] 
+        this.user = {}
+        this.user.id = atob(this.props.token.value.substring(6)).split(':')[0] 
     }
 
     async componentDidMount() {
@@ -76,13 +78,16 @@ class BoardDetails extends React.Component {
             })
         }
 
+        // Gets user details
+        getUserDetails(this.user.id, this.props.server, this.props.token.value).then( details => {
+            this.user = details
+            this.user.canEditBoard = canUserEditBoard(this.user,this.props.boards.value[this.props.route.params.boardId])
+        })
     }
 
     render() {
 		const menu = React.createRef();
         const stacks = this.props.boards.value[this.props.route.params.boardId].stacks
-        const ownerUid = this.props.boards.value[this.props.route.params.boardId].owner.uid
-        const canEdit = this.user===ownerUid || this.props.boards.value[this.props.route.params.boardId].acl.find(acl => acl.participant.uid==this.user).permissionEdit
         if (stacks.length === 0 && !this.state.refreshing) {
             // Board has no stack
             return (
@@ -159,7 +164,7 @@ class BoardDetails extends React.Component {
                                                 }))
                                             }}
                                             onLongPress={() => {
-                                                if (canEdit) {
+                                                if (user.canEditBoard) {
                                                     // Context menu
                                                     ActionSheetIOS.showActionSheetWithOptions(
                                                         {
@@ -238,7 +243,7 @@ class BoardDetails extends React.Component {
                         }
                     </DraxScrollView>
                     </View>
-                    {(!(this.state.addingStack || this.state.addingCard || this.state.stackToRename || !canEdit)) &&
+                    {(!(this.state.addingStack || this.state.addingCard || this.state.stackToRename || !this.user.canEditBoard)) &&
                         <View style={[this.props.theme.container, {marginBottom: this.insets.bottom}]}>
                             <Pressable
                                 style={this.props.theme.button}
