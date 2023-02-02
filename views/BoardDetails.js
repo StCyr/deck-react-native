@@ -164,7 +164,7 @@ class BoardDetails extends React.Component {
                                                 }))
                                             }}
                                             onLongPress={() => {
-                                                if (user.canEditBoard) {
+                                                if (this.user.canEditBoard) {
                                                     // Context menu
                                                     ActionSheetIOS.showActionSheetWithOptions(
                                                         {
