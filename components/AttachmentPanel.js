@@ -168,7 +168,7 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
 					console.log('error', error)
                     showSpinner(false)
 				})
-		    }
+			}
         }
         catch (error) {
             Toast.show({
