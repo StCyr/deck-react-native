@@ -87,8 +87,13 @@ class BoardDetails extends React.Component {
 
     render() {
 		const menu = React.createRef();
-        const stacks = this.props.boards.value[this.props.route.params.boardId].stacks
-        if (stacks.length === 0 && !this.state.refreshing) {
+        const stacks = this.props.boards.value[this.props.route.params.boardId]?.stacks
+        if (stacks === undefined) {
+            return (
+                <View style={[this.props.theme.container, {marginBottom: this.insets.bottom}]}>
+                </View>
+            )
+        } else if (stacks.length === 0 && !this.state.refreshing) {
             // Board has no stack
             return (
                 <View style={[this.props.theme.container, {marginBottom: this.insets.bottom}]}>
