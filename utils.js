@@ -96,7 +96,7 @@ export async function getUserDetails(userId, server, token) {
 }
 
 // Tells if a user has edit rights on a board
-export async function canUserEditBoard(user, board) {
+export function canUserEditBoard(user, board) {
 
     // Owner may edit their board obviously
     if (user === board.owner.uid) return true
@@ -105,13 +105,14 @@ export async function canUserEditBoard(user, board) {
     const userPermissions = board.acl.find(acl => acl.participant.uid==user)?.permissionEdit
     if (userPermissions !== undefined) return userPermissions
 
-    // If user is member of several groups listed in the board's acl, every gropups must have edit rights
+    // If user is member of several groups listed in the board's acl, every groups must have edit rights
     const userGroupPermissions = board.acl.every( acl => {
         if (user.groups.includes(acl.participant.uid)) {
             return acl.permissionEdit
         }
         return true
     })
+
     return userGroupPermissions
 
 }
