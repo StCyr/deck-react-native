@@ -8,7 +8,7 @@ import AttachmentPanel from '../components/AttachmentPanel'
 import CommentPanel from '../components/CommentPanel'
 import LabelList from '../components/LabelList'
 import Spinner from '../components/Spinner'
-import { fetchAttachments, getAttachmentURI } from '../utils'
+import { canUserEditBoard, fetchAttachments, getAttachmentURI, getUserDetails } from '../utils'
 import { Alert, Pressable, ScrollView, TextInput, View } from 'react-native'
 import { Text } from 'react-native-elements'
 import { HeaderBackButton } from '@react-navigation/elements'
@@ -30,12 +30,14 @@ const CardDetails = () => {
     const theme = useSelector(state => state.theme)
     const server = useSelector(state => state.server)
     const token = useSelector(state => state.token)
-    const user = atob(token.value.substring(6)).split(':')[0]
     const boards = useSelector(state => state.boards)
     const dispatch = useDispatch()
 
     const navigation = useNavigation()
     const route = useRoute()
+
+    let user = {}
+    user.id = atob(token.value.substring(6)).split(':')[0]
 
     const [busy, setBusy] = useState(false)
     const [card, setCard] = useState({})
@@ -45,8 +47,10 @@ const CardDetails = () => {
     const [showDatePicker, setShowDatePicker] = useState(false)
 
     // Can the user edit the card?
-    const ownerUid = boards.value[route.params.boardId].owner.uid
-    const canEdit = user===ownerUid || boards.value[route.params.boardId].acl.find(acl => acl.participant.uid==user).permissionEdit
+    getUserDetails(user.id, server, token.value).then( details => {
+        user = details
+        user.canEditBoard = canUserEditBoard(user,boards.value[route.params.boardId])
+    })
 
     // ComponentDidMount
     useEffect(() => {
@@ -373,7 +377,7 @@ const CardDetails = () => {
                 updateCard = {setCard}
                 showSpinner = {setBusy}
             />
-            { (editMode === false && canEdit) &&
+            { (editMode === false && user.canEditBoard) &&
                 <FloatingAction
                     style={theme.button}
                     actions={
@@ -414,7 +418,7 @@ const CardDetails = () => {
                     }} >
                 </FloatingAction>
             }
-            { (editMode && canEdit) &&
+            { (editMode && user.canEditBoard) &&
                 <Pressable style={theme.button}
                     onPress={() => {
                         saveCard()
