@@ -24,6 +24,11 @@ Development using expo:
 * Start hacking around
 * Submit MR's and PR's
 
+## Publishing
+
+* Build the app for production: `eas build --platform ios`
+* Submit the app to the appstore: `eas submit --platform ios`
+
 ## Financial support
 
 You may help me developing this app by donating ETH or EUR:
