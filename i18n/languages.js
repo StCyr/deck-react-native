@@ -263,7 +263,7 @@ export const it = {
     signIn: 'Accedi',
     theme : 'Tema',
     title : 'Titolo: ',
-    unauthorizedToEditCard : 'Non sei autorizzato a modificare questa scheda'
+    unauthorizedToEditCard : 'Non sei autorizzato a modificare questa scheda',
     yes: 'Si'
 }
 
