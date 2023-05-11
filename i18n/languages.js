@@ -216,7 +216,7 @@ export const it = {
     assignees: 'Assegnato a',
     attachments: 'Allegati',
     attachmentSource: 'Sorgente allegato',
-    attachmentSourcePrompt: 'Da quale sorgente vuoi selezionare l'allegato?',
+    attachmentSourcePrompt: 'Da quale sorgente vuoi selezionare l\'allegato?',
     attachmentType: 'Tipo di allenato',
     attachmentTypePrompt: 'Quale tipo di allegato vuoi aggiungere?',
     back: 'Indietro',
