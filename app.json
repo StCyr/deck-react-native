@@ -3,7 +3,7 @@
     "name": "Nextcloud Deck",
     "description": "The power of Nextcloud Deck on your smartphone",
     "slug": "deck-react-native",
-    "version": "0.15.1",
+    "version": "0.15.2",
     "icon": "./assets/icon.png",
     "scheme": "nc",
     "userInterfaceStyle": "automatic",
@@ -30,7 +30,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "be.bollu.deck-react-native",
-      "buildNumber": "50",
+      "buildNumber": "51",
       "usesIcloudStorage": true
     },
     "android": {
@@ -39,7 +39,7 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "be.bollu.deck_react_native",
-      "versionCode": 50,
+      "versionCode": 51,
       "permissions": []
     },
     "web": {
