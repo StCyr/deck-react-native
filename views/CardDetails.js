@@ -36,9 +36,7 @@ const CardDetails = () => {
     const navigation = useNavigation()
     const route = useRoute()
 
-    let user = {}
-    user.id = atob(token.value.substring(6)).split(':')[0]
-
+    const [user, setUser] = useState({})
     const [busy, setBusy] = useState(false)
     const [card, setCard] = useState({})
     const [cardAssigneesBackup, setcardAssigneesBackup] = useState([])
@@ -46,14 +44,17 @@ const CardDetails = () => {
     const [editMode, setEditMode] = useState(false)
     const [showDatePicker, setShowDatePicker] = useState(false)
 
-    // Can the user edit the card?
-    getUserDetails(user.id, server, token.value).then( details => {
-        user = details
-        user.canEditBoard = canUserEditBoard(user,boards.value[route.params.boardId])
-    })
-
     // ComponentDidMount
     useEffect(() => {
+
+        // Initialises user
+        const id = atob(token.value.substring(6)).split(':')[0]
+        getUserDetails(id, server, token.value).then( details => {
+            let user = details
+            user.canEditBoard = canUserEditBoard(user,boards.value[route.params.boardId])
+            console.log(user)
+            setUser(user)
+        })
 
         // Setup page header
         navigation.setOptions({
