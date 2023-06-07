@@ -20,7 +20,7 @@ Development using expo:
 * Setup your build environment:
   * Register your device: `eas device:create`
   * Build the app: `eas build --profile development --platform ios`
-* Start expo: `expo start`
+* Start expo: `npx expo start --dev-client --force-manifest-type=classic`
 * Start hacking around
 * Submit MR's and PR's
 

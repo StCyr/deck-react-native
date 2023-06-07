@@ -18,7 +18,8 @@
         {
           "iCloudContainerEnvironment": "Production"
         }
-      ]
+      ],
+      "expo-localization"
     ],
     "updates": {
       "fallbackToCacheTimeout": 0,
