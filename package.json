@@ -17,7 +17,7 @@
     "axios": "^0.25.0",
     "base-64": "^1.0.0",
     "dayjs": "^1.11.3",
-    "expo": "^48.0.0",
+    "expo": "^49.0.7",
     "expo-app-loading": "~2.1.1",
     "expo-dev-client": "~2.2.1",
     "expo-device": "~5.2.1",
