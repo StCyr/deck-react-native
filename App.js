@@ -21,13 +21,16 @@ import * as Linking from 'expo-linking'; // For creating an URL handler to retri
 import {encode as btoa} from 'base-64'; // btoa isn't supported by android (and maybe also iOS)
 import * as Device from 'expo-device';
 import * as ScreenOrientation from 'expo-screen-orientation';
+import { adapty } from 'react-native-adapty'; // in-app purchases
 
-// Create Stack navigator
+// Creates Stack navigator
 const Stack = createStackNavigator()
 
-// Prevent native splash screen from autohiding before App component declaration
-SplashScreen.preventAutoHideAsync()
-	.catch(console.warn);
+// Prevents native splash screen from autohiding before App component declaration
+SplashScreen.preventAutoHideAsync().catch(console.warn);
+
+// Activeates adapty SDK
+adapty.activate('public_live_dQQGIW4b.wZU2qtAbVtrojrx9ttUu');
 
 // Application
 class App extends React.Component {
