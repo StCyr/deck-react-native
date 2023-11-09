@@ -1,36 +1,37 @@
-import React from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { KeyboardAvoidingView, Appearance } from 'react-native';
-import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import React from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { KeyboardAvoidingView, Appearance } from 'react-native'
+import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
 import Toast from 'react-native-toast-message'
-import * as Font from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
-import Login from './views/Login';
-import Home from './views/Home';
-import AllBoards from './views/AllBoards';
-import BoardDetails from './views/BoardDetails';
-import CardDetails from './views/CardDetails';
-import { connect } from 'react-redux';
+import * as Font from 'expo-font'
+import * as SplashScreen from 'expo-splash-screen'
+import Login from './views/Login'
+import Home from './views/Home'
+import AllBoards from './views/AllBoards'
+import BoardDetails from './views/BoardDetails'
+import CardDetails from './views/CardDetails'
+import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { setServer } from './store/serverSlice';
-import { setTheme } from './store/themeSlice';
-import { setToken } from './store/tokenSlice';
-import { setColorScheme } from './store/colorSchemeSlice';
-import * as Linking from 'expo-linking'; // For creating an URL handler to retrieve the device token
-import {encode as btoa} from 'base-64'; // btoa isn't supported by android (and maybe also iOS)
-import * as Device from 'expo-device';
-import * as ScreenOrientation from 'expo-screen-orientation';
-import { adapty } from 'react-native-adapty'; // in-app purchases
+import { setServer } from './store/serverSlice'
+import { setTheme } from './store/themeSlice'
+import { setToken } from './store/tokenSlice'
+import { setColorScheme } from './store/colorSchemeSlice'
+import * as Linking from 'expo-linking' // For creating an URL handler to retrieve the device token
+import {encode as btoa} from 'base-64' // btoa isn't supported by android (and maybe also iOS)
+import * as Device from 'expo-device'
+import * as ScreenOrientation from 'expo-screen-orientation'
+import { adapty } from 'react-native-adapty' // in-app purchases
 
 // Creates Stack navigator
 const Stack = createStackNavigator()
 
 // Prevents native splash screen from autohiding before App component declaration
-SplashScreen.preventAutoHideAsync().catch(console.warn);
+SplashScreen.preventAutoHideAsync().catch(console.warn)
 
 // Activeates adapty SDK
-adapty.activate('public_live_dQQGIW4b.wZU2qtAbVtrojrx9ttUu');
+console.log('Activating adapty')
+adapty.activate('public_live_dQQGIW4b.wZU2qtAbVtrojrx9ttUu')
 
 // Application
 class App extends React.Component {
