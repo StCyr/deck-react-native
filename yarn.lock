@@ -24,6 +24,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@adapty/react-native-ui@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@adapty/react-native-ui@npm:2.0.0"
+  peerDependencies:
+    react-native: ">= 0.60.0"
+    react-native-adapty: ">=2.7.0-canary.0"
+  checksum: 5e203f2af81b4d687f29bf2ca7162ee15f2bb90ed690840fac7a12aa216cf96ef096ceeaf7d0a46ef976b87f19d1d5bab3b675b82bae61abeb8487c2f9ceca1c
+  languageName: node
+  linkType: hard
+
 "@ampproject/remapping@npm:^2.2.0":
   version: 2.2.1
   resolution: "@ampproject/remapping@npm:2.2.1"
@@ -4585,6 +4595,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "deck-react-native@workspace:."
   dependencies:
+    "@adapty/react-native-ui": ^2.0.0
     "@babel/core": ^7.19.3
     "@expo/ngrok": ^4.1.0
     "@react-native-async-storage/async-storage": 1.18.2

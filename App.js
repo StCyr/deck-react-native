@@ -22,6 +22,7 @@ import {encode as btoa} from 'base-64' // btoa isn't supported by android (and m
 import * as Device from 'expo-device'
 import * as ScreenOrientation from 'expo-screen-orientation'
 import { adapty } from 'react-native-adapty' // in-app purchases
+import {createPaywallView} from '@adapty/react-native-ui' // in-app purchases
 
 // Creates Stack navigator
 const Stack = createStackNavigator()
@@ -37,10 +38,46 @@ adapty.activate('public_live_dQQGIW4b.wZU2qtAbVtrojrx9ttUu')
 class App extends React.Component {
 
 	async loadFonts() {
+		console.log('Loading fonts')
 		await Font.loadAsync({
 			deck: require('./assets/fonts/deck/deck.ttf'),
 		})
 		this.setState({ fontsLoaded: true })
+	}
+
+	async getSubscriptionStatus() {
+
+		console.log('Getting user subscription status')
+
+		try {
+			const profile = await adapty.getProfile()
+		} catch (error) {
+		  console.log(error)
+		}
+	}
+
+	async showPaywall() {
+
+		console.log('Showing adapty paywall')
+
+		try {
+			const paywall = await adapty.getPaywall('NoAdsDefaultPlacement', 'en')
+			try {
+				const view = await createPaywallView(paywall)				
+				view.registerEventHandlers()
+				try {
+					await view.present()					
+				} catch (error) {
+					console.log(error)
+				}
+			} catch (error) {
+				console.log(error)
+			}
+		} catch (error) {
+			console.log(error)
+		}
+
+		return
 	}
 
 	constructor(props) {
@@ -62,6 +99,7 @@ class App extends React.Component {
 
 		// Register handler to catch Nextcloud's redirect after successfull login
 		Linking.addEventListener('url', (url) => {this.handleRedirect(url)})
+
 	}
 
 	componentDidMount() {
@@ -112,6 +150,8 @@ class App extends React.Component {
 		})
 
 		SplashScreen.hideAsync()
+
+		// this.showPaywall()
 
 	}
 
