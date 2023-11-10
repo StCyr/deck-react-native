@@ -45,39 +45,34 @@ class App extends React.Component {
 		this.setState({ fontsLoaded: true })
 	}
 
-	async getSubscriptionStatus() {
-
+	async isUserSubscribed() {
 		console.log('Getting user subscription status')
-
 		try {
 			const profile = await adapty.getProfile()
+			profile.accessLevels["premium"]?.isActive;
+			if (profile.accessLevels["No Ads"]?.isActive) {
+				console.log('User is subscribed')
+				return true
+			} else {
+				console.log('User is not subscribed')
+				return false
+			}
 		} catch (error) {
-		  console.log(error)
+		  console.error(error)
+		  return true
 		}
 	}
 
 	async showPaywall() {
-
 		console.log('Showing adapty paywall')
-
 		try {
 			const paywall = await adapty.getPaywall('NoAdsDefaultPlacement', 'en')
-			try {
-				const view = await createPaywallView(paywall)				
-				view.registerEventHandlers()
-				try {
-					await view.present()					
-				} catch (error) {
-					console.log(error)
-				}
-			} catch (error) {
-				console.log(error)
-			}
+			const view = await createPaywallView(paywall)
+			view.registerEventHandlers()
+			await view.present()
 		} catch (error) {
-			console.log(error)
+			console.error(error)
 		}
-
-		return
 	}
 
 	constructor(props) {
@@ -151,7 +146,9 @@ class App extends React.Component {
 
 		SplashScreen.hideAsync()
 
-		// this.showPaywall()
+		if (!this.isUserSubscribed()) {
+			this.showPaywall()
+		}
 
 	}
 
