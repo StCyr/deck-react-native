@@ -23,6 +23,7 @@ import * as Device from 'expo-device'
 import * as ScreenOrientation from 'expo-screen-orientation'
 import { adapty } from 'react-native-adapty' // in-app purchases
 import {createPaywallView} from '@adapty/react-native-ui' // in-app purchases
+import mobileAds, { AppOpenAd, TestIds } from 'react-native-google-mobile-ads';
 
 // Creates Stack navigator
 const Stack = createStackNavigator()
@@ -33,6 +34,13 @@ SplashScreen.preventAutoHideAsync().catch(console.warn)
 // Activeates adapty SDK
 console.log('Activating adapty')
 adapty.activate('public_live_dQQGIW4b.wZU2qtAbVtrojrx9ttUu')
+
+// Initializes ads
+mobileAds().initialize()
+const appOpenAd = AppOpenAd.createForAdRequest("ca-app-pub-8838289832709828/1694360664", {
+	requestNonPersonalizedAdsOnly: true,
+  })
+appOpenAd.load()
 
 // Application
 class App extends React.Component {
@@ -146,9 +154,14 @@ class App extends React.Component {
 
 		SplashScreen.hideAsync()
 
-		if (!this.isUserSubscribed()) {
-			this.showPaywall()
-		}
+//		if (!this.isUserSubscribed()) {
+//			this.showPaywall()
+			// Show the app open ad when user brings the app to the foreground.
+			setTimeout(() => {
+				console.log("Showing ad")
+				appOpenAd.show()
+			}, 2000)
+//		}
 
 	}
 
