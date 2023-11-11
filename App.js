@@ -22,8 +22,7 @@ import {encode as btoa} from 'base-64' // btoa isn't supported by android (and m
 import * as Device from 'expo-device'
 import * as ScreenOrientation from 'expo-screen-orientation'
 import { adapty } from 'react-native-adapty' // in-app purchases
-import {createPaywallView} from '@adapty/react-native-ui' // in-app purchases
-import mobileAds, { AppOpenAd, TestIds } from 'react-native-google-mobile-ads';
+import mobileAds, { AppOpenAd } from 'react-native-google-mobile-ads';
 
 // Creates Stack navigator
 const Stack = createStackNavigator()
@@ -51,36 +50,6 @@ class App extends React.Component {
 			deck: require('./assets/fonts/deck/deck.ttf'),
 		})
 		this.setState({ fontsLoaded: true })
-	}
-
-	async isUserSubscribed() {
-		console.log('Getting user subscription status')
-		try {
-			const profile = await adapty.getProfile()
-			profile.accessLevels["premium"]?.isActive;
-			if (profile.accessLevels["No Ads"]?.isActive) {
-				console.log('User is subscribed')
-				return true
-			} else {
-				console.log('User is not subscribed')
-				return false
-			}
-		} catch (error) {
-		  console.error(error)
-		  return true
-		}
-	}
-
-	async showPaywall() {
-		console.log('Showing adapty paywall')
-		try {
-			const paywall = await adapty.getPaywall('NoAdsDefaultPlacement', 'en')
-			const view = await createPaywallView(paywall)
-			view.registerEventHandlers()
-			await view.present()
-		} catch (error) {
-			console.error(error)
-		}
 	}
 
 	constructor(props) {
@@ -153,15 +122,6 @@ class App extends React.Component {
 		})
 
 		SplashScreen.hideAsync()
-
-//		if (!this.isUserSubscribed()) {
-//			this.showPaywall()
-			// Show the app open ad when user brings the app to the foreground.
-			setTimeout(() => {
-				console.log("Showing ad")
-				appOpenAd.show()
-			}, 2000)
-//		}
 
 	}
 

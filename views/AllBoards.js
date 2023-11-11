@@ -12,6 +12,9 @@ import {i18n} from '../i18n/i18n.js';
 import axios from 'axios';
 import AppMenu from '../components/AppMenu';
 import Board from '../components/Board';
+import {decode as atob} from 'base-64';
+import { adapty } from 'react-native-adapty' // in-app purchases
+import {createPaywallView} from '@adapty/react-native-ui' // in-app purchases
 
 // Component that display the user's boards
 class AllBoards extends React.Component {
@@ -31,14 +34,55 @@ class AllBoards extends React.Component {
 			bottom: 0,
 			top: 0,
 		}
+		this.user = atob(this.props.token.value.substring(6)).split(':')[0] 
 	}
   
+	async isUserSubscribed() {
+		console.log('Getting user subscription status')
+		try {
+			const profile = await adapty.getProfile()
+			profile.accessLevels["premium"]?.isActive;
+			if (profile.accessLevels["No Ads"]?.isActive) {
+				console.log('User is subscribed')
+				return true
+			} else {
+				console.log('User is not subscribed')
+				return false
+			}
+		} catch (error) {
+		  console.error(error)
+		  return true
+		}
+	}
+
+	async showPaywall() {
+		console.log('Showing adapty paywall')
+		try {
+			const paywall = await adapty.getPaywall('NoAdsDefaultPlacement', 'en')
+			const view = await createPaywallView(paywall)
+			view.registerEventHandlers()
+			await view.present()
+		} catch (error) {
+			console.error(error)
+		}
+	}
+
 	async componentDidMount() {
 
 		this.props.navigation.setOptions({
 			headerTitle: i18n.t('allBoards'),
 			headerRight: () => (<AppMenu navigation={this.props.navigation} setServer={this.props.setServer} setToken={this.props.setToken} />)
 		}, [this.props.navigation, this.props.setServer, this.props.setToken])
+
+		if (this.user === 'apple') {
+			this.showPaywall()
+		} else {
+			if (!this.isUserSubscribed()) {
+				// this.showPaywall()
+				// Show the app open ad when user brings the app to the foreground.
+				appOpenAd.show()
+			}
+		}
 
 		await this.loadBoards()
 
