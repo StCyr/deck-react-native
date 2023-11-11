@@ -16,7 +16,7 @@
 
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Pressable, Text, TextInput, View } from 'react-native'
+import { Pressable, Text, View } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import SegmentedControl from '@react-native-segmented-control/segmented-control'
 import axios from 'axios'
@@ -69,10 +69,10 @@ const Settings = () => {
                             showPaywall()
                         }}
                     >
-					    <Text style={theme.buttonTitle}>
-						    {i18n.t('subscribe')}
-					    </Text>
-				    </Pressable>
+                        <Text style={theme.buttonTitle}>
+                            {i18n.t('subscribe')}
+                        </Text>
+                    </Pressable>
                 </View>
             </View>
             <View style={{margin: 20}}>

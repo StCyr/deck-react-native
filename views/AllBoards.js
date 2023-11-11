@@ -52,7 +52,7 @@ class AllBoards extends React.Component {
 		this.user = atob(this.props.token.value.substring(6)).split(':')[0] 
 		this.appOpenAd = AppOpenAd.createForAdRequest("ca-app-pub-8838289832709828/1694360664", {
 			requestNonPersonalizedAdsOnly: true,
-		  })
+		})
 		this.appOpenAd.load()
 	}
   

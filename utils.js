@@ -133,8 +133,8 @@ export async function isUserSubscribed() {
 				return false
 			}
 		} catch (error) {
-		  console.error(error)
-		  return true
+            console.error(error)
+            return true
 		}
 	}
 

@@ -99,7 +99,6 @@ class BoardDetails extends React.Component {
     }
 
     render() {
-		const menu = React.createRef();
         const stacks = this.props.boards.value[this.props.route.params.boardId]?.stacks
         if (stacks === undefined) {
             return (
