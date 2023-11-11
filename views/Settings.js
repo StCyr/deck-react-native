@@ -26,6 +26,7 @@ import { setToken } from '../store/tokenSlice'
 import { setColorScheme } from '../store/colorSchemeSlice'
 import { i18n } from '../i18n/i18n.js'
 import { showPaywall } from '../utils'
+import { getColors } from '../styles/base.js'
 
 const Settings = () => {
 
@@ -36,7 +37,6 @@ const Settings = () => {
     const dispatch = useDispatch()
     const radioOptions = ['os','light','dark']
 
-    console.log(theme.title)
     return (
         <View>
             <View style={{marginHorizontal: 20}}>
@@ -46,8 +46,11 @@ const Settings = () => {
                 <View>
                     <SegmentedControl
                         values={ [i18n.t(radioOptions[0]), i18n.t(radioOptions[1]), i18n.t(radioOptions[2])] }
+                        fontStyle = {colorScheme.value === 'os' ? {} : { color: getColors(colorScheme.value).text}}
+                        activeFontStyle = {colorScheme.value === 'os' ? {} : { color: getColors(colorScheme.value).textReverted}}
                         selectedIndex={radioOptions.indexOf(colorScheme.value ?? 'os')}
                         onChange={(event) => {
+                            AsyncStorage.setItem('colorScheme', radioOptions[event.nativeEvent.selectedSegmentIndex] )
                             dispatch(setColorScheme(radioOptions[event.nativeEvent.selectedSegmentIndex]));
                         }}
                     />

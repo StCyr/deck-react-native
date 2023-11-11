@@ -15,6 +15,7 @@ export const getColors = (theme) => {
       iconEnabled: '#505050',
       lightText: '#505050',
       text: '#000',
+      textReverted: '#d8d8d8',
       border: '#E5E5E5',
       // blueish
       bgInteract: '#D8E6FF',
@@ -30,6 +31,7 @@ export const getColors = (theme) => {
       iconEnabled: '#505050',
       lightText: '#505050',
       text: '#d8d8d8',
+      textReverted: '#000',
       border: '#2a2a2a',
       // blueish
       bgInteract: '#001B4A',

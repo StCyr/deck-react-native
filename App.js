@@ -79,7 +79,7 @@ class App extends React.Component {
 		AsyncStorage.getItem('colorScheme').then(savedColorScheme => {
 
 			let colorScheme
-			if (savedColorScheme !== null && savedColorScheme !== 'OS') {
+			if (savedColorScheme !== null && savedColorScheme !== 'os') {
 				colorScheme = savedColorScheme
 			} else {
 				colorScheme = Appearance.getColorScheme()
