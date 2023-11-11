@@ -70,7 +70,7 @@ class AllBoards extends React.Component {
 			if (! await isUserSubscribed()) {
 				// Show the app open ad when user brings the app to the foreground
 				setTimeout(() => {
-					this.appOpenAd.show()
+					// this.appOpenAd.show()
 					this.appOpenAd.load()
 				}, 2000)
 			}
