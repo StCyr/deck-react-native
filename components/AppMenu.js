@@ -15,89 +15,19 @@
 //===============================================================================================================================================
 
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { setColorScheme } from '../store/colorSchemeSlice'
-import { deleteAllBoards } from '../store/boardSlice'
-import { setServer } from '../store/serverSlice'
-import { setToken } from '../store/tokenSlice'
+import { useSelector } from 'react-redux'
 import { Pressable, View } from 'react-native'
-import Menu, { MenuItem } from 'react-native-material-menu'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import {i18n} from '../i18n/i18n.js'
 import Icon from './Icon.js'
-import axios from 'axios'
 
-const AppMenu = () => {
+const AppMenu = ({navigation}) => {
 
-    const server = useSelector(state => state.server)
-    const token = useSelector(state => state.token)
     const theme = useSelector(state => state.theme)
-    const colorScheme = useSelector(state => state.colorScheme) ?? 'OS'
-    const dispatch = useDispatch()
-
-    const menu = React.createRef();
 
     return (
         <View style={{marginRight: 15}}>
-            <Menu
-                ref={menu}
-                button={
-                    <Pressable
-                        onPress={() => {
-                            menu.current.show();
-                        }}
-                    >
-                        <Icon name='cog-alt' style={theme.icon} />
-                    </Pressable>
-                }
-            >
-                <MenuItem
-                    onPress={() => {
-			let newColorScheme
-			switch(colorScheme) {
-				case 'OS':
-					newColorScheme = 'light'
-					break
-				case 'light':
-					newColorScheme = 'dark'
-					break
-				case 'dark':
-					newColorScheme = 'OS'
-					break
-			}
-			dispatch(setColorScheme(newColorScheme))
-			AsyncStorage.setItem('colorScheme', newColorScheme)
-                    }}
-                >
-			{i18n.t('theme') + ': ' + colorScheme} 
-		</MenuItem>
-                <MenuItem
-                    onPress={() => {
-                        axios.delete(server.value + '/ocs/v2.php/core/apppassword', {
-                            timeout: 8000,
-                            headers: {
-                                'OCS-APIREQUEST': true,
-                                'Authorization': token.value
-                            }
-                        }).then(() => {
-                            console.log('User logged out from server')
-                            AsyncStorage.clear()
-                            dispatch(setToken(null))
-                            dispatch(setServer(null))
-                            dispatch(deleteAllBoards())
-                        })
-                        .catch(() => {
-                            console.log('Error occured while logging user out from server. Trying to clear session here anyway')
-                            AsyncStorage.clear()
-                            dispatch(setToken(null))
-                            dispatch(setServer(null))
-                            dispatch(deleteAllBoards())
-                        })
-                    }}
-                >
-                     {i18n.t('logout')}
-               </MenuItem>
-            </Menu>
+            <Pressable onPress={() => {navigation.navigate('Settings')}}>
+                <Icon name='cog-alt' style={theme.icon} />
+            </Pressable>
         </View>
     )
 

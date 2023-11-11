@@ -11,6 +11,7 @@ import Home from './views/Home'
 import AllBoards from './views/AllBoards'
 import BoardDetails from './views/BoardDetails'
 import CardDetails from './views/CardDetails'
+import Settings from './views/Settings'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { setServer } from './store/serverSlice'
@@ -158,6 +159,7 @@ class App extends React.Component {
 								<Stack.Screen name="AllBoards" component={AllBoards} initialParams={{navigation: this.state.navigation}}/>
 								<Stack.Screen name="BoardDetails" component={BoardDetails} />
 								<Stack.Screen name="CardDetails" component={CardDetails} />
+								<Stack.Screen name="Settings" component={Settings} />
 							</Stack.Navigator>
 						</NavigationContainer>
 						<Toast />

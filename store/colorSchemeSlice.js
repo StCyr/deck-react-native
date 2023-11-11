@@ -2,10 +2,12 @@ import { createSlice } from '@reduxjs/toolkit'
 
 export const colorSchemeSlice = createSlice({
   name: 'colorScheme',
-  initialState: 'OS',
+  initialState: {
+    value: 'OS',
+  },
   reducers: {
     setColorScheme: (state, action) => {
-      return action.payload
+      state.value = action.payload
     },
   },
 })

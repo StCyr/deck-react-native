@@ -1,3 +1,19 @@
+//===============================================================================================================================================
+//
+// AllBoards: A view displaying the user's boards
+//
+//  This file is part of "Nextcloud Deck".
+//
+// "Nextcloud Deck" is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+//
+// "Nextcloud Deck" is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warrant
+// of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along with "Nextcloud Deck". If not, see <https://www.gnu.org/licenses/>. 
+//
+//===============================================================================================================================================
+
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux'
@@ -12,12 +28,10 @@ import {i18n} from '../i18n/i18n.js';
 import axios from 'axios';
 import AppMenu from '../components/AppMenu';
 import Board from '../components/Board';
+import { isUserSubscribed, showPaywall } from '../utils'
 import {decode as atob} from 'base-64';
-import { adapty } from 'react-native-adapty' // in-app purchases
-import {createPaywallView} from '@adapty/react-native-ui' // in-app purchases
 import { AppOpenAd } from 'react-native-google-mobile-ads';
 
-// Component that display the user's boards
 class AllBoards extends React.Component {
   
     constructor(props) {
@@ -42,48 +56,18 @@ class AllBoards extends React.Component {
 		this.appOpenAd.load()
 	}
   
-	async isUserSubscribed() {
-		console.log('Getting user subscription status')
-		try {
-			const profile = await adapty.getProfile()
-			profile.accessLevels["premium"]?.isActive;
-			if (profile.accessLevels["No Ads"]?.isActive) {
-				console.log('User is subscribed')
-				return true
-			} else {
-				console.log('User is not subscribed')
-				return false
-			}
-		} catch (error) {
-		  console.error(error)
-		  return true
-		}
-	}
-
-	async showPaywall() {
-		console.log('Showing adapty paywall')
-		try {
-			const paywall = await adapty.getPaywall('NoAdsDefaultPlacement', 'en')
-			const view = await createPaywallView(paywall)
-			view.registerEventHandlers()
-			await view.present()
-		} catch (error) {
-			console.error(error)
-		}
-	}
-
 	async componentDidMount() {
 
 		this.props.navigation.setOptions({
 			headerTitle: i18n.t('allBoards'),
-			headerRight: () => (<AppMenu navigation={this.props.navigation} setServer={this.props.setServer} setToken={this.props.setToken} />)
+			headerRight: () => (<AppMenu navigation={this.props.navigation} />)
 		}, [this.props.navigation, this.props.setServer, this.props.setToken])
 
 		// Showing AppOpen Ad
 		if (this.user === 'apple') {
-			this.showPaywall()
+			showPaywall()
 		} else {
-			if (! await this.isUserSubscribed()) {
+			if (! await isUserSubscribed()) {
 				// Show the app open ad when user brings the app to the foreground
 				setTimeout(() => {
 					this.appOpenAd.show()
@@ -179,7 +163,7 @@ class AllBoards extends React.Component {
 					text1: i18n.t('error'),
 					text2: resp,
 				})
-				console.warning('Error', resp)
+				console.warn('Error', resp)
 			} else {
 				console.log('Board created')
 				this.props.addBoard(resp.data)
@@ -191,7 +175,7 @@ class AllBoards extends React.Component {
 				text2: error.message,
 			})
 			this.setState({ newBoardName: '' })
-			console.warning(error)
+			console.warn(error)
 		})
 	}
 
@@ -218,7 +202,7 @@ class AllBoards extends React.Component {
 					text1: i18n.t('error'),
 					text2: resp,
 				})
-				console.warning('Error', resp)
+				console.warn('Error', resp)
 			} else {
 				console.log('boards retrieved from server')
 				this.setState({
@@ -243,7 +227,7 @@ class AllBoards extends React.Component {
 			this.setState({
 				refreshing: false
 			})
-			console.warning('Error while retrieving boards from the server', error)
+			console.warn('Error while retrieving boards from the server', error)
 		})  
 	}
     

@@ -1,3 +1,19 @@
+//===============================================================================================================================================
+//
+// CardDetails: The detailed view of a card, showing all card's information
+//
+//  This file is part of "Nextcloud Deck".
+//
+// "Nextcloud Deck" is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+//
+// "Nextcloud Deck" is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warrant
+// of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along with "Nextcloud Deck". If not, see <https://www.gnu.org/licenses/>. 
+//
+//===============================================================================================================================================
+
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigation, useRoute } from '@react-navigation/native'
@@ -24,7 +40,6 @@ import {decode as atob} from 'base-64';
 import { FloatingAction } from "react-native-floating-action";
 import * as MailComposer from 'expo-mail-composer';
 
-// The detailed view of a card, showing all card's information
 const CardDetails = () => {
 
     const theme = useSelector(state => state.theme)
@@ -59,7 +74,7 @@ const CardDetails = () => {
         // Setup page header
         navigation.setOptions({
             headerTitle: i18n.t('cardDetails'),
-            headerRight: () => (<AppMenu />),
+            headerRight: () => (<AppMenu navigation={navigation} />),
             headerLeft: () => (
                 <HeaderBackButton
                     label = {i18n.t('back')}
@@ -201,7 +216,7 @@ const CardDetails = () => {
                     text1: i18n.t('error'),
                     text2: resp,
                 })
-                console.log('Error', resp)
+                console.error('Error', resp)
             } else {
                 console.log('Card saved')
                 var cardToBeSaved = {...card}
@@ -218,7 +233,7 @@ const CardDetails = () => {
             setBusy(false)
         })
         .catch((error) => {
-            console.log(error)
+            console.error(error)
             if (error.message === 'Request failed with status code 403') {
                 Toast.show({
                     type: 'error',

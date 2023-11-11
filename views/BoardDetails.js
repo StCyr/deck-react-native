@@ -1,3 +1,19 @@
+//===============================================================================================================================================
+//
+// BoardDetails: A component that display a board's cards, grouped by stack
+//
+//  This file is part of "Nextcloud Deck".
+//
+// "Nextcloud Deck" is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+//
+// "Nextcloud Deck" is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warrant
+// of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along with "Nextcloud Deck". If not, see <https://www.gnu.org/licenses/>. 
+//
+//===============================================================================================================================================
+
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -6,7 +22,6 @@ import { setServer } from '../store/serverSlice';
 import { setToken } from '../store/tokenSlice';
 import AppMenu from '../components/AppMenu';
 import Card from '../components/Card';
-import Icon from '../components/Icon.js'
 import { canUserEditBoard, getUserDetails } from '../utils';
 import { ActionSheetIOS, Pressable, RefreshControl, Text, TextInput, View } from 'react-native';
 import { DraxProvider, DraxScrollView, DraxView } from 'react-native-drax';
@@ -14,12 +29,10 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { initialWindowMetrics } from 'react-native-safe-area-context';
 import { HeaderBackButton } from '@react-navigation/elements';
-import Menu, { MenuItem } from 'react-native-material-menu'
 import Toast from 'react-native-toast-message';
 import { i18n } from '../i18n/i18n.js';
 import {decode as atob} from 'base-64';
 
-// Component that display a board's cards, grouped by stack
 class BoardDetails extends React.Component {
 
     constructor(props) {
@@ -55,7 +68,7 @@ class BoardDetails extends React.Component {
         const title = this.props.boards.value[this.props.route.params.boardId].title
         this.props.navigation.setOptions({
             headerTitle: title.length > 25 ? title.slice(0,24) + '...' : title,
-            headerRight: () => (<AppMenu/>),
+            headerRight: () => (<AppMenu navigation={this.props.navigation} />),
             headerLeft: () => (
                 <HeaderBackButton
                     label = {i18n.t('all')}

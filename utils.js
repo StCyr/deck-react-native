@@ -3,6 +3,8 @@ import {i18n} from './i18n/i18n.js'
 import * as FileSystem from 'expo-file-system'
 import * as Localization from 'expo-localization'
 import axios from 'axios'
+import { adapty } from 'react-native-adapty' // in-app purchases
+import {createPaywallView} from '@adapty/react-native-ui' // in-app purchases
 
 export async function fetchAttachments(boardId, stackId, cardId, server, token) {
     console.log('fetching attachments from server')
@@ -116,3 +118,35 @@ export function canUserEditBoard(user, board) {
     return userGroupPermissions
 
 }
+
+// Tells if a user is subscribed to the paying version of the app
+export async function isUserSubscribed() {
+		console.log('Getting user subscription status')
+		try {
+			const profile = await adapty.getProfile()
+			profile.accessLevels["premium"]?.isActive;
+			if (profile.accessLevels["No Ads"]?.isActive) {
+				console.log('User is subscribed')
+				return true
+			} else {
+				console.log('User is not subscribed')
+				return false
+			}
+		} catch (error) {
+		  console.error(error)
+		  return true
+		}
+	}
+
+// Shows adapty paywall
+export async function showPaywall() {
+		console.log('Showing adapty paywall')
+		try {
+			const paywall = await adapty.getPaywall('NoAdsDefaultPlacement', 'en')
+			const view = await createPaywallView(paywall)
+			view.registerEventHandlers()
+			await view.present()
+		} catch (error) {
+			console.error(error)
+		}
+	}
