@@ -15,6 +15,7 @@ import Board from '../components/Board';
 import {decode as atob} from 'base-64';
 import { adapty } from 'react-native-adapty' // in-app purchases
 import {createPaywallView} from '@adapty/react-native-ui' // in-app purchases
+import { AppOpenAd } from 'react-native-google-mobile-ads';
 
 // Component that display the user's boards
 class AllBoards extends React.Component {
@@ -35,6 +36,10 @@ class AllBoards extends React.Component {
 			top: 0,
 		}
 		this.user = atob(this.props.token.value.substring(6)).split(':')[0] 
+		this.appOpenAd = AppOpenAd.createForAdRequest("ca-app-pub-8838289832709828/1694360664", {
+			requestNonPersonalizedAdsOnly: true,
+		  })
+		this.appOpenAd.load()
 	}
   
 	async isUserSubscribed() {
@@ -74,13 +79,16 @@ class AllBoards extends React.Component {
 			headerRight: () => (<AppMenu navigation={this.props.navigation} setServer={this.props.setServer} setToken={this.props.setToken} />)
 		}, [this.props.navigation, this.props.setServer, this.props.setToken])
 
+		// Showing AppOpen Ad
 		if (this.user === 'apple') {
 			this.showPaywall()
 		} else {
-			if (!this.isUserSubscribed()) {
-				// this.showPaywall()
-				// Show the app open ad when user brings the app to the foreground.
-				appOpenAd.show()
+			if (! await this.isUserSubscribed()) {
+				// Show the app open ad when user brings the app to the foreground
+				setTimeout(() => {
+					this.appOpenAd.show()
+					this.appOpenAd.load()
+				}, 2000)
 			}
 		}
 

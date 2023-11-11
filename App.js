@@ -22,7 +22,7 @@ import {encode as btoa} from 'base-64' // btoa isn't supported by android (and m
 import * as Device from 'expo-device'
 import * as ScreenOrientation from 'expo-screen-orientation'
 import { adapty } from 'react-native-adapty' // in-app purchases
-import mobileAds, { AppOpenAd } from 'react-native-google-mobile-ads';
+import mobileAds from 'react-native-google-mobile-ads';
 
 // Creates Stack navigator
 const Stack = createStackNavigator()
@@ -36,10 +36,6 @@ adapty.activate('public_live_dQQGIW4b.wZU2qtAbVtrojrx9ttUu')
 
 // Initializes ads
 mobileAds().initialize()
-const appOpenAd = AppOpenAd.createForAdRequest("ca-app-pub-8838289832709828/1694360664", {
-	requestNonPersonalizedAdsOnly: true,
-  })
-appOpenAd.load()
 
 // Application
 class App extends React.Component {
