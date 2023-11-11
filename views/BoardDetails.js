@@ -198,6 +198,7 @@ class BoardDetails extends React.Component {
                                         </Pressable>
                                     </DraxView>
                                 ))}
+                                {/*
 								<View style={[this.props.theme.boardMenu]}>
 									<Menu
 										ref={menu}
@@ -231,6 +232,7 @@ class BoardDetails extends React.Component {
 										</MenuItem>
 									</Menu>
 								</View>
+                                */}
                             </DraxScrollView>
                         </View>
                         {currentStack?.cards &&
