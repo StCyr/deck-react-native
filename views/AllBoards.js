@@ -171,7 +171,7 @@ class AllBoards extends React.Component {
 					text1: i18n.t('error'),
 					text2: resp,
 				})
-				console.log('Error', resp)
+				console.warning('Error', resp)
 			} else {
 				console.log('Board created')
 				this.props.addBoard(resp.data)
@@ -183,7 +183,7 @@ class AllBoards extends React.Component {
 				text2: error.message,
 			})
 			this.setState({ newBoardName: '' })
-			console.log(error)
+			console.warning(error)
 		})
 	}
 
@@ -210,7 +210,7 @@ class AllBoards extends React.Component {
 					text1: i18n.t('error'),
 					text2: resp,
 				})
-				console.log('Error', resp)
+				console.warning('Error', resp)
 			} else {
 				console.log('boards retrieved from server')
 				this.setState({
@@ -235,7 +235,7 @@ class AllBoards extends React.Component {
 			this.setState({
 				refreshing: false
 			})
-			console.log('Error while retrieving boards from the server', error)
+			console.warning('Error while retrieving boards from the server', error)
 		})  
 	}
     
