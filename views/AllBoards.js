@@ -20,10 +20,11 @@ import { bindActionCreators } from 'redux'
 import { addBoard, deleteAllBoards } from '../store/boardSlice';
 import { setServer } from '../store/serverSlice';
 import { setToken } from '../store/tokenSlice';
-import { Pressable, RefreshControl, ScrollView, View, Text, TextInput } from 'react-native';
+import { Image, RefreshControl, ScrollView, View, TextInput } from 'react-native';
 import { DraxProvider } from 'react-native-drax';
 import { initialWindowMetrics } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
+import { FloatingAction } from "react-native-floating-action";
 import {i18n} from '../i18n/i18n.js';
 import axios from 'axios';
 import AppMenu from '../components/AppMenu';
@@ -96,6 +97,15 @@ class AllBoards extends React.Component {
     }
   
     render() {
+		const icon = <Image
+			style={{
+				width: 20,
+				height: 20,
+				tintColor: 'white',
+			}}
+			source={require('../assets/plus.png')}
+		/>
+
 		return (
 			<DraxProvider>
 				<ScrollView contentContainerStyle={this.props.theme.container}
@@ -113,15 +123,20 @@ class AllBoards extends React.Component {
 						)}
 				</ScrollView>
 				{!this.state.creatingBoard &&
-					<View style={[this.props.theme.container, {marginBottom: this.insets.bottom}]}>
-						<Pressable
-							style={this.props.theme.button}
-							onPress={() => {this.setState({creatingBoard: true})}} >
-							<Text style={this.props.theme.buttonTitle}>
-								{i18n.t('createBoard')}
-							</Text>
-						</Pressable>
-					</View>
+					<FloatingAction
+						style={this.props.theme.button}
+						overrideWithAction = {true}
+						actions={
+							[
+								{
+									name: "add",
+									icon: icon,
+									position: 1
+								},
+							]
+						}
+						onPressItem={() => { {this.setState({creatingBoard: true})} }}
+					/>
 				}
 				{this.state.creatingBoard &&
 					<View style={[this.props.theme.container, {marginBottom: this.insets.bottom}]}>
