@@ -100,54 +100,64 @@ export async function getUserDetails(userId, server, token) {
 // Tells if a user has edit rights on a board
 export function canUserEditBoard(user, board) {
 
-    // Owner may edit their board obviously
-    if (user === board.owner.uid) return true
+    let canUserEditBoard = true
 
-    // If user is listed in the board's acl explicitly, then return his edit permissions
-    const userPermissions = board.acl.find(acl => acl.participant.uid==user)?.permissionEdit
-    if (userPermissions !== undefined) return userPermissions
-
-    // If user is member of several groups listed in the board's acl, every groups must have edit rights
-    const userGroupPermissions = board.acl.every( acl => {
-        if (user.groups.includes(acl.participant.uid)) {
-            return acl.permissionEdit
+    if (user === board.owner.uid) {
+        // User is owner of the board
+        console.log('User is owner of the board')
+        canUserEditBoard = true
+    } else {
+        // If user is listed in the board's acl explicitly, then return his edit permissions
+        const userPermissions = board.acl.find(acl => acl.participant.uid==user)?.permissionEdit
+        if (userPermissions !== undefined) {
+            console.log('User is listed in board ACL')
+            canUserEditBoard = userPermissions
+        } else {
+            // If user is member of several groups listed in the board's acl, every groups must have edit rights
+            board.acl.every( acl => {
+                if (user.groups.includes(acl.participant.uid)) {
+                    console.log('User is listed in board ACL')
+                    canUserEditBoard = acl.permissionEdit
+                }
+            })
         }
-        return true
-    })
+    }
 
-    return userGroupPermissions
+    console.log(canUserEditBoard ? 'User can edit board' : 'User cannot edit board')
+
+    return canUserEditBoard
 
 }
 
 // Tells if a user is subscribed to the paying version of the app
 export async function isUserSubscribed() {
-		console.log('Getting user subscription status')
-		try {
-			const profile = await adapty.getProfile()
-			profile.accessLevels["premium"]?.isActive;
-			if (profile.accessLevels["No Ads"]?.isActive) {
-				console.log('User is subscribed')
-				return true
-			} else {
-				console.log('User is not subscribed')
-				return false
-			}
-		} catch (error) {
-            console.error(error)
-            return true
+	console.log('Getting user subscription status')
+	try {
+		const profile = await adapty.getProfile()
+		profile.accessLevels["premium"]?.isActive;
+		if (profile.accessLevels["No Ads"]?.isActive) {
+			console.log('User is subscribed')
+			return true
+		} else {
+			console.log('User is not subscribed')
+			return false
 		}
+	} catch (error) {
+        console.error(error)
+        return true
 	}
+}
 
 // Shows adapty paywall
 export async function showPaywall(hard = false) {
-		try {
-            const paywallId = hard ?  'NoAdsForcedPlacement' : 'NoAdsDefaultPlacement'
-            console.log('Showing adapty paywall', paywallId)
-			const paywall = await adapty.getPaywall(paywallId, 'en')
-			const view = await createPaywallView(paywall)
-			view.registerEventHandlers()
-			await view.present()
-		} catch (error) {
-			console.error(error)
-		}
+	try {
+        const paywallId = hard ?  'NoAdsForcedPlacement' : 'NoAdsDefaultPlacement'
+        console.log('Showing adapty paywall', paywallId)
+		const paywall = await adapty.getPaywall(paywallId, 'en')
+		const view = await createPaywallView(paywall)
+		view.registerEventHandlers()
+		await view.present()
+	} catch (error) {
+		console.error(error)
 	}
+}

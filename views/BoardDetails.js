@@ -23,12 +23,13 @@ import { setToken } from '../store/tokenSlice';
 import AppMenu from '../components/AppMenu';
 import Card from '../components/Card';
 import { canUserEditBoard, getUserDetails } from '../utils';
-import { ActionSheetIOS, Pressable, RefreshControl, Text, TextInput, View } from 'react-native';
+import { ActionSheetIOS, Image, Pressable, RefreshControl, Text, TextInput, View } from 'react-native';
 import { DraxProvider, DraxScrollView, DraxView } from 'react-native-drax';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { initialWindowMetrics } from 'react-native-safe-area-context';
 import { HeaderBackButton } from '@react-navigation/elements';
+import { FloatingAction } from "react-native-floating-action";
 import Toast from 'react-native-toast-message';
 import { i18n } from '../i18n/i18n.js';
 import {decode as atob} from 'base-64';
@@ -45,7 +46,10 @@ class BoardDetails extends React.Component {
             newCardName: '',
             newStackName: undefined,
             refreshing: false,
-            stackToRename: undefined,
+            stackToRename: false,
+            user: {
+                id: atob(this.props.token.value.substring(6)).split(':')[0]
+            }
         }
         this.createCard = this.createCard.bind(this)
         this.createStack = this.createStack.bind(this)
@@ -58,8 +62,7 @@ class BoardDetails extends React.Component {
             bottom: 0,
             top: 0,
         }
-        this.user = {}
-        this.user.id = atob(this.props.token.value.substring(6)).split(':')[0] 
+        
     }
 
     async componentDidMount() {
@@ -92,13 +95,23 @@ class BoardDetails extends React.Component {
         }
 
         // Gets user details
-        getUserDetails(this.user.id, this.props.server, this.props.token.value).then( details => {
-            this.user = details
-            this.user.canEditBoard = canUserEditBoard(this.user,this.props.boards.value[this.props.route.params.boardId])
+        getUserDetails(this.state.user.id, this.props.server, this.props.token.value).then( details => {
+            const canEditBoard = canUserEditBoard(details,this.props.boards.value[this.props.route.params.boardId])
+            this.setState({user: {...details, canEditBoard} })
         })
     }
 
     render() {
+
+        const icon = <Image
+            style={{
+                width: 20,
+                height: 20,
+                tintColor: 'white',
+            }}
+            source={require('../assets/plus.png')}
+        />
+
         const stacks = this.props.boards.value[this.props.route.params.boardId]?.stacks
         if (stacks === undefined) {
             return (
@@ -181,7 +194,7 @@ class BoardDetails extends React.Component {
                                                 }))
                                             }}
                                             onLongPress={() => {
-                                                if (this.user.canEditBoard) {
+                                                if (this.state.user.canEditBoard) {
                                                     // Context menu
                                                     ActionSheetIOS.showActionSheetWithOptions(
                                                         {
@@ -262,19 +275,21 @@ class BoardDetails extends React.Component {
                         }
                     </DraxScrollView>
                     </View>
-                    {(!(this.state.addingStack || this.state.addingCard || this.state.stackToRename || !this.user.canEditBoard)) &&
-                        <View style={[this.props.theme.container, {marginBottom: this.insets.bottom}]}>
-                            <Pressable
-                                style={this.props.theme.button}
-                                onPress={() => {
-                                    this.setState({addingCard: true})
-                                }}
-                            >
-                                <Text style={this.props.theme.buttonTitle}>
-                                    {i18n.t('createCard')}
-                                </Text>
-                            </Pressable>
-                        </View>
+                    {(!(this.state.addingStack || this.state.addingCard || this.state.stackToRename || !this.state.user.canEditBoard)) &&
+                        <FloatingAction
+                            style={this.props.theme.button}
+                            overrideWithAction = {true}
+                            actions={
+                                [
+                                    {
+                                        name: "add",
+                                        icon: icon,
+                                        position: 1
+                                    },
+                                ]
+                            }
+                            onPressItem={() => { this.setState({addingCard: true}) }}
+                        />
                     }
                     {this.state.addingCard &&
                         <View style={[this.props.theme.container, {marginBottom: this.insets.bottom}]}>
@@ -301,13 +316,13 @@ class BoardDetails extends React.Component {
                         <View style={[this.props.theme.container, {marginBottom: this.insets.bottom}]}>
                             <View style={this.props.theme.inputButton} >
                                 <TextInput style={[this.props.theme.inputText, {flexGrow: 1}]}
-                                    defaultValue={this.state.stackToRename ? this.state.stackToRename.title :  undefined}
+                                    defaultValue={this.state.stackToRename ? this.state.stackToRename.title : false}
                                     value={this.state.newStackName}
                                     autoFocus={true}
                                     maxLength={100}
                                     onBlur={() => {
                                         this.setState({addingStack: false})
-                                        this.setState({stackToRename: undefined})
+                                        this.setState({stackToRename: false})
                                         this.setState({ newStackName: undefined })
                                     }}
                                     onChangeText={newStackName => {
@@ -320,7 +335,7 @@ class BoardDetails extends React.Component {
                                             this.renameStack(this.state.index, this.state.newStackName)
                                         }
                                     }}
-                                    placeholder={this.state.stackToRename ? undefined : i18n.t('newStackHint')}
+                                    placeholder={this.state.stackToRename ? false : i18n.t('newStackHint')}
                                     returnKeyType='send'
                                 />
                             </View>
