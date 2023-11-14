@@ -7,6 +7,7 @@ export const colorSchemeSlice = createSlice({
   },
   reducers: {
     setColorScheme: (state, action) => {
+      console.log('saving colorscheme', action.payload)
       state.value = action.payload
     },
   },

@@ -66,7 +66,7 @@ const Settings = () => {
                     </Text>
                     <Pressable style={theme.button}
                         onPress={() => {
-                            showPaywall()
+                            showPaywall(false)
                         }}
                     >
                         <Text style={theme.buttonTitle}>

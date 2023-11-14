@@ -81,13 +81,17 @@ class App extends React.Component {
 			let colorScheme
 			if (savedColorScheme !== null && savedColorScheme !== 'os') {
 				colorScheme = savedColorScheme
+				console.log('colorScheme retrieved', colorScheme)
+				this.props.setColorScheme(colorScheme)
 			} else {
+				// Using os colorscheme
 				colorScheme = Appearance.getColorScheme()
+				console.log('using OS colorsSheme')
+				this.props.setColorScheme('os')
 			}
 
 			this.setState({ colorScheme: colorScheme})
 			this.props.setTheme(colorScheme)
-			this.props.setColorScheme(savedColorScheme)
 		})
 
 		// Registers theme change subscription
