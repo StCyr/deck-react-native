@@ -139,10 +139,11 @@ export async function isUserSubscribed() {
 	}
 
 // Shows adapty paywall
-export async function showPaywall() {
-		console.log('Showing adapty paywall')
+export async function showPaywall(hard = false) {
 		try {
-			const paywall = await adapty.getPaywall('NoAdsDefaultPlacement', 'en')
+            const paywallId = hard ?  'NoAdsForcedPlacement' : 'NoAdsDefaultPlacement'
+            console.log('Showing adapty paywall', paywallId)
+			const paywall = await adapty.getPaywall(paywallId, 'en')
 			const view = await createPaywallView(paywall)
 			view.registerEventHandlers()
 			await view.present()

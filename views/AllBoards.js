@@ -30,7 +30,7 @@ import AppMenu from '../components/AppMenu';
 import Board from '../components/Board';
 import { isUserSubscribed, showPaywall } from '../utils'
 import {decode as atob} from 'base-64';
-import { AppOpenAd } from 'react-native-google-mobile-ads';
+import { AdsConsent, AppOpenAd } from 'react-native-google-mobile-ads';
 
 class AllBoards extends React.Component {
   
@@ -50,9 +50,7 @@ class AllBoards extends React.Component {
 			top: 0,
 		}
 		this.user = atob(this.props.token.value.substring(6)).split(':')[0] 
-		this.appOpenAd = AppOpenAd.createForAdRequest("ca-app-pub-8838289832709828/1694360664", {
-			requestNonPersonalizedAdsOnly: true,
-		})
+		this.appOpenAd = AppOpenAd.createForAdRequest("ca-app-pub-8838289832709828/1694360664")
 		this.appOpenAd.load()
 	}
   
@@ -64,15 +62,23 @@ class AllBoards extends React.Component {
 		}, [this.props.navigation, this.props.setServer, this.props.setToken])
 
 		// Showing AppOpen Ad
-		if (this.user === 'apple') {
-			showPaywall()
-		} else {
-			if (! await isUserSubscribed()) {
-				// Show the app open ad when user brings the app to the foreground
-				setTimeout(() => {
-					// this.appOpenAd.show()
-					this.appOpenAd.load()
-				}, 2000)
+		if (! await isUserSubscribed()) {
+			// User hasn't subscribed to a paying version of the app, we wan to show him/her ads
+
+			// Checks if we need to re-ask consent (eg: due to conditions change at provider-side)
+			const consentInfo = await AdsConsent.requestInfoUpdate()
+			if (consentInfo.status !== 'OBTAINED') {
+				// Asks consent
+				await AdsConsent.loadAndShowConsentFormIfRequired();
+			}
+
+			// Checks if user gaves enough consent to show ads
+			const userChoice = await AdsConsent.getUserChoices();
+			if (userChoice.storeAndAccessInformationOnDevice) {
+				this.appOpenAd.show()
+				this.appOpenAd.load()
+			} else {
+				showPaywall(true)
 			}
 		}
 
