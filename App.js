@@ -23,7 +23,9 @@ import {encode as btoa} from 'base-64' // btoa isn't supported by android (and m
 import * as Device from 'expo-device'
 import * as ScreenOrientation from 'expo-screen-orientation'
 import { adapty } from 'react-native-adapty' // in-app purchases
-import mobileAds from 'react-native-google-mobile-ads';
+import mobileAds from 'react-native-google-mobile-ads'
+import { AdEventType, AdsConsent, AppOpenAd } from 'react-native-google-mobile-ads'
+import { isUserSubscribed } from './utils'
 
 // Creates Stack navigator
 const Stack = createStackNavigator()
@@ -34,9 +36,6 @@ SplashScreen.preventAutoHideAsync().catch(console.warn)
 // Activeates adapty SDK
 console.log('Activating adapty')
 adapty.activate('public_live_dQQGIW4b.wZU2qtAbVtrojrx9ttUu')
-
-// Initializes ads
-mobileAds().initialize()
 
 // Application
 class App extends React.Component {
@@ -71,7 +70,47 @@ class App extends React.Component {
 
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
+
+		// Try to show ad if user hasn't subscribed to a paying version of the app
+		// For the moment, we just let the user use the app freely if he doesn't give consent for ads
+		if (! await isUserSubscribed()) {
+			// User hasn't subscribed to a paying version of the app, we'll try to show him/her ads. 
+
+			// Checks if we need to re-ask consent (eg: due to conditions change at provider-side)
+			const consentInfo = await AdsConsent.requestInfoUpdate()
+			console.log('Checking if we need to ask user consent to display ads')
+			if (consentInfo.status !== 'OBTAINED') {
+				// Asks consent
+				console.log('Asking user consent')
+				await AdsConsent.loadAndShowConsentFormIfRequired();
+			}
+
+			// Shows ad if user gaves enough consent
+			const userChoice = await AdsConsent.getUserChoices();
+			console.log('checking user choice', userChoice)
+			if (userChoice.storeAndAccessInformationOnDevice) {
+				// Initializes ads
+				console.log('Ok we got user consent to display ads')
+				mobileAds().initialize().then(() => {
+					let requestOptions = { requestNonPersonalizedAdsOnly: true }
+					if (userChoice.selectPersonalisedContent) {
+						console.log('Not for personalised ads though')
+						requestOptions = {}
+					}
+					const appOpenAd = AppOpenAd.createForAdRequest("ca-app-pub-8838289832709828/1694360664", requestOptions)
+					appOpenAd.addAdEventListener(AdEventType.LOADED, () => {
+						console.log('Showing ad')
+						appOpenAd.show()
+					});
+					console.log('Loading ad')
+					appOpenAd.load()
+				})
+			} else {
+				// For the moment, we just let the user use the app freely if he doesn't give consent for ads
+				console.log('User did not gave enough consent to use admob (missing "storeAndAccessInformationOnDevice" right)')
+			}
+		}
 
 		this.loadFonts()
 
@@ -111,11 +150,11 @@ class App extends React.Component {
 		// Retrieve token from storage if available
 		AsyncStorage.getItem('NCtoken').then(token => {
 			if (token !== null) {
-				console.log('token retrieved from asyncStorage', token)
+				console.log('token retrieved from asyncStorage')
 				this.props.setToken('Basic ' + token)
 				AsyncStorage.getItem('NCserver').then(server => {
 					if (server !== null) {
-						console.log('server retrieved from asyncStorage', server)
+						console.log('server retrieved from asyncStorage')
 						this.props.setServer(server)
 					}
 				})

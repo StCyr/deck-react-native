@@ -134,7 +134,6 @@ export async function isUserSubscribed() {
 	console.log('Getting user subscription status')
 	try {
 		const profile = await adapty.getProfile()
-		profile.accessLevels["premium"]?.isActive;
 		if (profile.accessLevels["No Ads"]?.isActive) {
 			console.log('User is subscribed')
 			return true
