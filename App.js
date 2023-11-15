@@ -78,8 +78,8 @@ class App extends React.Component {
 			// User hasn't subscribed to a paying version of the app, we'll try to show him/her ads. 
 
 			// Checks if we need to re-ask consent (eg: due to conditions change at provider-side)
-			const consentInfo = await AdsConsent.requestInfoUpdate()
 			console.log('Checking if we need to ask user consent to display ads')
+			const consentInfo = await AdsConsent.requestInfoUpdate()
 			if (consentInfo.status !== 'OBTAINED') {
 				// Asks consent
 				console.log('Asking user consent')
@@ -87,14 +87,14 @@ class App extends React.Component {
 			}
 
 			// Shows ad if user gaves enough consent
+			console.log('checking user consents')
 			const userChoice = await AdsConsent.getUserChoices();
-			console.log('checking user choice', userChoice)
 			if (userChoice.storeAndAccessInformationOnDevice) {
 				// Initializes ads
 				console.log('Ok we got user consent to display ads')
 				mobileAds().initialize().then(() => {
 					let requestOptions = { requestNonPersonalizedAdsOnly: true }
-					if (userChoice.selectPersonalisedContent) {
+					if (!userChoice.selectPersonalisedContent) {
 						console.log('Not for personalised ads though')
 						requestOptions = {}
 					}
