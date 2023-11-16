@@ -33,10 +33,6 @@ const Stack = createStackNavigator()
 // Prevents native splash screen from autohiding before App component declaration
 SplashScreen.preventAutoHideAsync().catch(console.warn)
 
-// Activeates adapty SDK
-console.log('Activating adapty')
-adapty.activate('public_live_dQQGIW4b.wZU2qtAbVtrojrx9ttUu')
-
 // Application
 class App extends React.Component {
 
@@ -70,20 +66,22 @@ class App extends React.Component {
 
 	}
 
-	async componentDidMount() {
-
-		// Try to show ad if user hasn't subscribed to a paying version of the app
-		// For the moment, we just let the user use the app freely if he doesn't give consent for ads
+	// Try to show ad if user hasn't subscribed to a paying version of the app
+	// For the moment, we just let the user use the app freely if he doesn't give consent for ads
+	async showAdIfNeeded() {
+		console.log('Adapty activated, checking if user is subscribed to a paying version of the app')
 		if (! await isUserSubscribed()) {
 			// User hasn't subscribed to a paying version of the app, we'll try to show him/her ads. 
-
 			// Checks if we need to re-ask consent (eg: due to conditions change at provider-side)
+			console.log('User has not subscribed to a paying version of the app, trying to display ads')
 			console.log('Checking if we need to ask user consent to display ads')
 			const consentInfo = await AdsConsent.requestInfoUpdate()
 			if (consentInfo.status !== 'OBTAINED') {
 				// Asks consent
 				console.log('Asking user consent')
 				await AdsConsent.loadAndShowConsentFormIfRequired();
+			} else {
+				console.log('Nope, we don\'t')
 			}
 
 			// Shows ad if user gaves enough consent
@@ -110,7 +108,16 @@ class App extends React.Component {
 				// For the moment, we just let the user use the app freely if he doesn't give consent for ads
 				console.log('User did not gave enough consent to use admob (missing "storeAndAccessInformationOnDevice" right)')
 			}
+		} else {
+			console.log('User is subscribed to a paying version of the app')
 		}
+	}
+
+	async componentDidMount() {
+
+		// Activates adapty and show ad if needed afterward
+		console.log('Activating adapty')
+		adapty.activate('public_live_dQQGIW4b.wZU2qtAbVtrojrx9ttUu', {logLevel: 'verbose'}).then( async () => this.showAdIfNeeded())
 
 		this.loadFonts()
 
