@@ -29,6 +29,7 @@ export const en = {
     dueDate : 'Due date',
     edit : 'Edit',
     error: 'Error',
+    generalSettings: 'General settings',
     image: 'Image',
     labels: 'Labels',
     light: 'Light',
@@ -62,6 +63,7 @@ export const en = {
     title : 'Title',
     unauthorizedToEditCard : 'You are not authorized to edit this card',
     useAppWithoutAds: 'Use this app without ads',
+    userSubscribed: 'You are subscribed to Nextcloud Deck without ad',
     yes: 'Yes'
 }
 
@@ -95,6 +97,7 @@ export const fr = {
     dueDate : 'Echéance',
     edit : 'Modifier',
     error: 'Erreur',
+    generalSettings: 'Paramètres généraux',
     image: 'Image',
     labels: 'Etiquettes',
     light: 'Clair',
@@ -127,6 +130,7 @@ export const fr = {
     title : 'Titre',
     unauthorizedToEditCard : 'Vous n\'êtes pas autorisé à modifier cette carte',
     useAppWithoutAds: 'Utilisez cette app sans publicité',
+    userSubscribed: 'Vous êtes abonné à Nextcloud Deck sans publicité',
     yes: 'Oui'
 }
 

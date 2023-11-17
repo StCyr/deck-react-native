@@ -25,7 +25,7 @@ import { setServer } from '../store/serverSlice'
 import { setToken } from '../store/tokenSlice'
 import { setColorScheme } from '../store/colorSchemeSlice'
 import { i18n } from '../i18n/i18n.js'
-import { showPaywall } from '../utils'
+import { isUserSubscribed, showPaywall } from '../utils'
 import { getColors } from '../styles/base.js'
 
 const Settings = () => {
@@ -60,19 +60,34 @@ const Settings = () => {
                 <Text style={theme.title}>
                     {i18n.t('subscriptions')}
                 </Text>
-                <View >
-                    <Text>
-                        {i18n.t('useAppWithoutAds')}
-                    </Text>
-                    <Pressable style={theme.button}
-                        onPress={() => {
-                            showPaywall(false)
-                        }}
-                    >
-                        <Text style={theme.buttonTitle}>
-                            {i18n.t('subscribe')}
+                {isUserSubscribed() ?
+                    <View>
+                        <Text>
+                            {i18n.t('userSubscribed')}
                         </Text>
-                    </Pressable>
+                    </View>
+                :
+                    <View>
+                        <Text>
+                            {i18n.t('useAppWithoutAds')}
+                        </Text>
+                        <Pressable style={theme.button}
+                            onPress={() => {
+                                showPaywall(false)
+                            }}
+                        >
+                            <Text style={theme.buttonTitle}>
+                                {i18n.t('subscribe')}
+                            </Text>
+                        </Pressable>
+                    </View>
+                }
+            </View>
+            <View style={{marginHorizontal: 20}}>
+                <Text style={theme.title}>
+                    {i18n.t('generalSettings')}
+                </Text>
+                <View>
                 </View>
             </View>
             <View style={{margin: 20}}>

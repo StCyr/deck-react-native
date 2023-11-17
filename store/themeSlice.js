@@ -6,6 +6,7 @@ export const themeSlice = createSlice({
   initialState: createStyles('light'),
   reducers: {
     setTheme: (state, action) => {
+      console.log('saving theme: ', action.payload)
       const newStyle = createStyles(action.payload)
       return {...state, ...newStyle}
     },

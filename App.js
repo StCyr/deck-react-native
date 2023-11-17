@@ -64,6 +64,13 @@ class App extends React.Component {
 		// Register handler to catch Nextcloud's redirect after successfull login
 		Linking.addEventListener('url', (url) => {this.handleRedirect(url)})
 
+		// Activates adapty and show ad if needed afterward
+		console.log('Activating adapty')
+		adapty.activate('public_live_dQQGIW4b.wZU2qtAbVtrojrx9ttUu').then( async () =>{
+			console.log('adapty activated, waiting 1 second before checking user\'subscribtion')
+			setTimeout(() => this.showAdIfNeeded(), 1000)
+		} )		
+
 	}
 
 	// Try to show ad if user hasn't subscribed to a paying version of the app
@@ -114,10 +121,6 @@ class App extends React.Component {
 	}
 
 	async componentDidMount() {
-
-		// Activates adapty and show ad if needed afterward
-		console.log('Activating adapty')
-		adapty.activate('public_live_dQQGIW4b.wZU2qtAbVtrojrx9ttUu', {logLevel: 'verbose'}).then( async () => this.showAdIfNeeded())
 
 		this.loadFonts()
 
