@@ -60,7 +60,7 @@ const Settings = () => {
                 <Text style={theme.title}>
                     {i18n.t('subscriptions')}
                 </Text>
-                {isUserSubscribed() ?
+                {isUserSubscribed() === true ?
                     <View>
                         <Text>
                             {i18n.t('userSubscribed')}
