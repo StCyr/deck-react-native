@@ -4640,7 +4640,7 @@ __metadata:
     react-native-file-viewer: ^2.1.5
     react-native-floating-action: ^1.22.0
     react-native-gesture-handler: ~2.12.0
-    react-native-google-mobile-ads: ^12.4.0
+    react-native-google-mobile-ads: ^12.6.0
     react-native-markdown-package: ^1.8.2
     react-native-material-menu: ^1.2.0
     react-native-pager-view: 6.2.0
@@ -9637,13 +9637,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-google-mobile-ads@npm:^12.4.0":
-  version: 12.4.0
-  resolution: "react-native-google-mobile-ads@npm:12.4.0"
+"react-native-google-mobile-ads@npm:^12.6.0":
+  version: 12.6.0
+  resolution: "react-native-google-mobile-ads@npm:12.6.0"
   dependencies:
     "@iabtcf/core": ^1.5.3
     use-deep-compare-effect: ^1.8.1
-  checksum: d21fcb87e1ed8e6c681e08ce92a12f5fa0eea0a2a86e9aad2ce4615e2cd8fb4d1e4dd4e385cbca813dbbc0e068eeb02e3c4b30692ad72169165dbb28349212eb
+  checksum: d54983197f551a00219342297a4016c5ff2f31d43ca539a42f110cce3acdbd7ba703224c57e6398773b317c33c303f468a0204571125854c851473187f0efab4
   languageName: node
   linkType: hard
 

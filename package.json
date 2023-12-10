@@ -44,7 +44,7 @@
     "react-native-file-viewer": "^2.1.5",
     "react-native-floating-action": "^1.22.0",
     "react-native-gesture-handler": "~2.12.0",
-    "react-native-google-mobile-ads": "^12.4.0",
+    "react-native-google-mobile-ads": "^12.6.0",
     "react-native-markdown-package": "^1.8.2",
     "react-native-material-menu": "^1.2.0",
     "react-native-pager-view": "6.2.0",
@@ -69,7 +69,4 @@
   "private": true,
   "name": "deck-react-native",
   "packageManager": "yarn@3.2.1",
-  "resolutions": {
-    "react-native-google-mobile-ads@12.4.0": "patch:react-native-google-mobile-ads@npm:12.4.0#.yarn/patches/react-native-google-mobile-ads-npm-12.4.0-d7d1f6a266.patch"
-  }
 }
