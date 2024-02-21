@@ -4735,7 +4735,7 @@ __metadata:
     react: 18.2.0
     react-dom: 18.2.0
     react-native: 0.73.4
-    react-native-adapty: ^2.7.0
+    react-native-adapty: ~2.7.0
     react-native-bouncy-checkbox: ^2.1.1
     react-native-drax: ~0.10.0
     react-native-dropdown-picker: ^5.3.0
@@ -6805,13 +6805,6 @@ __metadata:
   version: 1.1.9
   resolution: "ip@npm:1.1.9"
   checksum: b6d91fd45a856e3bd6d4f601ea0619d90f3517638f6918ebd079f959a8a6308568d8db5ef4fdf037e0d9cfdcf264f46833dfeea81ca31309cf0a7eb4b1307b84
-  languageName: node
-  linkType: hard
-
-"ip@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "ip@npm:2.0.0"
-  checksum: cfcfac6b873b701996d71ec82a7dd27ba92450afdb421e356f44044ed688df04567344c36cbacea7d01b1c39a4c732dc012570ebe9bebfb06f27314bca625349
   languageName: node
   linkType: hard
 
@@ -9485,12 +9478,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-adapty@npm:^2.7.0":
-  version: 2.9.2
-  resolution: "react-native-adapty@npm:2.9.2"
+"react-native-adapty@npm:~2.7.0":
+  version: 2.7.0
+  resolution: "react-native-adapty@npm:2.7.0"
   peerDependencies:
     react-native: ">= 0.60.0"
-  checksum: 581f7f099bd91995810ad73e397312630a8a89ca7328ec39350a091afb8e00def670fa04db8baf3c066c8b1da5e7bc9ef2919a6bbadd5961218d678bd97dc23e
+  checksum: e999d5e03d2917ce798e0322c2dbbfd05475a4f5898de4f3d70cb030a5dcf1a67c09f5f400aa44c108064e073bb160bd9ef37762e702d22fc1972d21152a8e80
   languageName: node
   linkType: hard
 
