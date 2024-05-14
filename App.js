@@ -178,7 +178,8 @@ class App extends React.Component {
 	// Function to retrieve the device's token and save it after user logged in
 	async handleRedirect({url}) {
 		if (url.startsWith('nc://login/server')) {
-			const user = decodeURIComponent(url.substring(url.lastIndexOf('user:')+5, url.lastIndexOf('&')))
+			let user = decodeURIComponent(url.substring(url.lastIndexOf('user:')+5, url.lastIndexOf('&'))).replace(/\+/g, ' ')
+			console.log('User is', user)
 			const pwd = url.substring(url.lastIndexOf(':')+1)
 			const token = btoa(user + ':' + pwd)
 			console.log('Persisting token in asyncStorage', token)
