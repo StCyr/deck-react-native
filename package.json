@@ -7,7 +7,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
-    "@adapty/react-native-ui": "^2.0.0",
+    "@adapty/react-native-ui": "^2.1.0",
     "@react-native-async-storage/async-storage": "1.21.0",
     "@react-native-community/datetimepicker": "~7.6.1",
     "@react-native-segmented-control/segmented-control": "2.4.1",
