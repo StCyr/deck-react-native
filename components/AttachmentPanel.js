@@ -78,10 +78,10 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
 
 			if (status !== 'cancel') {
 
-                const uri = resp.uri ? resp.uri : resp.assets.uri
+                const uri = resp.uri ? resp.uri : resp.assets[0].uri
 				// Uploads attachment
                 showSpinner(true)
-				console.log('Uploading attachment')
+				console.log('Uploading attachment', uri)
                 FileSystem.uploadAsync(
                     server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}/attachments`,
                     uri,
