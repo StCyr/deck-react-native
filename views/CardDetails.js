@@ -396,9 +396,10 @@ const CardDetails = () => {
 						<Markdown
                             rules={{
                                 html_inline: (node, children, parent, styles, inheritedStyles = {}) => (
-                                    <BouncyCheckbox key={node.key} style={[inheritedStyles, styles.inline]}
+                                    <BouncyCheckbox key={node.key}
                                         disableText={true}
                                         isChecked={node.content.match(/checked=/)}
+                                        size={16}
                                         onPress={() => {
                                             const text = parent[0].children[1].content
                                             updateCardDescriptionTaskListItem(text)
