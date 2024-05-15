@@ -55,9 +55,8 @@ const CardDetails = () => {
     const route = useRoute()
 
     const [user, setUser] = useState({})
-    const [busy, setBusy] = useState(false)
+    const [busy, setBusy] = useState(true)
     const [card, setCard] = useState({})
-    const [cardDescription, setCardDescription] = useState("")
     const [cardAssigneesBackup, setcardAssigneesBackup] = useState([])
     const [cardLabelsBackup, setcardLabelsBackup] = useState([])
     const [editMode, setEditMode] = useState(false)
@@ -109,6 +108,8 @@ const CardDetails = () => {
         setcardLabelsBackup(cardFromStore.labels)
         setcardAssigneesBackup(cardFromStore.assignedUsers)
 
+        setBusy(false)
+
     }, [])
 
     // Handler to let the LabelList child update the card's labels
@@ -136,10 +137,10 @@ const CardDetails = () => {
     }
 
     // Saves card and its labels
-    const saveCard = () => {
+    const saveCard = (cardToBeSaved) => {
         setBusy(true)
         // Adds new labels
-        card.labels.forEach(label => {
+        cardToBeSaved.labels.forEach(label => {
             if (cardLabelsBackup.every(backupLabel => backupLabel.id !== label.id)) {
                 console.log('Adding label', label.id)
                 axios.put(server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}/assignLabel`,
@@ -156,7 +157,7 @@ const CardDetails = () => {
         })
         // Removes labels
         cardLabelsBackup.forEach(backupLabel => {
-            if (card.labels.every(label => label.id !== backupLabel.id)) {
+            if (cardToBeSaved.labels.every(label => label.id !== backupLabel.id)) {
                 console.log('Removing label', backupLabel.id)
                 axios.put(server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}/removeLabel`,
                     {labelId: backupLabel.id},
@@ -171,7 +172,7 @@ const CardDetails = () => {
             }
         })
         // Adds new assignees
-        card.assignedUsers.forEach(user => {
+        cardToBeSaved.assignedUsers.forEach(user => {
             if (cardAssigneesBackup?.every(backupUser => backupUser.participant.uid !== user.participant.uid)) {
                 console.log('Adding assignee', user.participant.uid)
                 axios.put(server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}/assignUser`,
@@ -188,7 +189,7 @@ const CardDetails = () => {
         })
         // Removes labels
         cardAssigneesBackup?.forEach(backupUser => {
-            if (card.assignedUsers.every(user => user.participant.uid !== backupUser.participant.uid)) {
+            if (cardToBeSaved.assignedUsers.every(user => user.participant.uid !== backupUser.participant.uid)) {
                 console.log('Removing assignee', backupUser.participant.uid)
                 axios.put(server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}/unassignUser`,
                     {userId: backupUser.participant.uid},
@@ -204,7 +205,7 @@ const CardDetails = () => {
         })
         // Saves card
         axios.put(server.value + `/index.php/apps/deck/api/v1.0/boards/${route.params.boardId}/stacks/${route.params.stackId}/cards/${route.params.cardId}`,
-            card,
+            cardToBeSaved,
             {
                 timeout: 8000,
                 headers: {
@@ -222,9 +223,8 @@ const CardDetails = () => {
                 console.error('Error', resp)
             } else {
                 console.log('Card saved')
-                var cardToBeSaved = {...card}
-                if (card.duedate !== null) {
-                    cardToBeSaved = {...card, duedate: card.duedate.toString()}
+                if (cardToBeSaved.duedate !== null) {
+                    cardToBeSaved = {...cardToBeSaved, duedate: cardToBeSaved.duedate.toString()}
                 }
                 dispatch(addCard({
                     boardId: route.params.boardId,
@@ -284,7 +284,9 @@ const CardDetails = () => {
             regexp = new RegExp("- \\[ \]" + text, "g")
             description = card.description.replace(regexp, "- [x]" + text)
         }
-        setCard({...card, description})
+        const newCard = {...card, description}
+        setCard(newCard)
+        saveCard(newCard)
     }
 
     return (
@@ -386,7 +388,6 @@ const CardDetails = () => {
 								multiline={true}
 								value={card.description}
 								onChangeText={description => {
-                                    console.log(description)
 									setCard({...card, description})
 								}}
 								placeholder={i18n.t('descriptionOptional')}
@@ -468,7 +469,7 @@ const CardDetails = () => {
             { (editMode && user.canEditBoard) &&
                 <Pressable style={theme.button}
                     onPress={() => {
-                        saveCard()
+                        saveCard(card)
                     }} >
                     <Text style={theme.buttonTitle}>
                         {i18n.t('save')}

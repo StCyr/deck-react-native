@@ -13,7 +13,7 @@ import {i18n} from '../i18n/i18n.js'
 import {decode as atob} from 'base-64';
 
 // The comment div that's displayed in the CardDetails view
-const CommentPanel = ({card, updateCard}) => {
+const CommentPanel = ({card, updateCard, showSpinner}) => {
 
     const theme = useSelector(state => state.theme)
     const server = useSelector(state => state.server)
@@ -37,6 +37,7 @@ const CommentPanel = ({card, updateCard}) => {
             return
         }
         console.log('fetching comments from server')
+        showSpinner(true)
         axios.get(server.value + `/ocs/v2.php/apps/deck/api/v1.0/cards/${route.params.cardId}/comments`, {
 			timeout: 8000,
 			headers: {
@@ -51,6 +52,7 @@ const CommentPanel = ({card, updateCard}) => {
                     text1: i18n.t('error'),
                     text2: resp,
                 })
+                showSpinner(false)
                 console.log('Error', resp)
             } else {
                 // Adds comments to card
@@ -68,6 +70,7 @@ const CommentPanel = ({card, updateCard}) => {
                     ...card,
                     ...{'comments': comments}
                 })
+                showSpinner(false)
             }
         }).catch((error) => {
             Toast.show({
@@ -75,6 +78,7 @@ const CommentPanel = ({card, updateCard}) => {
                 text1: i18n.t('error'),
                 text2: error.message,
             })
+            showSpinner(false)
             console.log(error)
         })
     }
