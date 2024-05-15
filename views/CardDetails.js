@@ -31,14 +31,17 @@ import { HeaderBackButton } from '@react-navigation/elements'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import BouncyCheckbox from "react-native-bouncy-checkbox"
 import DateTimePicker from '@react-native-community/datetimepicker'
-import Markdown from 'react-native-markdown-package'
+import Markdown, { MarkdownIt } from 'react-native-markdown-display'
 import axios from 'axios'
 import * as Localization from 'expo-localization'
 import Toast from 'react-native-toast-message'
 import {i18n} from '../i18n/i18n.js'
-import {decode as atob} from 'base-64';
-import { FloatingAction } from "react-native-floating-action";
-import * as MailComposer from 'expo-mail-composer';
+import {decode as atob} from 'base-64'
+import { FloatingAction } from "react-native-floating-action"
+import * as MailComposer from 'expo-mail-composer'
+
+const taskLists = require('markdown-it-task-lists')
+const mdParser = MarkdownIt().use(taskLists, {enabled: true})
 
 const CardDetails = () => {
 
@@ -54,6 +57,7 @@ const CardDetails = () => {
     const [user, setUser] = useState({})
     const [busy, setBusy] = useState(false)
     const [card, setCard] = useState({})
+    const [cardDescription, setCardDescription] = useState("")
     const [cardAssigneesBackup, setcardAssigneesBackup] = useState([])
     const [cardLabelsBackup, setcardLabelsBackup] = useState([])
     const [editMode, setEditMode] = useState(false)
@@ -67,7 +71,6 @@ const CardDetails = () => {
         getUserDetails(id, server, token.value).then( details => {
             let user = details
             user.canEditBoard = canUserEditBoard(user,boards.value[route.params.boardId])
-            console.log(user)
             setUser(user)
         })
 
@@ -228,8 +231,8 @@ const CardDetails = () => {
                     stackId: route.params.stackId,
                     card: cardToBeSaved,
                 }))
-                navigation.goBack()
             }
+            setEditMode(false) 
             setBusy(false)
         })
         .catch((error) => {
@@ -269,6 +272,19 @@ const CardDetails = () => {
             return await getAttachmentURI(attachment,route.params.boardId, route.params.stackId, route.params.cardId, server, token.value)
         }));
         sendEmail(attachmentURIs)
+    }
+
+    // Function to check/uncheck task list item in the card's description
+    const updateCardDescriptionTaskListItem = (text) => {
+        // tries to uncheck first
+        let regexp = new RegExp("- \\[x\]" + text, "g")
+        let description = card.description.replace(regexp, "- [ ]" + text)
+        // if uncheck didn't change a thing then we must check
+        if (description === card.description) {
+            regexp = new RegExp("- \\[ \]" + text, "g")
+            description = card.description.replace(regexp, "- [x]" + text)
+        }
+        setCard({...card, description})
     }
 
     return (
@@ -369,14 +385,29 @@ const CardDetails = () => {
 								editable={true}
 								multiline={true}
 								value={card.description}
-									onChangeText={description => {
+								onChangeText={description => {
+                                    console.log(description)
 									setCard({...card, description})
 								}}
 								placeholder={i18n.t('descriptionOptional')}
 							/>
 						:
 						<Markdown
+                            rules={{
+                                html_inline: (node, children, parent, styles, inheritedStyles = {}) => (
+                                    <BouncyCheckbox key={node.key} style={[inheritedStyles, styles.inline]}
+                                        disableText={true}
+                                        isChecked={node.content.match(/checked=/)}
+                                        onPress={() => {
+                                            const text = parent[0].children[1].content
+                                            updateCardDescriptionTaskListItem(text)
+                                        }}
+                                    />
+                                )
+                            }}
 							styles={theme.markdown}
+                            mergeStyle={true}
+                            markdownit={mdParser}
 						>
 							{card.description}
 						</Markdown>
