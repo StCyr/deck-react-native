@@ -56,8 +56,7 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
 			if (attachmentType === 'photo') {
                 resp = await ImagePicker.launchImageLibraryAsync({
                     mediaTypes: ImagePicker.MediaTypeOptions.All,
-                    allowsEditing: true,
-                    aspect: [4, 3],
+                    allowsMultipleSelection: true,
                     quality: 1,
                   });
             } else if (attachmentType === 'camera') {
@@ -65,8 +64,6 @@ const AttachmentPanel = ({card, updateCard, showSpinner}) => {
                 if (result.granted) {
                     resp = await ImagePicker.launchCameraAsync({
                         mediaTypes: ImagePicker.MediaTypeOptions.All,
-                        allowsEditing: true,
-                        aspect: [4, 3],
                         quality: 1,
                     });
                 }
