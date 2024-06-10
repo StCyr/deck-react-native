@@ -14,9 +14,9 @@
     "@react-navigation/elements": "^1.2.1",
     "@react-navigation/native": "^6.0.13",
     "@react-navigation/stack": "^6.3.2",
-    "@reduxjs/toolkit": "^2.2.4",
+    "@reduxjs/toolkit": "^2.2.5",
     "accordion-collapse-react-native": "^1.1.1",
-    "axios": "^1.6.0",
+    "axios": "^1.7.2",
     "base-64": "^1.0.0",
     "dayjs": "^1.11.3",
     "expo": "^50.0.7",
@@ -55,17 +55,17 @@
     "react-native-tab-view": "^3.3.0",
     "react-native-toast-message": "^2.0.2",
     "react-native-vector-icons": "^8.1.0",
-    "react-native-web": "^0.19.10",
+    "react-native-web": "^0.19.12",
     "react-native-webview": "13.6.4",
     "react-redux": "^9.1.2",
     "redux": "^5.0.1",
-    "tslib": "^2.4.0"
+    "tslib": "^2.6.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.19.3",
-    "@babel/plugin-transform-optional-chaining": "^7.23.4",
+    "@babel/core": "^7.24.7",
+    "@babel/plugin-transform-optional-chaining": "^7.24.7",
     "eslint": "^8.57.0",
-    "eslint-plugin-react": "^7.31.10"
+    "eslint-plugin-react": "^7.34.2"
   },
   "private": true,
   "name": "deck-react-native",
